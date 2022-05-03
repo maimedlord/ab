@@ -1,0 +1,122 @@
+body {
+    background-color: darkgrey;
+    height: 100%;
+    width: 100%;
+}
+#account_general {
+    background-color: cornflowerblue;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: 340px;
+    width: 100%;
+}
+#account_orders {
+    display: flex;
+    background-color: mediumpurple;
+    flex-direction: column;
+    min-height: 300px;
+    padding: 10px;
+}
+#a_g_left {
+    background-color: yellow;
+    flex-basis: 300px;
+    flex-grow: 1;
+}
+#a_g_right {
+    background-color: darkcyan;
+    flex-basis: 300px;
+    flex-grow: 1;
+}
+#a_o_bought {
+    background-color: darkseagreen;
+    display: flex;
+    flex-basis: 150px;
+}
+#a_o_display {
+    background-color: darkgrey;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+#a_o_selector {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+#a_o_sold {
+    background-color: burlywood;
+    display: flex;
+    flex-basis: 150px;
+}
+#container_main {
+    background-color: aquamarine;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    max-width: 1000px;
+    min-width: 400px;
+    padding: 0;
+}
+#container_markets {
+    display: flex;
+    flex-direction: column;
+    min-height: 500px;
+    padding: 10px;
+}
+#footer {
+    background-color: black;
+    color: white;
+    margin: auto;
+    text-align: center;
+    width: 100%;
+}
+#header_neutral {
+    align-content: space-around;
+    align-items: baseline;
+    background-color: bisque;
+    display: flex;
+    flex-direction: row;
+    height: 240px;
+    width: 100%;
+}
+#market_buyer {
+    background-color: darkseagreen;
+}
+#market_display {
+    background-color: dodgerblue;
+    display: flex;
+    flex-grow: 1;
+    width: 100%;
+}
+#market_selector {
+    display: flex;
+    flex-direction: row;
+}
+#market_selector_buyer {
+    background-color: darkseagreen;
+    height: 40px;
+    flex-basis: 150px;
+}
+#market_selector_seller {
+    background-color: lightcoral;
+    height: 40px;
+    flex-basis: 150px;
+}
+#market_seller {
+    background-color: lightcoral;
+}
+#notice_construction {
+    background-color: black;
+    color: yellow;
+    margin: auto;
+    text-align: center;
+    width: 100%;
+}
+#temp_accountheader {
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
