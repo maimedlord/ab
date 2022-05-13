@@ -1,4 +1,6 @@
 from flask import Flask, render_template
+import calls as calls
+
 
 app = Flask(__name__)
 

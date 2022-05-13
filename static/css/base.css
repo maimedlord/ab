@@ -36,7 +36,6 @@ body {
 #a_o_display {
     background-color: darkgrey;
     display: flex;
-    flex-direction: column;
     flex-grow: 1;
 }
 #a_o_selector {
@@ -64,6 +63,33 @@ body {
     min-height: 500px;
     padding: 10px;
 }
+/*     */
+#display_buyer {
+    background-color: darkkhaki;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+#display_seller {
+    background-color: darkcyan;
+    display: none;
+    flex-direction: column;
+    width: 100%;
+}
+/*     */
+#display_bought {
+    background-color: darkseagreen;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+}
+#display_sold {
+    background-color: dimgray;
+    display: none;
+    width: 100%;
+}
+/*     */
 #footer {
     background-color: black;
     color: white;
@@ -119,4 +145,14 @@ body {
     margin: 0;
     padding: 0;
     width: 100%;
+}
+/* CLASSES */
+.market_order {
+    background-color: burlywood;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    height: 30px;
+    min-width: 350px;
+    width: 100%
 }

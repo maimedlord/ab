@@ -11,9 +11,21 @@
     </div>
     <div id="container_markets">
         <div id="market_selector">
-            <div id="market_selector_buyer">market_selector_buyer</div>
-            <div id="market_selector_seller">market_selector_seller</div>
+            <div id="market_selector_buyer" onclick="show_display_buyer()">market_selector_buyer</div>
+            <div id="market_selector_seller" onclick="show_display_seller()">market_selector_seller</div>
         </div>
-        <div id="market_display">market_display</div>
+        <div id="market_display">
+            <div id="display_buyer">
+                <div id="order1" class="market_order">
+                    order1
+                </div>
+                <div id="order2" class="market_order">
+                    order2
+                </div>
+            </div>
+            <div id="display_seller">
+                display_seller
+            </div>
+        </div>
     </div>
 {% endblock %}
