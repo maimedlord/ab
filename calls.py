@@ -19,6 +19,14 @@ Which ones will be chosen?
 def get_orders_top():
     db = db_mc[dbOrders]
     dbc = db["corders"]
-    mongo_obj = dbc.find_one(sort=[('_id', DESCENDING)])
-    some_str = mongo_obj.get("status")
-    return some_str
+    temp_array = list(dbc.find({}, {
+        "_id": 0,
+        "orderID": 1,
+        "dateOpen": 1,
+        "level": 1,
+        "subject": 1,
+        "status": 1,
+        "contract.commitment": 1,
+        "contract.finalPrice": 1
+    }).limit(5))
+    return temp_array

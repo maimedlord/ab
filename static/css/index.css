@@ -1,0 +1,55 @@
+#container_markets {
+    display: flex;
+    flex-direction: column;
+}
+#market_display {
+    background-color: dodgerblue;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    width: 100%;
+}
+#market_display_buyer {
+    background-color: darkseagreen;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+#market_display_seller {
+    background-color: lightcoral;
+    display: none;
+    flex-direction: column;
+    width: 100%;
+}
+#market_display_top_row {
+
+}
+#market_selector {
+    display: flex;
+    flex-direction: row;
+}
+#market_selector_buyer {
+    background-color: darkseagreen;
+    height: 40px;
+    flex-basis: 150px;
+}
+#market_selector_seller {
+    background-color: lightcoral;
+    height: 40px;
+    flex-basis: 150px;
+}
+
+/* CLASSES */
+.market_order {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: 30px;
+    justify-content: space-between;
+    min-width: 350px;
+    width: 100%;
+}
+.market_order_element {
+    padding: 0;
+    margin: 0;
+}

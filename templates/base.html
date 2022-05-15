@@ -4,18 +4,15 @@
         <!-- Basic Page Needs –––––––––––––––––––––––––––––––––– -->
         <meta charset="utf-8">
         {% block title %}{% endblock %}
-        <meta name="description" content="">
-        <meta name="author" content="">
-
+        <meta name="description" content="An Answer Marketplace">
+        <meta name="author" content="Answer Blasters">
         <!-- Mobile Specific Metas –––––––––––––––––––––––––––-–––– -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
         <!-- CSS –––––––––––––––––––––––––––––––––––––––––––––––––– -->
         <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
-
+        {% block css %}{% endblock %}
         <!-- Scripts  ––––––––––––––––––––––––––––––––––––––––––––– -->
         <script src="{{url_for('static', filename='scripts/js.js')}}"></script>
-
         <!-- Favicon  ––––––––––––––––––––––––––––––––––––––––––––– -->
         <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.ico') }}">
     </head>

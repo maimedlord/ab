@@ -1,6 +1,5 @@
 body {
     background-color: darkgrey;
-    height: 100%;
     width: 100%;
 }
 #account_general {
@@ -52,30 +51,14 @@ body {
     background-color: aquamarine;
     display: flex;
     flex-direction: column;
-    margin: 0 auto;
+    margin: auto;
     max-width: 1000px;
     min-width: 400px;
     padding: 0;
 }
-#container_markets {
-    display: flex;
-    flex-direction: column;
-    min-height: 500px;
-    padding: 10px;
-}
+
 /*     */
-#display_buyer {
-    background-color: darkkhaki;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
-#display_seller {
-    background-color: darkcyan;
-    display: none;
-    flex-direction: column;
-    width: 100%;
-}
+
 /*     */
 #display_bought {
     background-color: darkseagreen;
@@ -106,32 +89,7 @@ body {
     height: 240px;
     width: 100%;
 }
-#market_buyer {
-    background-color: darkseagreen;
-}
-#market_display {
-    background-color: dodgerblue;
-    display: flex;
-    flex-grow: 1;
-    width: 100%;
-}
-#market_selector {
-    display: flex;
-    flex-direction: row;
-}
-#market_selector_buyer {
-    background-color: darkseagreen;
-    height: 40px;
-    flex-basis: 150px;
-}
-#market_selector_seller {
-    background-color: lightcoral;
-    height: 40px;
-    flex-basis: 150px;
-}
-#market_seller {
-    background-color: lightcoral;
-}
+
 #notice_construction {
     background-color: black;
     color: yellow;
@@ -147,12 +105,5 @@ body {
     width: 100%;
 }
 /* CLASSES */
-.market_order {
-    background-color: burlywood;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    height: 30px;
-    min-width: 350px;
-    width: 100%
-}
+
+/*  */

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block title %}<title>answerBlasters: welcome!</title>{% endblock %}
+{% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">{% endblock %}
 {% block body %}
     <div id="header_neutral">
         <div id="neutral_login">
@@ -15,15 +16,16 @@
             <div id="market_selector_seller" onclick="show_display_seller()">market_selector_seller</div>
         </div>
         <div id="market_display">
-            <div id="display_buyer">
-                <div id="order1" class="market_order">
-                    order1
-                </div>
-                <div id="order2" class="market_order">
-                    order2
-                </div>
+            <div id="market_display_buyer">
+                {% for element in temp_array %}
+                    <div class="market_order">
+                        {% for n_element in element %}
+                            <a href=""><div class="market_order_element">{{ n_element }}</div></a>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
             </div>
-            <div id="display_seller">
+            <div id="market_display_seller">
                 display_seller
             </div>
         </div>
