@@ -6,10 +6,10 @@ from pymongo import MongoClient, DESCENDING
 import datetime
 
 
-dbOrders = 'ab-dborders'
-dbUsers = 'ab-dbusers'
-dbSiteGen = 'ab-dbsitegen'
-dbGames = 'ab-dbgames'
+dbOrders = 'ab_dborders'
+dbUsers = 'ab_dbusers'
+dbSiteGen = 'ab_dbsitegen'
+dbGames = 'ab_dbgames'
 db_mc = MongoClient()
 
 
