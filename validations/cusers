@@ -1,0 +1,36 @@
+{
+  $jsonSchema: {
+    bsonType: 'object',
+    required: [
+      'email',
+      'pass',
+      'uName',
+      'joinDate',
+      'orders'
+    ],
+    properties: {
+      email: {
+        bsonType: 'string',
+        description: 'required: email'
+      },
+      pass: {
+        bsonType: 'string',
+        description: 'required: pass',
+        minLength: 12,
+        maxLength: 64
+      },
+      uName: {
+        bsonType: 'string',
+        description: 'required: uName'
+      },
+      joinDate: {
+        bsonType: 'string',
+        description: 'required: joinDate'
+      },
+      orders: {
+        bsonType: 'array',
+        description: 'required: array of order objects'
+      }
+    }
+  }
+}
