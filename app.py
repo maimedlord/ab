@@ -1,7 +1,7 @@
 from flask import Flask, redirect, render_template, request, session, url_for
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user, UserMixin
 #from flask_socketio import SocketIO
-import processing
+import processing as prc
 
 
 app = Flask(__name__)
@@ -9,15 +9,23 @@ app.config['SECRET_KEY'] = 'secret!'
 login_mgr = LoginManager()
 
 
+'''
+INCOMPLETE
+'''
 @app.route('/', methods=['post', 'get'])
 def index():
     message = ''
     if "email" in session:
         return redirect(url_for('account.html'))
     if request.method == 'POST':
-        email = request.form.get('email')
-        pass_word = request.form.get('pass_word')
-        #user_found =
+        email = request.form.get('user_email')
+        pass_word = request.form.get('user_pass_word')
+        user_found = prc.get_user_record(email, pass_word)
+        if user_found != {}:
+            return render_template('account.html')
+        else:
+            return render_template('index.html')###
+
 
     # if request.method == 'POST':
     #     user = request.form.get('fullname')
