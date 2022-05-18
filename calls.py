@@ -15,6 +15,29 @@ corders = "corders"
 cusers = "cusers"
 
 
+'''
+'''
+def is_user(email, hashed_password):
+    db = db_mc[dbUsers]
+    dbc = db[cusers]
+    user_record = dbc.find_one({"email": email, "pass": hashed_password})  # need to add a filter?
+    if user_record:
+        return True
+    else:
+        return False
+
+
+'''
+'''
+def get_active(email):
+    db = db_mc[dbOrders]
+    dbc = db[cusers]
+    temp_obj = dbc.find_one({"email": email})
+    if temp_obj:
+        return True
+    else:
+        return False
+
 
 '''
 INCOMPLETE
@@ -38,15 +61,16 @@ def get_orders_top():
 '''
 INCOMPLETE
 '''
-def get_user_record(email, pass_word):
+def get_user_record_email(email):
     db = db_mc[dbUsers]
     dbc = db[cusers]
-    user_record = dbc.find_one({"email": email, "pass": pass_word})
+    user_record = dbc.find_one({"email": email})#need to add a filter?
     if user_record:
         return user_record
     else:
-        return {"error": "no record found"}
+        return None
 
 
 if __name__ == '__main__':
-    print(get_user_record('theman@gmail.com', 'passwordpass'))
+    print(get_user_record_email("theman@gmail.com"))
+    print(type(get_user_record_email("theman@gmail.com")))

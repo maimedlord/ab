@@ -2,6 +2,7 @@
   $jsonSchema: {
     bsonType: 'object',
     required: [
+      'active',
       'email',
       'pass',
       'uName',
@@ -9,6 +10,10 @@
       'orders'
     ],
     properties: {
+      active: {
+        bsonType: 'bool',
+        description: 'required: active'
+      },
       email: {
         bsonType: 'string',
         description: 'required: email'

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}<title>lOGIn</title>{% endblock %}
+{% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">{% endblock %}
+{% block body %}
+    <div>
+        <form action="" method="post">
+            <input name="user_email" placeholder="email...">
+            <input name="user_pass_word" placeholder="password...">
+            <button type="submit">submit</button>
+        </form>
+    </div>
+{% endblock %}

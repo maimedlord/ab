@@ -1,18 +1,39 @@
-from flask import Flask, redirect, render_template, request, session, url_for
-from flask_login import LoginManager, login_required, login_user, logout_user, current_user, UserMixin
-#from flask_socketio import SocketIO
+import flask
+from flask import Flask, redirect, render_template, request, session, url_for, flash
+from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 import processing as prc
+import calls
+from user import User
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret!'
-login_mgr = LoginManager()
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+app.config['SECRET_KEY'] = 'secret!'# put in config file?
 
 
 '''
+INCOMPLETE
 '''
-class User:
-    pass
+@login_manager.user_loader
+def user_loader(email):
+    user_obj = calls.get_user_record_email(email)
+    if user_obj:
+        return User(email)
+    else:
+        return None
+
+
+'''
+INCOMPLETE
+'''
+@app.route('/logout')
+def logout():
+    logout_user()
+    flask.flash('logged out')
+    return render_template('logout.html')
 
 
 '''
@@ -20,53 +41,36 @@ INCOMPLETE
 '''
 @app.route('/', methods=['post', 'get'])
 def index():
-    message = ''
-    if "email" in session:
-        return redirect(url_for('account.html'))
     if request.method == 'POST':
         email = request.form.get('user_email')
-        pass_word = request.form.get('user_pass_word')
-        user_found = prc.get_user_record(email, pass_word)
-        if user_found != {}:
+        password = request.form.get('user_password')
+        if calls.is_user(email, password):
+            user_obj = User(email)
+            login_user(user_obj)
             return render_template('account.html')
         else:
-            return render_template('index.html')###
+            print("failed login")
+            return render_template('index.html')
+    else:
+        return render_template('index.html')
 
-
-    # if request.method == 'POST':
-    #     user = request.form.get('fullname')
-    #     email = request.form.get('email')
-    #     password1 = request.form.get('password1')
-    #     password2 = request.form.get('password2')
-    #     user_found = request.form.get('...')
-    #     email_found = request.form.get('.....')
-    #     if user_found:
-    #         message = 'There is already a user by that name'
-    #         return render_template('index.html', message=message)
-    #     if email_found:
-    #         message = 'This email already exists.'
-    #         return render_template('index.html', message=message)
-    #     if password1 != password2:
-    #         message = 'incorrect password'
-    #         return render_template('index.html', message=message)
-    #     else:
-    #         user_input = {'name': user, 'email': email, 'password': password2}
-    #         records.insert_one(user_input) # records = database collection
-    #         user_data = records.find_one({'email': email})
-    #         new_email = user_data['email']
-    #         return render_template('account.html', email=new_email)
-    #         pass
 
     temp_array = prc.get_orders_top()
     return render_template('index.html', temp_array=temp_array)
 
 
+'''
+INCOMPLETE
+'''
 @app.route('/account')
-#@login_required
+@login_required
 def account():
     return render_template('account.html')
 
 
+'''
+INCOMPLETE
+'''
 @app.route('/market')
 def market():
     return render_template('market.html')
@@ -74,3 +78,4 @@ def market():
 
 if __name__ == '__main__':
     app.run(debug=True)
+    #print(user_loader("theman@gmail.com"))
