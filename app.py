@@ -10,6 +10,12 @@ login_mgr = LoginManager()
 
 
 '''
+'''
+class User:
+    pass
+
+
+'''
 INCOMPLETE
 '''
 @app.route('/', methods=['post', 'get'])
@@ -51,11 +57,12 @@ def index():
     #         return render_template('account.html', email=new_email)
     #         pass
 
-    temp_array = processing.get_orders_top()
+    temp_array = prc.get_orders_top()
     return render_template('index.html', temp_array=temp_array)
 
 
 @app.route('/account')
+#@login_required
 def account():
     return render_template('account.html')
 

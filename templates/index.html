@@ -3,10 +3,15 @@
 {% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">{% endblock %}
 {% block body %}
     <div id="header_neutral">
-        <div id="neutral_login">
+        <div id="header_neutral_login">
             <a href="account">neutral login button here</a>
+            <form action="" method="post">
+                <input name="user_email" placeholder="email...">
+                <input name="user_pass_word" placeholder="password...">
+                <button type="submit">submit</button>
+            </form>
         </div>
-        <div id="neutral_header_logo">
+        <div id="header_neutral_header_logo">
             <a href="/">answerBlasters logo</a>
         </div>
     </div>

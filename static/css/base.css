@@ -80,16 +80,6 @@ body {
     text-align: center;
     width: 100%;
 }
-#header_neutral {
-    align-content: space-around;
-    align-items: baseline;
-    background-color: bisque;
-    display: flex;
-    flex-direction: row;
-    height: 240px;
-    width: 100%;
-}
-
 #notice_construction {
     background-color: black;
     color: yellow;
