@@ -5,11 +5,17 @@
     <div id="header_neutral">
         <div id="header_neutral_login">
             <a href="account">neutral login button here</a>
-            <form action="" method="post">
-                <input name="user_email" placeholder="email...">
-                <input name="user_password" placeholder="password...">
-                <button type="submit">submit</button>
-            </form>
+            {% if current_user.is_authenticated %}
+                <div>
+                    YOU'RE AUTHENTICATED
+                </div>
+            {% else %}
+                <form action="" method="post">
+                    <input name="user_email" placeholder="email...">
+                    <input name="user_password" placeholder="password...">
+                    <button type="submit">submit</button>
+                </form>
+            {% endif %}
         </div>
         <div id="header_neutral_header_logo">
             <a href="/">answerBlasters logo</a>

@@ -31,9 +31,10 @@ INCOMPLETE
 '''
 @app.route('/logout')
 def logout():
+    temp_array = prc.get_orders_top()
     logout_user()
     flask.flash('logged out')
-    return render_template('logout.html')
+    return render_template('index.html', temp_array=temp_array)
 
 
 '''
@@ -41,6 +42,8 @@ INCOMPLETE
 '''
 @app.route('/', methods=['post', 'get'])
 def index():
+    temp_array = prc.get_orders_top()
+
     if request.method == 'POST':
         email = request.form.get('user_email')
         password = request.form.get('user_password')
@@ -50,13 +53,9 @@ def index():
             return render_template('account.html')
         else:
             print("failed login")
-            return render_template('index.html')
+            return render_template('index.html', temp_array=temp_array)
     else:
-        return render_template('index.html')
-
-
-    temp_array = prc.get_orders_top()
-    return render_template('index.html', temp_array=temp_array)
+        return render_template('index.html', temp_array=temp_array)
 
 
 '''
