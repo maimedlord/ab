@@ -22,7 +22,7 @@
                 This website is under construction
             </div>
         <div>
-            <a href="/">index</a> --- <a href="account">ACCOUNT</a> --- <a href="logout">logout</a>
+            <a href="{{ url_for('index') }}">index</a> --- <a href="{{ url_for('account') }}">ACCOUNT</a> --- <a href="{{ url_for('logout') }}">logout</a> --- <a href="{{ url_for('register') }}">REgISteR</a>
         </div>
             {% block body %}{% endblock %}
             <div id="footer">

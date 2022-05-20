@@ -4,10 +4,9 @@
 {% block body %}
     <div id="header_neutral">
         <div id="header_neutral_login">
-            <a href="account">neutral login button here</a>
             {% if current_user.is_authenticated %}
                 <div>
-                    YOU'RE AUTHENTICATED
+                    YOU'RE AUTHENTICATED {{ current_user.email }} // {{ current_user.username }}
                 </div>
             {% else %}
                 <form action="" method="post">
@@ -20,9 +19,6 @@
         <div id="header_neutral_header_logo">
             <a href="/">answerBlasters logo</a>
         </div>
-    <div>
-        <a href="login">login page here lol</a>
-    </div>
     </div>
     <div id="container_markets">
         <div id="market_selector">

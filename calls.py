@@ -2,6 +2,7 @@
 Alex Haas
 functions that make the calls and then separate functions that prepare data for use by FE
 '''
+from werkzeug.security import check_password_hash
 from pymongo import MongoClient, DESCENDING
 import datetime
 
@@ -15,24 +16,36 @@ corders = "corders"
 cusers = "cusers"
 
 
+dict_template = {
+                'active': True,
+                'email': 'aaaa@aaaa.com',
+                'pass': 'aaaassssddddffff',
+                'uName': 'somename',
+                'joinDate': 'some date for sure 2',
+                'orders': []
+            }
 '''
+INCOMPLETE
 '''
-def is_user(email, hashed_password):
+def create_user(user_obj):
     db = db_mc[dbUsers]
     dbc = db[cusers]
-    user_record = dbc.find_one({"email": email, "pass": hashed_password})  # need to add a filter?
-    if user_record:
-        return True
-    else:
+    print(user_obj['email'])
+    result = dbc.find_one({'email': user_obj['email']})
+    if result:
         return False
+    else:
+        dbc.insert_one(user_obj)
+        return True
 
 
 '''
+INCOMPLETE
 '''
 def get_active(email):
     db = db_mc[dbOrders]
     dbc = db[cusers]
-    temp_obj = dbc.find_one({"email": email})
+    temp_obj = dbc.find_one({'email': email})
     if temp_obj:
         return True
     else:
@@ -71,6 +84,41 @@ def get_user_record_email(email):
         return None
 
 
+'''
+INCOMPLETE
+'''
+def get_username(email):
+    db = db_mc[dbUsers]
+    dbc = db[cusers]
+    username = dbc.find_one({'email': email}, {
+        '_id': 0,
+        'uName': 1
+    })
+    if username:
+        return username['uName']
+    else:
+        return None
+
+
+'''
+INCOMPLETE
+returns object if True, None if False
+'''
+def is_auth_user(email, password):
+    db = db_mc[dbUsers]
+    dbc = db[cusers]
+    user_record = dbc.find_one({"email": email}, {
+        '_id': 0,
+        'email': 1,
+        'uName': 1,
+        'pass': 1
+    })
+    if user_record and check_password_hash(user_record['pass'], password):
+        user_record.pop('pass')
+        return user_record
+    else:
+        return None
+
+
 if __name__ == '__main__':
-    print(get_user_record_email("theman@gmail.com"))
-    print(type(get_user_record_email("theman@gmail.com")))
+    print(create_user(dict_template))

@@ -1,13 +1,11 @@
 from flask_login import UserMixin
-import calls
 
 
 class User(UserMixin):
-    def __init__(self, email):
+    def __init__(self, email, username):
         self.id = email
         self.email = email
-
-
+        self.username = username
 
     def is_active(self):
         return True
@@ -20,6 +18,9 @@ class User(UserMixin):
 
     def get_id(self):
         return self.id
+
+    def build_user(self):
+        return None
 
 
 if __name__ == '__main__':
