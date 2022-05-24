@@ -3,8 +3,10 @@
 {% block css %}{% endblock %}
 {% block body %}
     <div>
-        YOU'VE BEEN LOGGED OUT
+        {% if message %}
+            {{ message }}
+        {% endif %}
         <p>
-            <a href={{ url_for('index') }}>GO HOME</a>
+            <a href="{{ url_for('index') }}">GO HOME</a>
     </div>
 {% endblock %}

@@ -18,7 +18,7 @@ cusers = "cusers"
 
 dict_template = {
                 'active': True,
-                'email': 'aaaa@aaaa.com',
+                'email': 'aaSDaa@aaaSDa.com',
                 'pass': 'aaaassssddddffff',
                 'uName': 'somename',
                 'joinDate': 'some date for sure 2',
@@ -31,8 +31,9 @@ def create_user(user_obj):
     db = db_mc[dbUsers]
     dbc = db[cusers]
     print(user_obj['email'])
-    result = dbc.find_one({'email': user_obj['email']})
-    if result:
+    email_result = dbc.find_one({'email': user_obj['email']})
+    username_result = dbc.find_one({'uName': user_obj['uName']})
+    if email_result or username_result:
         return False
     else:
         dbc.insert_one(user_obj)

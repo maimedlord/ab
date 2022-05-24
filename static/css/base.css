@@ -56,6 +56,16 @@ body {
     min-width: 400px;
     padding: 0;
 }
+#navbar {
+    align-items: center;
+    background-color: dimgray;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 50px;
+    width: 100%;
+}
 
 /*     */
 

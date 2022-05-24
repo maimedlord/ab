@@ -3,28 +3,15 @@
 {% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">{% endblock %}
 {% block body %}
     <div id="header_neutral">
-        <div id="header_neutral_login">
-            {% if current_user.is_authenticated %}
-                <div>
-                    YOU'RE AUTHENTICATED {{ current_user.email }} // {{ current_user.username }}
-                </div>
-            {% else %}
-                <form action="" method="post">
-                    <input name="user_email" placeholder="email...">
-                    <input name="user_password" placeholder="password...">
-                    <button type="submit">submit</button>
-                </form>
-            {% endif %}
-        </div>
         <div id="header_neutral_header_logo">
             <a href="/">answerBlasters logo</a>
         </div>
     </div>
     <div id="container_markets">
-        <div id="market_selector">
-            <div id="market_selector_buyer" onclick="show_display_buyer()">market_selector_buyer</div>
-            <div id="market_selector_seller" onclick="show_display_seller()">market_selector_seller</div>
-        </div>
+{#        <div id="market_selector">#}
+{#            <div id="market_selector_buyer" onclick="show_display_buyer()">market_selector_buyer</div>#}
+{#            <div id="market_selector_seller" onclick="show_display_seller()">market_selector_seller</div>#}
+{#        </div>#}
         <div id="market_display">
             <div id="market_display_buyer">
                 {% for element in temp_array %}

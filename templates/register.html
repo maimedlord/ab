@@ -10,6 +10,11 @@
             <a href="/">answerBlasters logo</a>
         </div>
     </div>
+    {% if message != '' %}
+        <div>
+            {{ message }}
+        </div>
+    {% endif %}
     <div>
         <form action="" method="post">
             <input name="user_email" placeholder="email...">
