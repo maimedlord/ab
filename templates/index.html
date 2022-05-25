@@ -2,17 +2,17 @@
 {% block title %}<title>answerBlasters: welcome!</title>{% endblock %}
 {% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">{% endblock %}
 {% block body %}
+    {% if message %}
+        {{ message }}
+    {% endif %}
     <div id="header_neutral">
         <div id="header_neutral_header_logo">
             <a href="/">answerBlasters logo</a>
         </div>
     </div>
     <div id="container_markets">
-{#        <div id="market_selector">#}
-{#            <div id="market_selector_buyer" onclick="show_display_buyer()">market_selector_buyer</div>#}
-{#            <div id="market_selector_seller" onclick="show_display_seller()">market_selector_seller</div>#}
-{#        </div>#}
         <div id="market_display">
+            A glimpse of what's on the market right now:
             <div id="market_display_buyer">
                 {% for element in temp_array %}
                     <div class="market_order">

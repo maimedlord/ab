@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}<title>wtf</title>{% endblock %}
+{% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">{% endblock %}
+{% block body %}
+    {{ message }}
+{% endblock %}
