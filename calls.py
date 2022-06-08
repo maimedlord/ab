@@ -7,12 +7,12 @@ from pymongo import MongoClient, DESCENDING
 import datetime
 
 
-dbOrders = 'ab_dborders'
+dbContracts = 'ab_dbcontracts'
 dbUsers = 'ab_dbusers'
 dbSiteGen = 'ab_dbsitegen'
 dbGames = 'ab_dbgames'
 db_mc = MongoClient()
-corders = "corders"
+ccontracts = "ccontracts"
 cusers = "cusers"
 
 
@@ -44,7 +44,7 @@ def create_user(user_obj):
 INCOMPLETE
 '''
 def get_active(email):
-    db = db_mc[dbOrders]
+    db = db_mc[dbContracts]
     dbc = db[cusers]
     temp_obj = dbc.find_one({'email': email})
     if temp_obj:
@@ -57,8 +57,8 @@ def get_active(email):
 INCOMPLETE
 '''
 def get_orders_top():
-    db = db_mc[dbOrders]
-    dbc = db[corders]
+    db = db_mc[dbContracts]
+    dbc = db[ccontracts]
     temp_array = list(dbc.find({}, {
         "_id": 0,
         "orderID": 1,
