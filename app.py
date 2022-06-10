@@ -5,6 +5,7 @@ import processing as prc
 import calls
 # import html
 from user import User
+from forms import LoginForm, RegistrationForm
 
 
 # NEXT AFTER LOGIN_USER - SEE FLASK-LOGIN DOCUMENTATION
