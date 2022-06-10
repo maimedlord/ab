@@ -19,7 +19,7 @@ app.config['SECRET_KEY'] = 'secret!'# put in config file?
 
 
 '''
-INCOMPLETE
+...
 '''
 @login_manager.user_loader
 def user_loader(email):
@@ -66,11 +66,12 @@ def account():
 
 
 '''
+INCOMPLETE
 '''
 @app.route('/login', methods=['post', 'get'])
 def login():
     ip_address = request.remote_addr
-    temp_array = prc.get_orders_top()
+    message = "You failed logging in..."
     if request.method == 'POST':
         email = request.form.get('user_email')
         password = request.form.get('user_password')
@@ -83,37 +84,21 @@ def login():
             #     return flask.abort(400)
             return redirect('account')
         else:
-            print("failed login")
-            return render_template('index.html', ip_address=ip_address, temp_array=temp_array)
-    return redirect('/')
+            return render_template('login.html', ip_address=ip_address, message=message)
+    return render_template('login.html', ip_address=ip_address)
 
 
 '''
 INCOMPLETE
 '''
-@app.route('/logout', methods=['post', 'get'])
+@app.route('/logout')
 def logout():
+    message = "You've been logged out"
     ip_address = request.remote_addr
-    message = ''
     if not current_user.is_authenticated:
-        message = 'You\'re already logged out...'
+        message = "You're already logged out tho..."
     logout_user()
-    if request.method == 'POST':
-        email = request.form.get('user_email')
-        password = request.form.get('user_password')
-        user_obj = calls.is_auth_user(email, password)
-        if user_obj:
-            user_obj = User(email, user_obj['uName'])
-            login_user(user_obj)
-            # next = flask.request.args.get('next')
-            # if not is_safe_url(next):
-            #     return flask.abort(400)
-            return render_template('account.html', ip_address=ip_address)
-        else:
-            print("failed login")
-            return render_template('index.html', ip_address=ip_address)
-    else:
-        return render_template('logout.html', ip_address=ip_address, message=message)
+    return render_template('logout.html', ip_address=ip_address, message=message)
 
 
 '''

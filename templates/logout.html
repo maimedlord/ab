@@ -3,10 +3,6 @@
 {% block css %}{% endblock %}
 {% block body %}
     <div>
-        {% if message %}
-            {{ message }}
-        {% endif %}
-        <p>
-            <a href="{{ url_for('index') }}">GO HOME</a>
+        {{ message }}
     </div>
 {% endblock %}

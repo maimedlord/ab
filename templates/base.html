@@ -40,14 +40,6 @@
                         IS NOT AUTHENTICATED @ {{ ip_address }}
                     </div>
                     <div>
-                        <form action="{{ url_for('login') }}" method="post">
-                            login-improper:
-                            <p>
-                            <input name="user_email" placeholder="email...">
-                            <input name="user_password" placeholder="password...">
-                            <button type="submit">submit</button>
-                        </form>
-                        <p>
                         <a href="{{ url_for('login') }}">LOGin proper</a>
                         <p>
                         <a href="{{ url_for('register') }}">REGisTER</a>

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}<title>answerBlasters: LOGIN BROTHERS AND SISTERS</title>{% endblock %}
+{% block css %}{% endblock %}
+{% block body %}
+    <div id="login_main">
+        {{ message }}
+        <p></p>
+        <form action="{{ url_for('login') }}" method="post">
+            <input name="user_email" placeholder="email...">
+            <input name="user_password" placeholder="password...">
+            <button type="submit">submit</button>
+        </form>
+    </div>
+{% endblock %}
