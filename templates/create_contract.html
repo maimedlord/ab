@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}<title>answerBlasters: create THAT contraCT yo</title>{% endblock %}
+{% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/create_contract.css') }}">{% endblock %}
+{% block body %}
+    <div>
+        create your contract:
+        <p></p>
+        Is this an ASSIGNMENT contract or a TEST contract? use Javascript to capture user's choice and then show the proper form fields and fill in the ones the user will not use...
+        <p></p>
+        <div id="contract_assignment">
+            <form method="post">
+                {{ form.csrf_token }}
+                {{ form.lostudy.label }}{{ form.lostudy(size=20) }}
+                {{ form.subject.label }}{{ form.subject(size=20) }}
+                {{ form.specialization.label }}{{ form.specialization(size=20) }}
+                {{ form.sample.label }}{{ form.sample(size=20) }}
+                {{ form.bounty.label }}{{ form.bounty(size=20) }}
+                {{ form.efbonus.label }}{{ form.efbonus(size=20) }}
+                {{ form.egbonus.label }}{{ form.egbonus(size=20) }}
+                <p></p>
+                <b>timeline starts here:</b> will use JS to show/fill out proper form fields as per assignment/test choice <p></p>
+                {{ form.starttime.label }}{{ form.starttime(size=20) }}
+                {{ form.stalltime.label }}{{ form.stalltime(size=20) }}
+                {{ form.aendtime.label }}{{ form.aendtime(size=20) }}
+                {{ form.tstarttime.label }}{{ form.tstarttime(size=20) }}
+                {{ form.tendtime.label }}{{ form.tendtime(size=20) }}
+                {{ form.ratingtime.label }}{{ form.ratingtime(size=20) }}
+
+            </form>
+        </div>
+        <div id="contract_test">
+
+        </div>
+    </div>
+{% endblock %}

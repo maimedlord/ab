@@ -5,7 +5,7 @@ import processing as prc
 import calls
 # import html
 from user import User
-from forms import LoginForm, RegistrationForm
+from forms import CContract, LoginForm, RegistrationForm
 
 
 # NEXT AFTER LOGIN_USER - SEE FLASK-LOGIN DOCUMENTATION
@@ -69,24 +69,36 @@ def account():
 '''
 INCOMPLETE
 '''
+@app.route('/create_contract', methods=['post', 'get'])
+@login_required
+def create_contract():
+    form = CContract()
+    ip_address = request.remote_addr
+    if form.validate_on_submit():
+        return redirect('success')
+    return render_template('create_contract.html', form=form, ip_address=ip_address)
+
+
+'''
+INCOMPLETE
+'''
 @app.route('/login', methods=['post', 'get'])
 def login():
+    if current_user.is_authenticated:
+        return redirect('/')
     ip_address = request.remote_addr
-    message = "You failed logging in..."
-    if request.method == 'POST':
-        email = request.form.get('user_email')
-        password = request.form.get('user_password')
+    form = LoginForm()
+    if form.validate_on_submit():
+        email = form.email.data
+        password = form.password.data
         user_obj = calls.is_auth_user(email, password)
         if user_obj:
-            user_obj = User(email, user_obj['uName'])
-            login_user(user_obj)
+            login_user(User(email, user_obj['uName']))
             # next = flask.request.args.get('next')
             # if not is_safe_url(next):
             #     return flask.abort(400)
             return redirect('account')
-        else:
-            return render_template('login.html', ip_address=ip_address, message=message)
-    return render_template('login.html', ip_address=ip_address)
+    return render_template('login.html', form=form, ip_address=ip_address)
 
 
 '''
@@ -117,40 +129,38 @@ INCOMPLETE
 '''
 @app.route('/register', methods=['post', 'get'])
 def register():
+    if current_user.is_authenticated:
+        return redirect('/')
     ip_address = request.remote_addr
     message = ''
     temp_array = prc.get_orders_top()
-    if current_user.is_authenticated:
-        logout_user()
-        return render_template('hmm.html', ip_address=ip_address, message='You\'re already registered...')
-    else:
-        if request.method == 'POST':
-            email = request.form.get('user_email')
-            password1 = request.form.get('user_password1')
-            password2 = request.form.get('user_password2')
-            username = request.form.get('username')
-            if email == '' or password1 == '' or password2 == '' or username == '':
-                return render_template('register.html', ip_address=ip_address, temp_array=temp_array)
-            dict_template = {
-                'active': True,
-                'email': email,
-                'pass': generate_password_hash(password1),
-                'uName': username,
-                'joinDate': 'some date for sure 2',
-                'orders': []
-            }
-            result = calls.create_user(dict_template)
-            if result:
-                user_obj = User(email, username)
-                login_user(user_obj)
-                # next = flask.request.args.get('next')
-                # if not is_safe_url(next):
-                #     return flask.abort(400)
-                return render_template('success.html')
-            else:
-                return render_template('register.html', message='email or username is already taken. try again')
+    if request.method == 'POST':
+        email = request.form.get('user_email')
+        password1 = request.form.get('user_password1')
+        password2 = request.form.get('user_password2')
+        username = request.form.get('username')
+        if email == '' or password1 == '' or password2 == '' or username == '':
+            return render_template('register.html', ip_address=ip_address, temp_array=temp_array)
+        dict_template = {
+            'active': True,
+            'email': email,
+            'pass': generate_password_hash(password1),
+            'uName': username,
+            'joinDate': 'some date for sure 2',
+            'orders': []
+        }
+        result = calls.create_user(dict_template)
+        if result:
+            user_obj = User(email, username)
+            login_user(user_obj)
+            # next = flask.request.args.get('next')
+            # if not is_safe_url(next):
+            #     return flask.abort(400)
+            return render_template('success.html')
+        else:
+            return render_template('register.html', message='email or username is already taken. try again')
 
-        return render_template('register.html', ip_address=ip_address, temp_array=temp_array)
+    return render_template('register.html', ip_address=ip_address, temp_array=temp_array)
 
 
 '''

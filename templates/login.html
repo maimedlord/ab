@@ -5,10 +5,30 @@
     <div id="login_main">
         {{ message }}
         <p></p>
-        <form action="{{ url_for('login') }}" method="post">
-            <input name="user_email" placeholder="email...">
-            <input name="user_password" placeholder="password...">
-            <button type="submit">submit</button>
+        <form action="" method="post">
+            {{ form.csrf_token }}
+            {{ form.email.label }}{{ form.email(size=20) }}
+            {% if form.email.errors %}
+                <ul>
+                    {% for x in form.email.errors %}
+                        <li>{{ x }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <p></p>
+            {{ form.password.label }}{{ form.password(size=20) }}
+            {% if form.password.errors %}
+                <ul>
+                    {% for x in form.password.errors %}
+                        <li>{{ x }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <p></p>
+            <input type="submit">
+{#            <input name="user_email" placeholder="email...">#}
+{#            <input name="user_password" placeholder="password...">#}
+{#            <button type="submit">submit</button>#}
         </form>
     </div>
 {% endblock %}

@@ -28,12 +28,14 @@
                     </div>
                     <div>
                         here should go a popout element...
-                        <p>
+                        <p></p>
                         <a href="{{ url_for('logout') }}">LOGOUT</a>
-                        <p>
+                        <p></p>
                         <a href="{{ url_for('account') }}">AcCoUnT</a>
-                        <p>
+                        <p></p>
                         <a href="{{ url_for('index') }}">HOmE</a>
+                        <p></p>
+                        <a href="{{ url_for('market') }}">MARKet</a>
                     </div>
                 {% else %}
                     <div>
@@ -41,9 +43,9 @@
                     </div>
                     <div>
                         <a href="{{ url_for('login') }}">LOGin proper</a>
-                        <p>
+                        <p></p>
                         <a href="{{ url_for('register') }}">REGisTER</a>
-                        <p>
+                        <p></p>
                         <a href="{{ url_for('index') }}">HOme</a>
                     </div>
 
