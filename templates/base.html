@@ -13,6 +13,7 @@
         {% block css %}{% endblock %}
         <!-- Scripts  ––––––––––––––––––––––––––––––––––––––––––––– -->
         <script src="{{url_for('static', filename='scripts/js.js')}}"></script>
+        {% block scripts %}{% endblock %}
         <!-- Favicon  ––––––––––––––––––––––––––––––––––––––––––––– -->
         <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.ico') }}">
     </head>

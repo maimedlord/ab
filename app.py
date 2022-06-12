@@ -72,11 +72,12 @@ INCOMPLETE
 @app.route('/create_contract', methods=['post', 'get'])
 @login_required
 def create_contract():
-    form = CContract()
+    form = CContract(type='assignment')
     ip_address = request.remote_addr
+    c_type = "assignment"
     if form.validate_on_submit():
         return redirect('success')
-    return render_template('create_contract.html', form=form, ip_address=ip_address)
+    return render_template('create_contract.html', form=form, ip_address=ip_address, c_type=c_type)
 
 
 '''

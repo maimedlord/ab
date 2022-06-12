@@ -1,0 +1,29 @@
+#cc_main {
+    background-color: darksalmon;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+#s_assignment {
+    background-color: blanchedalmond;
+    flex-basis: 50%;
+}
+#s_test {
+    background-color: khaki;
+    flex-basis: 50%;
+}
+#s_main {
+    background-color: plum;
+    display: flex;
+    flex-direction: row;
+    height: 75px;
+    width: 100%;
+}
+#d_assignment {
+    background-color: blanchedalmond;
+    display: flex;
+}
+#d_test {
+    background-color: khaki;
+    display: none;
+}

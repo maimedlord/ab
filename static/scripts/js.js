@@ -1,3 +1,7 @@
+/*
+Answer Bounty
+Alex Haas
+*/
 // function show_login() {
 //    document.getElementById('login_form').style.display = "none";
 //    document.getElementById('login_text').style.display = "flex";

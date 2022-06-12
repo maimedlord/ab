@@ -15,14 +15,13 @@ class CContract(FlaskForm):
     specialization = StringField('specialization', validators=[InputRequired()])
     subject = StringField('subject', validators=[InputRequired()])
     submit = StringField('submit')
-    type = HiddenField('type', validators=[AnyOf(['assignment', 'test'])])
     #
-    aendtime = DateTimeField('aendtime', validators=[InputRequired()])
-    ratingtime = DateTimeField('ratingtime', validators=[InputRequired()])
-    stalltime = DateTimeField('stalltime', validators=[InputRequired()])
-    starttime = DateTimeField('starttime', validators=[InputRequired()])
-    tstarttime = DateTimeField('tstarttime', validators=[InputRequired()])
-    tendtime = DateTimeField('tendtime', validators=[InputRequired()])
+    aendtime = DateTimeField('aendtime', validators=[])
+    ratingtime = DateTimeField('ratingtime', validators=[])
+    stalltime = DateTimeField('stalltime', validators=[])
+    starttime = DateTimeField('starttime', validators=[])
+    tstarttime = DateTimeField('tstarttime', validators=[])
+    tendtime = DateTimeField('tendtime', validators=[])
 
 
 '''
