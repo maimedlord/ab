@@ -88,10 +88,9 @@ def login():
     if current_user.is_authenticated:
         return redirect('/')
     ip_address = request.remote_addr
-    form = LoginForm()
-    if form.validate_on_submit():
-        email = form.email.data
-        password = form.password.data
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
         user_obj = calls.is_auth_user(email, password)
         if user_obj:
             login_user(User(email, user_obj['uName']))
@@ -99,7 +98,7 @@ def login():
             # if not is_safe_url(next):
             #     return flask.abort(400)
             return redirect('account')
-    return render_template('login.html', form=form, ip_address=ip_address)
+    return render_template('login.html', ip_address=ip_address)
 
 
 '''

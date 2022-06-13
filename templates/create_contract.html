@@ -5,56 +5,35 @@
 {% block body %}
     <div id="cc_main">
         TEXT -- {{ c_type }} -- TEST
-        <div id="s_main">
-            <div id="s_assignment" onclick="show_type_assignment()">
+        <div id="s_l_main">
+            <div id="s_l_h_school" onclick="choose_a_lostudy_hs()">
+                high school
+            </div>
+            <div id="s_l_graduate" onclick="choose_a_lostudy_g()">
+                graduate
+            </div>
+            <div id="s_l_undergraduate" onclick="choose_a_lostudy_u()">
+                undergraduate
+            </div>
+        </div>
+        <div id="s_t_main">
+            <div id="s_t_assignment" onclick="show_type_assignment()">
                 assignment choice
             </div>
-            <div id="s_test" onclick="show_type_test()">
+            <div id="s_t_test" onclick="show_type_test()">
                 test choice
             </div>
         </div>
-        <div id="d_assignment">
+        <div id="d_t_assignment">
             <form id="c_assignment" method="post">
                 ASSIGNMENT DIV
-                <p></p>
-                {{ form.csrf_token }}
-                {{ form.lostudy.label }}{{ form.lostudy(size=20) }}<p></p>
-                {{ form.subject.label }}{{ form.subject(size=20) }}<p></p>
-                {{ form.specialization.label }}{{ form.specialization(size=20) }}<p></p>
-                {{ form.sample.label }}{{ form.sample(size=20) }}<p></p>
-                {{ form.bounty.label }}{{ form.bounty(size=20) }}<p></p>
-                {{ form.efbonus.label }}{{ form.efbonus(size=20) }}<p></p>
-                {{ form.egbonus.label }}{{ form.egbonus(size=20) }}<p></p>
-                <p></p>
-                <b>timeline starts here:</b> will use JS to show/fill out proper form fields as per assignment/test choice <p></p>
-                {{ form.starttime.label }}{{ form.starttime(size=20) }}<p></p>
-                {{ form.stalltime.label }}{{ form.stalltime(size=20) }}<p></p>
-                {{ form.aendtime.label }}{{ form.aendtime(size=20) }}<p></p>
-                {{ form.ratingtime.label }}{{ form.ratingtime(size=20) }}<p></p>
-                <p></p>
-                {{ form.submit.label }}
+
             </form>
         </div>
-        <div id="d_test">
+        <div id="d_t_test">
             <form id="c_test" method="post">
                 TEST DIV
-                <p></p>
-                {{ form.csrf_token }}
-                {{ form.lostudy.label }}{{ form.lostudy(size=20) }}<p></p>
-                {{ form.subject.label }}{{ form.subject(size=20) }}<p></p>
-                {{ form.specialization.label }}{{ form.specialization(size=20) }}<p></p>
-                {{ form.sample.label }}{{ form.sample(size=20) }}<p></p>
-                {{ form.bounty.label }}{{ form.bounty(size=20) }}<p></p>
-                {{ form.egbonus.label }}{{ form.egbonus(size=20) }}<p></p>
-                <p></p><p></p>
-                <b>timeline starts here:</b> will use JS to show/fill out proper form fields as per assignment/test choice<p></p>
-                {{ form.starttime.label }}{{ form.starttime(size=20) }}<p></p>
-                {{ form.stalltime.label }}{{ form.stalltime(size=20) }}<p></p>
-                {{ form.tstarttime.label }}{{ form.tstarttime(size=20) }}<p></p>
-                {{ form.tendtime.label }}{{ form.tendtime(size=20) }}<p></p>
-                {{ form.ratingtime.label }}{{ form.ratingtime(size=20) }}<p></p>
-                <p></p>
-                {{ form.submit.label }}
+
             </form>
         </div>
     </div>
