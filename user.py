@@ -2,9 +2,9 @@ from flask_login import UserMixin
 
 
 class User(UserMixin):
-    def __init__(self, email, username):
-        self.id = email
+    def __init__(self, id, email, username):
         self.email = email
+        self.id = id
         self.username = username
 
     def is_active(self):
@@ -21,5 +21,3 @@ class User(UserMixin):
 
     def build_user(self):
         return None
-
-

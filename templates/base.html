@@ -25,7 +25,10 @@
             <div id="navbar">
                 {% if current_user.is_authenticated %}
                     <div>
-                        IS AUTHENTICATED @ {{ ip_address }}
+                        IS AUTHENTICATED @ {{ data_obj['ip_address'] }}<p></p>
+                        {{ current_user.id }}<p></p>
+                        {{ current_user.email }}<p></p>
+                        {{ current_user.username }}
                     </div>
                     <div>
                         here should go a popout element...
@@ -40,7 +43,7 @@
                     </div>
                 {% else %}
                     <div>
-                        IS NOT AUTHENTICATED @ {{ ip_address }}
+                        IS NOT AUTHENTICATED @ {{ data_obj['ip_address'] }}
                     </div>
                     <div>
                         <a href="{{ url_for('login') }}">LOGin proper</a>

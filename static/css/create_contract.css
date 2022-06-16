@@ -1,47 +1,48 @@
+.all {
+    display: none;
+}
+.aonly {
+    display: none;
+}
+.tonly {
+    display: none;
+}
 #cc_main {
     background-color: darksalmon;
     display: flex;
     flex-direction: column;
     width: 100%;
 }
-#d_t_assignment {
-    background-color: blanchedalmond;
-    display: flex;
-    flex-direction: column;
-}
-#d_t_test {
-    background-color: khaki;
-    display: none;
-    flex-direction: column;
-}
-#s_l_graduate {
+#c_f_s_l_graduate {
     background-color: plum;
     flex-basis: 33.33%;
 }
-#s_l_h_school {
+#c_f_s_l_h_school {
     background-color: aqua;
     flex-basis: 33.33%;
 }
-#s_l_main {
+#c_f_s_l_main {
     background-color: plum;
+    border-style: dotted;
     display: flex;
     flex-direction: row;
     height: 50px;
 }
-#s_l_undergraduate {
+#c_f_s_l_undergraduate {
     background-color: coral;
     flex-basis: 33.33%;
 }
-#s_t_assignment {
+#c_f_s_t_assignment {
     background-color: blanchedalmond;
     flex-basis: 50%;
 }
-#s_t_test {
+#c_f_s_t_test {
     background-color: khaki;
     flex-basis: 50%;
 }
-#s_t_main {
+#c_f_s_t_main {
     background-color: plum;
+    border-style: dotted;
     display: flex;
     flex-direction: row;
     height: 75px;

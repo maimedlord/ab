@@ -4,37 +4,75 @@
 {% block scripts %}<script src="{{url_for('static', filename='scripts/create_contract.js')}}"></script>{% endblock %}
 {% block body %}
     <div id="cc_main">
-        TEXT -- {{ c_type }} -- TEST
-        <div id="s_l_main">
-            <div id="s_l_h_school" onclick="choose_a_lostudy_hs()">
-                high school
+        {{ data_obj['message'] }}
+        <form action="" id="c_form" method="post" name="c_form">
+            <input id="c_f_lostudy" name="c_f_lostudy" type="hidden" value="none">
+            <input id="c_f_type" name="c_f_type" type="hidden" value="none">
+            <input id="c_f_t_r_deadline" name="c_f_t_r_deadline" type="hidden" value="none">
+            <div id="c_f_s_l_main">
+                <div id="c_f_s_l_h_school" onclick="choose_lostudy_hs()">
+                    high school
+                </div>
+                <div id="c_f_s_l_graduate" onclick="choose_lostudy_g()">
+                    graduate
+                </div>
+                <div id="c_f_s_l_undergraduate" onclick="choose_lostudy_u()">
+                    undergraduate
+                </div>
             </div>
-            <div id="s_l_graduate" onclick="choose_a_lostudy_g()">
-                graduate
+            specialization: <input id="c_f_specialization" placeholder="specialization..." name="c_f_specialization" required type="text">
+            <div id="c_f_s_t_main">
+                <div id="c_f_s_t_assignment" onclick="choose_type_a()">
+                    assignment choice
+                </div>
+                <div id="c_f_s_t_test" onclick="choose_type_t()">
+                    test choice
+                </div>
             </div>
-            <div id="s_l_undergraduate" onclick="choose_a_lostudy_u()">
-                undergraduate
+            THE REST<p></p>
+            <div class="all" id="div_bounty">
+                bounty: <input id="c_f_bounty" min="10.00" name="c_f_bounty" placeholder="$0.00" required type="number">
             </div>
-        </div>
-        <div id="s_t_main">
-            <div id="s_t_assignment" onclick="show_type_assignment()">
-                assignment choice
+            <div class="aonly" id="div_e_f_bonus">
+                early finish bonus: <input id="c_f_efbonus" min="0" name="c_f_efbonus" placeholder="$0.00" type="number">
             </div>
-            <div id="s_t_test" onclick="show_type_test()">
-                test choice
+            <div class="aonly" id="div_e_f_b_d_time">
+                early finish bonus deadline: <input id="c_f_efb_deadline" name="c_f_efb_deadline" type="date">
+                <input id="c_f_efb_d_time" name="c_f_efb_d_time" type="time">
             </div>
-        </div>
-        <div id="d_t_assignment">
-            <form id="c_assignment" method="post">
-                ASSIGNMENT DIV
-
-            </form>
-        </div>
-        <div id="d_t_test">
-            <form id="c_test" method="post">
-                TEST DIV
-
-            </form>
-        </div>
+            <div class="all" id="div_e_g_bonus">
+                excellent grade bonus: <input id="c_f_egbonus" placeholder="$0.00" name="c_f_egbonus" type="number">
+            </div>
+            <div class="all" id="div_sample">
+                sample: <input id="c_f_sample" placeholder="sample..." name="c_f_sample" required type="text">
+            </div>
+            <div class="therest" id="div_timezone">
+                make sure to have a timezone setting for each user...
+            </div>
+            <div class="all" id="div_t_stall">
+                timeline: stall: <input id="c_f_t_stall" name="c_f_t_stall" required title="stall date"  type="date">
+                <input id="c_f_t_s_time" name="c_f_t_s_time" required type="time">
+            </div>
+            <div class="aonly" id="div_t_a_deadline">
+                timeline: assignment deadline: <input id="c_f_t_a_deadline" name="c_f_t_a_deadline" type="date">
+                <input id="c_f_t_a_d_time" name="c_f_t_a_d_time" type="time">
+            </div>
+            <div class="tonly" id="div_t_t_start">
+                timeline: test start: <input id="c_f_t_t_start"  name="c_f_t_t_start" type="date">
+                <input id="c_f_t_t_s_time" name="c_f_t_t_s_time" type="time">
+            </div>
+            <div class="tonly" id="div_t_t_end">
+                timeline: test end: <input id="c_f_t_t_end"  name="c_f_t_t_end" type="date">
+                <input id="c_f_t_t_e_time" name="c_f_t_t_e_time" type="time">
+            </div>
+            <div class="all" id="div_t_g_deadline">
+                timeline: grade deadline <input id="c_f_t_g_deadline"  name="c_f_t_g_deadline" type="date">
+                <input id="c_f_t_g_d_time" name="c_f_t_g_d_time" type="time">
+            </div>
+            PAYMENT STUFF HERE
+            <div class="therest" id="div_submit">
+                <button type="submit">submit</button>
+            </div>
+        </form>
     </div>
 {% endblock %}

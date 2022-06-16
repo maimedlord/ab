@@ -5,6 +5,7 @@ functions that make the calls and then separate functions that prepare data for 
 from werkzeug.security import check_password_hash
 from pymongo import MongoClient, DESCENDING
 import datetime
+from bson.objectid import ObjectId
 
 
 dbContracts = 'ab_dbcontracts'
@@ -24,6 +25,14 @@ dict_template = {
                 'joinDate': 'some date for sure 2',
                 'orders': []
             }
+
+'''
+INCOMPLETE
+'''
+def create_contract(user_obj):
+    pass
+
+
 '''
 INCOMPLETE
 '''
@@ -52,6 +61,27 @@ def get_active(email):
     else:
         return False
 
+'''
+INCOMPLETE
+returns object if True, None if False
+'''
+def get_auth_user(email, password):
+    db = db_mc[dbUsers]
+    dbc = db[cusers]
+    user_record = dbc.find_one({"email": email}, {
+        '_id': 1,
+        'email': 1,
+        'uName': 1,
+        'pass': 1
+    })
+    if user_record and check_password_hash(user_record['pass'], password):
+        #user_record.pop('pass')
+        tstring = str(user_record['_id'])
+        temp_array = [tstring, email, user_record['uName']]
+        return temp_array
+    else:
+        return []
+
 
 '''
 INCOMPLETE
@@ -75,50 +105,35 @@ def get_orders_top():
 '''
 INCOMPLETE
 '''
-def get_user_record_email(email):
+def get_sesh(id):
     db = db_mc[dbUsers]
     dbc = db[cusers]
-    user_record = dbc.find_one({"email": email})#need to add a filter?
-    if user_record:
-        return user_record
-    else:
-        return None
-
-
-'''
-INCOMPLETE
-'''
-def get_username(email):
-    db = db_mc[dbUsers]
-    dbc = db[cusers]
-    username = dbc.find_one({'email': email}, {
-        '_id': 0,
+    user_record = dbc.find_one({"_id": ObjectId(id)}, {
+        '_id': 1,
+        'email': 1,
         'uName': 1
     })
-    if username:
-        return username['uName']
+    if user_record:
+        temp_array = [id, user_record['email'], user_record['uName']]
+        return temp_array
     else:
-        return None
+        return []
 
 
-'''
-INCOMPLETE
-returns object if True, None if False
-'''
-def is_auth_user(email, password):
-    db = db_mc[dbUsers]
-    dbc = db[cusers]
-    user_record = dbc.find_one({"email": email}, {
-        '_id': 0,
-        'email': 1,
-        'uName': 1,
-        'pass': 1
-    })
-    if user_record and check_password_hash(user_record['pass'], password):
-        user_record.pop('pass')
-        return user_record
-    else:
-        return None
+# '''
+# INCOMPLETE
+# '''
+# def get_username(email):
+#     db = db_mc[dbUsers]
+#     dbc = db[cusers]
+#     username = dbc.find_one({'email': email}, {
+#         '_id': 0,
+#         'uName': 1
+#     })
+#     if username:
+#         return username['uName']
+#     else:
+#         return None
 
 
 if __name__ == '__main__':

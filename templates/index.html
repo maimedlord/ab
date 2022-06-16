@@ -2,9 +2,7 @@
 {% block title %}<title>answerBlasters: welcome!</title>{% endblock %}
 {% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">{% endblock %}
 {% block body %}
-    {% if message %}
-        {{ message }}
-    {% endif %}
+    {{ data_obj['message'] }}
     <div id="header_neutral">
         <div id="header_neutral_header_logo">
             <a href="/">answerBlasters logo</a>

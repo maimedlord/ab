@@ -2,14 +2,9 @@
 {% block title %}<title>REGISTERt</title>{% endblock %}
 {% block css %}{% endblock %}
 {% block body %}
-    {% if message %}
-        {{ message }}
-    {% endif %}
+    {{ data_obj['message'] }}
     <div>
         <a href="{{ url_for('index') }}">INDEX</a>
         <p>
-        <form action="{{ url_for('register') }}" method="post">
-            {{  }}
-        </form>
     </div>
 {% endblock %}

@@ -3,11 +3,10 @@
 {% block css %}{% endblock %}
 {% block body %}
     <div id="login_main">
-        {{ message }}
         <p></p>
         <form action="" method="post">
             <input name="email" placeholder="email..."><!-- verify -->
-            <input name="password" pattern="^[^<>/?$]{12,32}$" placeholder="password..."><!-- verify -->
+            <input name="password" pattern="^[^<>/?$]{12,32}$" placeholder="password..." type="password"><!-- verify -->
             <button type="submit">submit</button>
         </form>
     </div>
