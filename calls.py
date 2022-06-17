@@ -29,13 +29,28 @@ dict_template = {
 '''
 INCOMPLETE
 '''
+
+
 def create_contract(user_obj):
-    pass
+    db = db_mc[dbUsers]
+    dbc = db[cusers]
+    print(user_obj)
+    # check if user exists
+    if dbc.find_one(user_obj['owner']):
+        db = db_mc[dbContracts]
+        dbc = db[ccontracts]
+        result = dbc.insert_one(user_obj)
+        print("yups")
+        print(result)
+    #result = dbc.insert_one(user_obj)
+    return None
 
 
 '''
 INCOMPLETE
 '''
+
+
 def create_user(user_obj):
     db = db_mc[dbUsers]
     dbc = db[cusers]
@@ -52,6 +67,8 @@ def create_user(user_obj):
 '''
 INCOMPLETE
 '''
+
+
 def get_active(email):
     db = db_mc[dbContracts]
     dbc = db[cusers]
@@ -65,6 +82,8 @@ def get_active(email):
 INCOMPLETE
 returns object if True, None if False
 '''
+
+
 def get_auth_user(email, password):
     db = db_mc[dbUsers]
     dbc = db[cusers]
@@ -77,7 +96,7 @@ def get_auth_user(email, password):
     if user_record and check_password_hash(user_record['pass'], password):
         #user_record.pop('pass')
         tstring = str(user_record['_id'])
-        temp_array = [tstring, email, user_record['uName']]
+        temp_array = [tstring, email, user_record['uName'], user_record['_id']]
         return temp_array
     else:
         return []
@@ -86,6 +105,8 @@ def get_auth_user(email, password):
 '''
 INCOMPLETE
 '''
+
+
 def get_orders_top():
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
@@ -105,6 +126,8 @@ def get_orders_top():
 '''
 INCOMPLETE
 '''
+
+
 def get_sesh(id):
     db = db_mc[dbUsers]
     dbc = db[cusers]
@@ -114,7 +137,7 @@ def get_sesh(id):
         'uName': 1
     })
     if user_record:
-        temp_array = [id, user_record['email'], user_record['uName']]
+        temp_array = [id, user_record['email'], user_record['uName'], user_record['_id']]
         return temp_array
     else:
         return []

@@ -2,51 +2,6 @@ body {
     background-color: darkgrey;
     width: 100%;
 }
-#account_general {
-    background-color: cornflowerblue;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    height: 340px;
-    width: 100%;
-}
-#account_orders {
-    display: flex;
-    background-color: mediumpurple;
-    flex-direction: column;
-    min-height: 300px;
-    padding: 10px;
-}
-#a_g_left {
-    background-color: yellow;
-    flex-basis: 300px;
-    flex-grow: 1;
-}
-#a_g_right {
-    background-color: darkcyan;
-    flex-basis: 300px;
-    flex-grow: 1;
-}
-#a_o_bought {
-    background-color: darkseagreen;
-    display: flex;
-    flex-basis: 150px;
-}
-#a_o_display {
-    background-color: darkgrey;
-    display: flex;
-    flex-grow: 1;
-}
-#a_o_selector {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-}
-#a_o_sold {
-    background-color: burlywood;
-    display: flex;
-    flex-basis: 150px;
-}
 #container_main {
     background-color: aquamarine;
     display: flex;
@@ -66,21 +21,6 @@ body {
     width: 100%;
 }
 
-/*     */
-
-/*     */
-#display_bought {
-    background-color: darkseagreen;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    width: 100%;
-}
-#display_sold {
-    background-color: dimgray;
-    display: none;
-    width: 100%;
-}
 /*     */
 #footer {
     background-color: black;
@@ -103,6 +43,3 @@ body {
     padding: 0;
     width: 100%;
 }
-/* CLASSES */
-
-/*  */

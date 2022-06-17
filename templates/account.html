@@ -1,12 +1,8 @@
 {% extends "base.html" %}
 {% block title %}<title>answerBlasters: your account</title>{% endblock %}
-{% block css %}{% endblock %}
+{% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/account.css') }}">{% endblock %}
+{% block scripts %}{% endblock %}
 {% block body %}
-    <div id="temp_accountheader">
-        <div id="neutral_header_logo">
-            <a href="/">answerBlasters logo</a>
-        </div>
-    </div>
     <div id="account_general">
         <div id="a_g_left">
 
@@ -15,21 +11,9 @@
             a_g_right
         </div>
     </div>
-    <div id="account_orders">
+    <div>
         <div>
             <a href="{{ url_for('create_contract') }}">CREATE CONtrACt</a>
-        </div>
-        <div id="a_o_selector">
-            <div id="a_o_bought" onclick="show_display_bought()">a_o_bought</div>
-            <div id="a_o_sold" onclick="show_display_sold()">a_o_sold</div>
-        </div>
-        <div id="a_o_display">
-            <div id="display_bought">
-                display_bought
-            </div>
-            <div id="display_sold">
-                display_sold
-            </div>
         </div>
     </div>
 {% endblock %}

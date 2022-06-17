@@ -1,0 +1,18 @@
+#account_general {
+    background-color: cornflowerblue;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: 340px;
+    width: 100%;
+}
+#a_g_left {
+    background-color: yellow;
+    flex-basis: 300px;
+    flex-grow: 1;
+}
+#a_g_right {
+    background-color: darkcyan;
+    flex-basis: 300px;
+    flex-grow: 1;
+}

@@ -28,7 +28,7 @@ app.config['SECRET_KEY'] = 'secret!'  # put in config file?
 def user_loader(user_id):
     user_arr = calls.get_sesh(user_id)
     if len(user_arr) > 0:
-        return User(user_arr[0], user_arr[1], user_arr[2])
+        return User(user_arr[0], user_arr[1], user_arr[2], user_arr[3])
     else:
         return None
 
@@ -67,10 +67,10 @@ INCOMPLETE
 def create_contract():
     data_obj = {"ip_address": request.remote_addr}
     if request.method == 'POST':
-        prc_return = prc.process_new_contract(request.form)
+        prc_return = prc.process_new_contract(request.form, current_user.id_object)
         if prc_return is None:
             data_obj.update({"message": "processing for your contract failed..."})
-            return render_template('create_contract.html', passed=data_obj)
+            return render_template('create_contract.html', data_obj=data_obj)
         data_obj.update({"message": "you created a contract successfully"})
         return render_template('success.html', data_obj=data_obj)
     return render_template('create_contract.html', data_obj=data_obj)
@@ -93,7 +93,7 @@ def login():
         # userid = str(user_obj['_id'])
         if user_arr:
             print(user_arr)
-            login_user(User(user_arr[0], user_arr[1], user_arr[2]))
+            login_user(User(user_arr[0], user_arr[1], user_arr[2], user_arr[3]))
             # next = flask.request.args.get('next')
             # if not is_safe_url(next):
             #     return flask.abort(400)
