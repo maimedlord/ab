@@ -49,12 +49,13 @@ INCOMPLETE
 '''
 
 
-@app.route('/account', methods=['post', 'get'])
+@app.route('/account')
 @login_required
 def account():
     data_obj = {"ip_address": request.remote_addr}
     data_obj.update({"ip_address": request.remote_addr})
-    return render_template('account.html', data_obj=data_obj)
+    user_orders = calls.get_user_orders(current_user.id_object)
+    return render_template('account.html', data_obj=data_obj, user_orders=user_orders)
 
 
 '''
@@ -92,7 +93,9 @@ def login():
         user_arr = calls.get_auth_user(email, password)
         # userid = str(user_obj['_id'])
         if user_arr:
-            print(user_arr)
+            # for doc in user_arr:
+            #     print(doc)
+            #print(user_arr)
             login_user(User(user_arr[0], user_arr[1], user_arr[2], user_arr[3]))
             # next = flask.request.args.get('next')
             # if not is_safe_url(next):

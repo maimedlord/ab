@@ -1,6 +1,6 @@
 import calls
 from datetime import datetime, timedelta
-
+from bson.objectid import ObjectId
 
 
 '''
@@ -44,7 +44,7 @@ def process_new_contract(form_dict, userid):
     user_obj = {}
     bounty = float(form_dict['c_f_bounty'])
     user_obj.update({"bounty": bounty})
-    user_obj.update({"bhunter": None})
+    user_obj.update({"bhunter": ObjectId("000000000000000000000000")})
     e_f_bonus = float(form_dict['c_f_efbonus'])
     user_obj.update({"efbonus": float(e_f_bonus)})
     e_g_bonus = float(form_dict['c_f_egbonus'])

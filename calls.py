@@ -94,7 +94,7 @@ def get_auth_user(email, password):
         'pass': 1
     })
     if user_record and check_password_hash(user_record['pass'], password):
-        #user_record.pop('pass')
+        user_record.pop('pass')
         tstring = str(user_record['_id'])
         temp_array = [tstring, email, user_record['uName'], user_record['_id']]
         return temp_array
@@ -107,40 +107,32 @@ INCOMPLETE
 '''
 
 
-def get_orders_top():
-    db = db_mc[dbContracts]
-    dbc = db[ccontracts]
-    temp_array = list(dbc.find({}, {
-        "_id": 0,
-        "orderID": 1,
-        "dateOpen": 1,
-        "level": 1,
-        "subject": 1,
-        "status": 1,
-        "contract.commitment": 1,
-        "contract.finalPrice": 1
-    }).limit(5))
-    return temp_array
-
-
-'''
-INCOMPLETE
-'''
-
-
-def get_sesh(id):
+def get_sesh(userid):
     db = db_mc[dbUsers]
     dbc = db[cusers]
-    user_record = dbc.find_one({"_id": ObjectId(id)}, {
+    user_record = dbc.find_one({"_id": ObjectId(userid)}, {
         '_id': 1,
         'email': 1,
         'uName': 1
     })
     if user_record:
-        temp_array = [id, user_record['email'], user_record['uName'], user_record['_id']]
+        temp_array = [userid, user_record['email'], user_record['uName'], user_record['_id']]
         return temp_array
     else:
         return []
+
+
+'''
+INCOMPLETE
+'''
+def get_user_orders(userid_obj):
+    db = db_mc[dbContracts]
+    dbc = db[ccontracts]
+    user_orders = dbc.find({"$or": [{"owner": userid_obj}, {"bhunter": userid_obj}]})
+    # print(user_orders)
+    # for doc in user_orders:
+    #     print(doc)
+    return user_orders
 
 
 # '''

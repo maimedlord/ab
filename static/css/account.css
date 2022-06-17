@@ -16,3 +16,9 @@
     flex-basis: 300px;
     flex-grow: 1;
 }
+#c_display {
+    background-color: dodgerblue;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}

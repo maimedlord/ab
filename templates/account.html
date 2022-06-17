@@ -5,7 +5,7 @@
 {% block body %}
     <div id="account_general">
         <div id="a_g_left">
-
+            a_g_left
         </div>
         <div id="a_g_right">
             a_g_right
@@ -14,6 +14,15 @@
     <div>
         <div>
             <a href="{{ url_for('create_contract') }}">CREATE CONtrACt</a>
+        </div>
+        <div id="c_display">
+            {% for doc in u_o_keys %}
+                {{ doc }}
+            {% endfor %}
+            <p></p>
+            {% for doc in u_o_values %}
+                {{ doc }}
+            {% endfor %}
         </div>
     </div>
 {% endblock %}
