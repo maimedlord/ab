@@ -138,6 +138,20 @@ INCOMPLETE
 '''
 
 
+def get_all_open():
+    db = db_mc[dbContracts]
+    dbc = db[ccontracts]
+    contract_cursor = dbc.find({'phase': 'open'})
+    if contract_cursor:
+        return list(contract_cursor)
+    return None
+
+
+'''
+INCOMPLETE
+'''
+
+
 def get_sesh(userid):
     db = db_mc[dbUsers]
     dbc = db[cusers]

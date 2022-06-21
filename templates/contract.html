@@ -24,6 +24,13 @@
             {% endif %}
         {% endif %}{# PHASE: OPEN #}
         <p></p>
-        {{ contract_obj }}
+        owner: {{ contract_obj['owner'] }}<p></p>
+        bounty: {{ contract_obj['bounty'] }}<p></p>
+        level of study: {{ contract_obj['lostudy'] }}<p></p>
+        subject: {{ contract_obj['subject'] }}<p></p>
+        specialization: {{ contract_obj['specialization'] }}<p></p><p></p>
+        {% for party in contract_obj['iparties'] %}
+            interested party: {{ party }}<p></p>
+        {% endfor %}
     </div>
 {% endblock %}

@@ -170,6 +170,9 @@ INCOMPLETE
 @login_required
 def market():
     data_obj = {"ip_address": request.remote_addr}
+    all_open_arr = calls.get_all_open()
+    if all_open_arr:
+        return render_template('market.html', all_open_arr=all_open_arr, data_obj=data_obj)
     return render_template('market.html', data_obj=data_obj)
 
 
