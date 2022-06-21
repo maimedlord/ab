@@ -1,25 +1,18 @@
 import calls
 from datetime import datetime, timedelta
 from bson.objectid import ObjectId
+from werkzeug.security import generate_password_hash
+from user import User
 
 
 '''
+INCOMPLETE
 '''
-def get_orders_top():
-    get_array = list(calls.get_orders_top())
-    loop_array = []
-    return_array = []
-    for element in get_array:
-        loop_array.append(element["orderID"])
-        loop_array.append(element["dateOpen"])
-        loop_array.append(element["level"])
-        loop_array.append(element["subject"])
-        loop_array.append(element["status"])
-        loop_array.append(element["contract"]["commitment"])
-        loop_array.append(element["contract"]["finalPrice"])
-        return_array.append(loop_array)
-        loop_array = []
-    return return_array
+def get_contracts_top():
+    contracts_data = calls.get_contracts_top_10()
+    if contracts_data:
+        contracts_data = list(contracts_data)
+    return contracts_data
 
 
 '''
@@ -32,6 +25,20 @@ def get_user_record(email, password):
         return {}
     else:
         return user_record
+
+
+'''
+INCOMPLETE
+'''
+
+
+def prc_create_ip(contract_id, bhunter_user_id, offer):
+    ip_object = {
+        'bhunter': bhunter_user_id,
+        'offer': offer,
+        'time': datetime.fromisoformat(datetime.now().isoformat()[:-7])
+    }
+    return calls.create_ip(contract_id, ip_object)
 
 
 '''
@@ -72,10 +79,10 @@ def process_new_contract(form_dict, userid):
             efbonus_deadline = datetime.fromisoformat(form_dict['c_f_efb_deadline'] + 'T' + form_dict['c_f_efb_d_time'] + ':00')
             user_obj.update({"timeline": [{"time": start_iso, "event": "created"},
                                           {"time": stall_iso, "event": "deadline: stall"},
-                                          {"time": efbonus_deadline, "event": "deadline: early finish bonus!"},
                                           {"time": a_deadline_iso, "event": "deadline: submission"},
                                           {"time": g_deadline, "event": "deadline: grading"},
-                                          {"time": g_deadline, "event": "deadline: rate the other person"}]})  # MISSING CORRECT RATING DEADLINE
+                                          {"time": g_deadline, "event": "deadline: rate the other person"},
+                                          {"time": efbonus_deadline, "event": "deadline: early finish bonus!"}]})  # MISSING CORRECT RATING DEADLINE
         else:
             user_obj.update({"timeline": [{"time": start_iso, "event": "created"},
                                       {"time": stall_iso, "event": "deadline: stall"},
@@ -99,6 +106,53 @@ def process_new_contract(form_dict, userid):
     user_obj.update({"phase": "creation"})
     result = calls.create_contract(user_obj)
     return result
+
+
+'''
+INCOMPLETE
+'''
+
+
+def process_new_user(email, password1, username):
+    user_template = {
+        'active': True,
+        'email': email,
+        'pass': generate_password_hash(password1),
+        'uName': username,
+        'joinDate': datetime.fromisoformat(datetime.now().isoformat()[:-7]),
+        'timezone': 'sometimezonezzz'
+    }
+    return calls.create_user(user_template)
+
+
+    #     if result:
+    #         user_obj = User(email, username)
+    #         login_user(user_obj)
+    #         # next = flask.request.args.get('next')
+    #         # if not is_safe_url(next):
+    #         #     return flask.abort(400)
+    #         return render_template('success.html')
+    #     else:
+    #         data_obj.update({"message": "email or username is already taken. try again"})
+    #         return render_template('register.html', data_obj=data_obj)
+    pass
+
+
+'''
+INCOMPLETE
+'''
+
+
+def process_user_orders(userid_obj):
+    cursor_obj = calls.get_user_contracts(userid_obj)
+    if cursor_obj:
+        obj_arr = []
+        for doc in cursor_obj:
+            obj_arr.append(doc)
+            print(obj_arr[-1]['timeline'][3]['time'])
+        return obj_arr
+    else:
+        return None
 
 
 if __name__ == '__main__':

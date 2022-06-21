@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}<title>MARKET</title>{% endblock %}
+{% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/contract.css') }}">{% endblock %}
+{% block body %}
+    {{ data_obj['message'] }}
+    <div>
+        {% if contract_obj['phase'] == "creation" %}{# PHASE: CREATION #}
+            this contract is in the creation stage and likely hasn't successfully processed payment.
+        {% endif %}{# PHASE: CREATION #}
+        {% if contract_obj['phase'] == "open" %}{# PHASE: OPEN #}
+            contract is phase: "open"<p></p>
+            {% if (current_user.id_object != contract_obj['owner']) and not data_obj['bhunter_offer'] %}
+                make an offer on this contract:<p></p>
+                <form id="make_offer_form" method="post" name="make_offer_form">
+                    For what amount will you take on this contract? <input id="m_o_f_offer" min="{{ contract_obj['bounty'] }}" name="m_o_f_offer" placeholder="$0.00" step="0.01" required type="number"><p></p>
+                    <button type="submit">submit</button>
+                </form>
+            {% elif data_obj['bhunter_offer'] %}
+                Your existing offer on this contract:<p></p>
+                offer: {{ data_obj['bhunter_offer']['offer'] }}
+                time: {{ data_obj['bhunter_offer']['time'] }}
+            {% else %}
+                    you and the contract owner are the same person. you cannot make an offer on this contract.<p></p>
+            {% endif %}
+        {% endif %}{# PHASE: OPEN #}
+        <p></p>
+        {{ contract_obj }}
+    </div>
+{% endblock %}

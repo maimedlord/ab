@@ -8,15 +8,104 @@
             <a href="/">answerBlasters logo</a>
         </div>
     </div>
-    <div id="container_markets">
-        <div id="market_display">
-            A glimpse of what's on the market right now:
-            <div id="market_display_buyer">
-               ...
+    <div id="container_market">
+        <div id="c_m_header">
+            <div class="column_market">
+                <b>phase</b>
             </div>
-            <div id="market_display_seller">
-                display_seller
+            <div class="column_market">
+                <b>type</b>
+            </div>
+            <div class="column_market">
+                <b>level of study</b>
+            </div>
+            <div class="column_market">
+                <b>subject</b>
+            </div>
+            <div class="column_market" id="col_specialization">
+                <b>specialization</b>
+            </div>
+            <div class="column_market">
+                <b>deadline 1</b>
+            </div>
+            <div class="column_market">
+                <b>deadline 2</b>
+            </div>
+            <div class="column_market">
+                <b>bounty</b>
+            </div>
+            <div class="column_market">
+                <b>excellent grade bonus</b>
+            </div>
+            <div class="column_market">
+                <b>early finish bonus</b>
+            </div>
+            <div class="column_market">
+                <b>owner</b>
             </div>
         </div>
+        {% for doc in c_top %}
+            <!-- can wrap row with a link -->
+            <div class="row_market">
+                <!-- can wrap column with a link -->
+                <div class="column_market">
+                    {{ doc['phase'] }}
+                </div>
+                <div class="column_market">
+                    {{ doc['type_contract'] }}
+                </div>
+                <div class="column_market">
+                    {{ doc['lostudy'] }}
+                </div>
+                <div class="column_market">
+                    {{ doc['subject'] }}
+                </div>
+                <div class="column_market" id="col_specialization">
+                    {{ doc['specialization'] }}
+                </div>
+                {% if doc['type_contract'] == "assignment" %}
+                    {% if doc['timeline']|length > 5 %}
+                        <div class="column_market">
+                            {{ doc['timeline'][5]['time'] }}
+                        </div>
+                    {% else %}
+                        <div class="column_market">
+                            no efbonus deadline
+                        </div>
+                    {% endif %}
+                    <div class="column_market">
+                        {{ doc['timeline'][3]['time'] }}
+                    </div>
+                    <div class="column_market">
+                        {{ doc['bounty'] }}
+                    </div>
+                    <div class="column_market">
+                        {{ doc['egbonus'] }}
+                    </div>
+                    <div class="column_market">
+                        {{ doc['efbonus'] }}
+                    </div>
+                {% else %}
+                    <div class="column_market">
+                        {{ doc['timeline'][3]['time'] }}
+                    </div>
+                    <div class="column_market">
+                        {{ doc['timeline'][4]['time'] }}
+                    </div>
+                    <div class="column_market">
+                        {{ doc['bounty'] }}
+                    </div>
+                    <div class="column_market">
+                        {{ doc['egbonus'] }}
+                    </div>
+                    <div class="column_market">
+                        filler...
+                    </div>
+                {% endif %}
+                <div class="column_market">
+                    {{ doc['owner'] }}
+                </div>
+            </div>
+        {% endfor %}
     </div>
 {% endblock %}

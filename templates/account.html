@@ -12,17 +12,113 @@
         </div>
     </div>
     <div>
-        <div>
-            <a href="{{ url_for('create_contract') }}">CREATE CONtrACt</a>
+        <a href="{{ url_for('create_contract') }}">CREATE CONtrACt</a>
+    </div>
+    <div id="container_contracts">
+        <div id="c_c_header">
+            <div class="column_contract">
+                <b>position</b>
+            </div>
+            <div class="column_contract">
+                <b>phase</b>
+            </div>
+            <div class="column_contract">
+                <b>type</b>
+            </div>
+            <div class="column_contract">
+                <b>level of study</b>
+            </div>
+            <div class="column_contract">
+                <b>subject</b>
+            </div>
+            <div class="column_contract" id="col_specialization">
+                <b>specialization</b>
+            </div>
+            <div class="column_contract">
+                <b>deadline 1</b>
+            </div>
+            <div class="column_contract">
+                <b>deadline 2</b>
+            </div>
+            <div class="column_contract">
+                <b>bounty</b>
+            </div>
+            <div class="column_contract">
+                <b>excellent grade bonus</b>
+            </div>
+            <div class="column_contract">
+                <b>early finish bonus</b>
+            </div>
         </div>
-        <div id="c_display">
-            {% for doc in u_o_keys %}
-                {{ doc }}
-            {% endfor %}
-            <p></p>
-            {% for doc in u_o_values %}
-                {{ doc }}
-            {% endfor %}
-        </div>
+        {% for doc in user_orders %}
+            <!-- can wrap row with a link -->
+            <a href="{{ url_for('contract', contract_id=doc['_id']) }}">
+                <div class="row_contract">
+                    <!-- can wrap column with a link -->
+                    <div class="column_contract">
+                        {% if current_user.id_object == doc['owner'] %}
+                            owner
+                        {% endif %}
+                        {% if current_user.id_object == doc['bhunter'] %}
+                            hunter
+                        {% endif %}
+                    </div>
+                    <div class="column_contract">
+                        {{ doc['phase'] }}
+                    </div>
+                    <div class="column_contract">
+                        {{ doc['type_contract'] }}
+                    </div>
+                    <div class="column_contract">
+                        {{ doc['lostudy'] }}
+                    </div>
+                    <div class="column_contract">
+                        {{ doc['subject'] }}
+                    </div>
+                    <div class="column_contract" id="col_specialization">
+                        {{ doc['specialization'] }}
+                    </div>
+                    {% if doc['type_contract'] == "assignment" %}
+                        {% if doc['timeline']|length > 5 %}
+                            <div class="column_contract">
+                                {{ doc['timeline'][5]['time'] }}
+                            </div>
+                        {% else %}
+                            <div class="column_contract">
+                                no efbonus deadline
+                            </div>
+                        {% endif %}
+                        <div class="column_contract">
+                            {{ doc['timeline'][3]['time'] }}
+                        </div>
+                        <div class="column_contract">
+                            {{ doc['bounty'] }}
+                        </div>
+                        <div class="column_contract">
+                            {{ doc['egbonus'] }}
+                        </div>
+                        <div class="column_contract">
+                            {{ doc['efbonus'] }}
+                        </div>
+                    {% else %}
+                        <div class="column_contract">
+                            {{ doc['timeline'][3]['time'] }}
+                        </div>
+                        <div class="column_contract">
+                            {{ doc['timeline'][4]['time'] }}
+                        </div>
+                        <div class="column_contract">
+                            {{ doc['bounty'] }}
+                        </div>
+                        <div class="column_contract">
+                            {{ doc['egbonus'] }}
+                        </div>
+                        <div class="column_contract">
+                            0.0
+                        </div>
+                    {% endif %}
+                </div>
+            </a>
+        {% endfor %}
     </div>
 {% endblock %}

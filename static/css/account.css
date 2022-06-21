@@ -1,3 +1,16 @@
+.column_contract {
+    background-color: orange;
+    display: flex;
+    flex-basis: 80px;
+    flex-direction: column;
+    text-align: center;
+}
+.row_contract {
+    background-color: plum;
+    border-style: dashed;
+    display: flex;
+    flex-direction: row;
+}
 #account_general {
     background-color: cornflowerblue;
     display: flex;
@@ -16,9 +29,17 @@
     flex-basis: 300px;
     flex-grow: 1;
 }
-#c_display {
+#c_c_header {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+#container_contracts {
     background-color: dodgerblue;
     display: flex;
     flex-direction: column;
     width: 100%;
+}
+#col_specialization {
+    flex-basis: 150px;
 }

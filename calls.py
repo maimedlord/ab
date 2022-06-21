@@ -51,32 +51,32 @@ INCOMPLETE
 '''
 
 
-def create_user(user_obj):
+def create_user(user_template):
     db = db_mc[dbUsers]
     dbc = db[cusers]
-    print(user_obj['email'])
-    email_result = dbc.find_one({'email': user_obj['email']})
-    username_result = dbc.find_one({'uName': user_obj['uName']})
+    print(user_template['email'])
+    email_result = dbc.find_one({'email': user_template['email']})
+    username_result = dbc.find_one({'uName': user_template['uName']})
     if email_result or username_result:
         return False
     else:
-        dbc.insert_one(user_obj)
+        dbc.insert_one(user_template)
         return True
 
 
-'''
-INCOMPLETE
-'''
-
-
-def get_active(email):
-    db = db_mc[dbContracts]
-    dbc = db[cusers]
-    temp_obj = dbc.find_one({'email': email})
-    if temp_obj:
-        return True
-    else:
-        return False
+# '''
+# INCOMPLETE
+# '''
+#
+#
+# def get_active(email):
+#     db = db_mc[dbContracts]
+#     dbc = db[cusers]
+#     temp_obj = dbc.find_one({'email': email})
+#     if temp_obj:
+#         return True
+#     else:
+#         return False
 
 '''
 INCOMPLETE
@@ -104,6 +104,37 @@ def get_auth_user(email, password):
 
 '''
 INCOMPLETE
+need to add filter to reduce returned data
+'''
+
+
+def get_contract(contract_id):
+    print(contract_id)
+    db = db_mc[dbContracts]
+    dbc = db[ccontracts]
+    contract_obj = dbc.find_one({'_id': ObjectId(contract_id)})
+    print(contract_obj)
+    if contract_obj:
+        dict(contract_obj)
+    return contract_obj
+
+
+'''
+INCOMPLETE
+'''
+
+
+def get_contracts_top_10():
+    db = db_mc[dbContracts]
+    dbc = db[ccontracts]
+    contract_cursor = dbc.find().limit(10)
+    if contract_cursor:
+        return contract_cursor
+    return None
+
+
+'''
+INCOMPLETE
 '''
 
 
@@ -125,7 +156,9 @@ def get_sesh(userid):
 '''
 INCOMPLETE
 '''
-def get_user_orders(userid_obj):
+
+
+def get_user_contracts(userid_obj):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
     user_orders = dbc.find({"$or": [{"owner": userid_obj}, {"bhunter": userid_obj}]})
@@ -133,6 +166,17 @@ def get_user_orders(userid_obj):
     # for doc in user_orders:
     #     print(doc)
     return user_orders
+
+
+'''
+INCOMPLETE
+'''
+
+
+def create_ip(contract_id, ip_object):
+    db = db_mc[dbContracts]
+    dbc = db[ccontracts]
+    return dbc.update_one({'_id': contract_id}, {'$push': {'iparties': ip_object}})
 
 
 # '''

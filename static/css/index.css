@@ -1,25 +1,32 @@
-#container_markets {
+/* CLASSES */
+.column_market {
+    background-color: plum;
     display: flex;
+    flex-basis: 80px;
     flex-direction: column;
+    text-align: center;
 }
-#header_neutral {
-    align-content: space-around;
-    align-items: baseline;
-    background-color: bisque;
+.row_market {
+    background-color: lightgreen;
+    border-style: dashed;
     display: flex;
     flex-direction: row;
-    height: 240px;
+}
+/* ID'S */
+#c_m_header {
+    background-color: deepskyblue;
+    display: flex;
+    flex-direction: row;
     width: 100%;
 }
-#header_neutral_header_logo {
-    display: flex;
-    flex-basis: 50%;
-    flex-grow: 1;
+#col_specialization {
+    flex-basis: 150px;
 }
-header_neutral_login {
+#container_market {
+    background-color: khaki;
     display: flex;
-    flex-basis: 50%;
-    flex-grow: 1;
+    flex-direction: column;
+    width: 100%;
 }
 #market_display {
     background-color: dodgerblue;
@@ -27,48 +34,4 @@ header_neutral_login {
     flex-direction: column;
     padding: 0;
     width: 100%;
-}
-#market_display_buyer {
-    background-color: darkseagreen;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
-#market_display_seller {
-    background-color: lightcoral;
-    display: none;
-    flex-direction: column;
-    width: 100%;
-}
-#market_display_top_row {
-
-}
-#market_selector {
-    display: flex;
-    flex-direction: row;
-}
-#market_selector_buyer {
-    background-color: darkseagreen;
-    height: 40px;
-    flex-basis: 150px;
-}
-#market_selector_seller {
-    background-color: lightcoral;
-    height: 40px;
-    flex-basis: 150px;
-}
-
-/* CLASSES */
-.market_order {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    height: 30px;
-    justify-content: space-between;
-    min-width: 350px;
-    width: 100%;
-}
-.market_order_element {
-    padding: 0;
-    margin: 0;
 }
