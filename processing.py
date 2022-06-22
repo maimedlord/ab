@@ -8,6 +8,18 @@ from user import User
 '''
 INCOMPLETE
 '''
+
+
+def accept_offer(contract_id, bhunter_id):
+    print(contract_id, bhunter_id)
+    # update phase, bhunter
+    calls.update_inprogress(ObjectId(contract_id), ObjectId(bhunter_id))
+    pass
+
+
+'''
+INCOMPLETE
+'''
 def get_contracts_top():
     contracts_data = calls.get_contracts_top_10()
     if contracts_data:
@@ -104,6 +116,7 @@ def process_new_contract(form_dict, userid):
     user_obj.update({"iparties": []})
     user_obj.update({"clog": [{"time": start_iso, "event": "created"}]})
     user_obj.update({"phase": "creation"})
+    user_obj.update({'reviews': []})
     result = calls.create_contract(user_obj)
     return result
 
@@ -120,7 +133,8 @@ def process_new_user(email, password1, username):
         'pass': generate_password_hash(password1),
         'uName': username,
         'joinDate': datetime.fromisoformat(datetime.now().isoformat()[:-7]),
-        'timezone': 'sometimezonezzz'
+        'timezone': 'sometimezonezzz',
+        'reviewHistory': []
     }
     return calls.create_user(user_template)
 

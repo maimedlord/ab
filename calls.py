@@ -184,6 +184,35 @@ def get_user_contracts(userid_obj):
 
 '''
 INCOMPLETE
+add filter to returned object???
+'''
+
+
+def get_user(userid_obj):
+    db = db_mc[dbUsers]
+    dbc = db[cusers]
+    user_record = dbc.find_one({'_id': ObjectId(userid_obj)}, {
+        'pass': 0
+    })# add filter?
+    return user_record
+
+
+'''
+INCOMPLETE
+'''
+
+
+def get_username(userid_obj):
+    db = db_mc[dbUsers]
+    dbc = db[cusers]
+    user_name = dbc.find_one({'_id': ObjectId(userid_obj)}, {
+        'uName': 1
+    })
+    return user_name
+
+
+'''
+INCOMPLETE
 '''
 
 
@@ -191,6 +220,19 @@ def create_ip(contract_id, ip_object):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
     return dbc.update_one({'_id': contract_id}, {'$push': {'iparties': ip_object}})
+
+
+'''
+INCOMPLETE
+'''
+
+
+def update_inprogress(contractid_obj, bhunterid_obj):
+    db = db_mc[dbContracts]
+    dbc = db[ccontracts]
+    result = dbc.update_one({'_id': contractid_obj}, {'$set': {'bhunter': bhunterid_obj, 'phase': 'inprogress'}})
+    print(result)
+    pass
 
 
 # '''

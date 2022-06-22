@@ -5,32 +5,52 @@
     {{ data_obj['message'] }}
     <div>
         {% if contract_obj['phase'] == "creation" %}{# PHASE: CREATION #}
-            this contract is in the creation stage and likely hasn't successfully processed payment.
+            link: finish payment processing for your contract...<p></p>
         {% endif %}{# PHASE: CREATION #}
         {% if contract_obj['phase'] == "open" %}{# PHASE: OPEN #}
             contract is phase: "open"<p></p>
-            {% if (current_user.id_object != contract_obj['owner']) and not data_obj['bhunter_offer'] %}
+            {% if (current_user.id_object != contract_obj['owner']) and not data_obj['bhunter_offer'] %}{# show for anyone that's NOT the owner and has NOT offered on the contract yet #}
                 make an offer on this contract:<p></p>
                 <form id="make_offer_form" method="post" name="make_offer_form">
                     For what amount will you take on this contract? <input id="m_o_f_offer" min="{{ contract_obj['bounty'] }}" name="m_o_f_offer" placeholder="$0.00" step="0.01" required type="number"><p></p>
                     <button type="submit">submit</button>
                 </form>
-            {% elif data_obj['bhunter_offer'] %}
+            {% elif data_obj['bhunter_offer'] %}{# show for bhunter that's already offered on contract #}
                 Your existing offer on this contract:<p></p>
                 offer: {{ data_obj['bhunter_offer']['offer'] }}
                 time: {{ data_obj['bhunter_offer']['time'] }}
-            {% else %}
-                    you and the contract owner are the same person. you cannot make an offer on this contract.<p></p>
+            {% else %}{# show for the contract owner... maybe add another elif here? #}
+                {% for party in contract_obj['iparties'] %}
+                    <div id="div_i_party">
+                        interested party:<p></p>
+                        <a href="{{ url_for('view_user', userid=party['bhunter']) }}">bounty hunter:    {{ party['bhunter'] }}</a><p></p>
+                        offer:    <b>$ {{ party['offer'] }}</b><p></p>
+                        time:    {{ party['time'] }}<p></p>
+                        *** put here some type of JavaScript popup box that when submitted and upon successfully moving contract to "inprogress" then moves user to the contract page again, but this time the contract page will show for phase of inprogress ***<p></p>
+                        <form id="accept_offer" method="post" name="accept_offer">
+                            <input id="contractid" name="contractid" type="hidden" value="{{ contract_obj['_id'] }}">
+                            <input id="bountyhunterid" name="bountyhunterid" type="hidden" value="{{ party['bhunter'] }}">
+                            accept this offer?    <button type="submit">submit</button>
+                        </form>
+                    </div>
+                {% endfor %}
             {% endif %}
         {% endif %}{# PHASE: OPEN #}
+        {% if contract_obj['phase'] == "inprogress" %}{# PHASE: INPROGRESS #}
+        {% endif %}{# PHASE: INPROGRESS #}
+        {% if contract_obj['phase'] == "stalled" %}{# PHASE: STALLED #}
+        {% endif %}{# PHASE: STALLED #}
+{#        other phases ...#}
         <p></p>
-        owner: {{ contract_obj['owner'] }}<p></p>
+        {% if contract_obj['owner'] == current_user.id_object %}
+            owner: you<p></p>
+        {% else %}
+            owner: {{ contract_obj['owner'] }}<p></p>
+        {% endif %}
         bounty: {{ contract_obj['bounty'] }}<p></p>
         level of study: {{ contract_obj['lostudy'] }}<p></p>
         subject: {{ contract_obj['subject'] }}<p></p>
-        specialization: {{ contract_obj['specialization'] }}<p></p><p></p>
-        {% for party in contract_obj['iparties'] %}
-            interested party: {{ party }}<p></p>
-        {% endfor %}
+        specialization: {{ contract_obj['specialization'] }}<p></p>
+        sample: {{ contract_obj['sample'] }}<p></p>
     </div>
 {% endblock %}

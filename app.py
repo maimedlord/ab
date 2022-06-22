@@ -49,6 +49,20 @@ INCOMPLETE
 '''
 
 
+@app.route('/accept_offer', methods=['POST'])
+@login_required
+def accept_offer():
+    if request.method == 'POST':
+
+        pass
+    pass
+
+
+'''
+INCOMPLETE
+'''
+
+
 @app.route('/account')
 @login_required
 def account():
@@ -100,23 +114,38 @@ only can be viewed: all = ONLY open contract, owner,bhunter = inprogress contrac
 def contract(contract_id):
     data_obj = {"ip_address": request.remote_addr}
     contract_obj = calls.get_contract(contract_id)
-    # prepare for user having submitted offer on this contract:
+    if contract_obj['phase'] == "creation" and contract_obj['owner'] != current_user.id_object:
+        # some type of tracking here...
+        return redirect('/')
+    # prepare for user having already submitted offer on this contract:
     iparty_arr = contract_obj['iparties']
     for doc in iparty_arr:
         if doc['bhunter'] == current_user.id_object:
             data_obj.update({'bhunter_offer': doc})
-    if contract_obj and contract_obj['phase'] == "open" or current_user.id_object == contract_obj['owner'] or current_user.id_object == contract_obj['bhunter']:
-        if request.method == 'POST':
-            offer = float(request.form['m_o_f_offer'])
-            result = prc.prc_create_ip(contract_obj['_id'], current_user.id_object, offer)
-            if result:
-                return redirect(url_for('contract', contract_id=contract_id))
-            else:
-                data_obj['message'] = "fail!"
-                return render_template('contract.html', data_obj=data_obj)
-        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
+    # phase: open
+    if contract_obj and contract_obj['phase'] == "open":
+        if contract_obj['owner'] != current_user.id_object:
+            # form for making an offer:
+            if request.method == 'POST':
+                offer = float(request.form['m_o_f_offer'])
+                result = prc.prc_create_ip(contract_obj['_id'], current_user.id_object, offer)
+                if result:
+                    return redirect(url_for('contract', contract_id=contract_id))
+                else:
+                    data_obj['message'] = "fail!"
+                    return render_template('contract.html', data_obj=data_obj)
+            return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
+        else:
+            # form for accepting an offer:
+            if request.method == 'POST':
+                contract_id = request.form['contractid']
+                bhunter_id = request.form['bountyhunterid']
+                print(prc.accept_offer(contract_id, bhunter_id))
+                pass
+            return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
+    # rejected
     data_obj.update({'message': 'contract not found or you are not permitted to view it'})
-    return render_template('contract.html', data_obj=data_obj)
+    return render_template('contract.html', contract_obj={}, data_obj=data_obj)
 
 
 '''
@@ -242,6 +271,23 @@ INCOMPLETE
 def success():
     data_obj = {"ip_address": request.remote_addr}
     return render_template('success.html', data_obj=data_obj)
+
+
+'''
+INCOMPLETE
+'''
+
+
+@app.route('/view_user/<userid>')
+@login_required
+def view_user(userid):
+    data_obj = {"ip_address": request.remote_addr}
+    user_obj = calls.get_user(userid)
+    if user_obj:
+        user_obj = dict(user_obj)
+        return render_template('view_user.html', data_obj=data_obj, user_obj=user_obj)
+    data_obj['message'] = "no user found..."
+    return render_template('view_user.html', data_obj=data_obj)
 
 
 # '''

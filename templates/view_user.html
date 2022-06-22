@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}<title>answerBlasters: LOGIN BROTHERS AND SISTERS</title>{% endblock %}
+{% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/view_user.css') }}">{% endblock %}
+{% block body %}
+    <div>
+        view_user.html<p></p>
+        {{ data_obj['message'] }}<p></p>
+        username: {{ user_obj['uName'] }}<p></p>
+        user since: {{ user_obj['joinDate'] }}<p></p>
+        review history:<p></p>
+        {% for review in data_obj['reviewHistory'] %}
+            review<p></p>
+        {% endfor %}
+    </div>
+{% endblock %}
