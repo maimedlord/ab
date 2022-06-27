@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block title %}<title>wtf</title>{% endblock %}
-{% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">{% endblock %}
+{% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/hmm.css') }}">{% endblock %}
 {% block body %}
-    {{ data_obj['message'] }}
+    <div id="div_main">
+        {{ data_obj['message'] }}
+    </div>
 {% endblock %}

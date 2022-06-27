@@ -4,7 +4,7 @@ functions that make the calls and then separate functions that prepare data for 
 '''
 from werkzeug.security import check_password_hash
 from pymongo import MongoClient, DESCENDING
-import datetime
+from datetime import datetime
 from bson.objectid import ObjectId
 
 
@@ -25,6 +25,45 @@ dict_template = {
                 'joinDate': 'some date for sure 2',
                 'orders': []
             }
+
+
+'''
+INCOMPLETE
+'''
+
+
+def c_accept_offer(contractid_obj, bhunterid_obj, bhunter_offer):
+    db = db_mc[dbContracts]
+    dbc = db[ccontracts]
+    result = dbc.update_one({'_id': contractid_obj},
+                            {'$set': {'bhunter': bhunterid_obj, 'phase': 'inprogress', 'bounty': bhunter_offer},
+                             '$push': {'clog': {'event': 'bounty hunter offer accepted and phase set to inprogress',
+                                                'time': datetime.fromisoformat(datetime.now().isoformat()[:-7])}}})
+    print(result)
+    return result
+
+
+'''
+INCOMPLETE
+'''
+
+
+def c_create_ip(contract_id, ip_object):
+    db = db_mc[dbContracts]
+    dbc = db[ccontracts]
+    return dbc.update_one({'_id': contract_id}, {'$push': {'iparties': ip_object, 'clog': {'event': 'user has made offer on contract', 'time': datetime.fromisoformat(datetime.now().isoformat()[:-7])}}})
+
+
+'''
+INCOMPLETE
+'''
+
+
+def c_send_chat(contractid_obj, chat_obj):
+    db = db_mc[dbContracts]
+    dbc = db[ccontracts]
+    return dbc.update_one({'_id': contractid_obj}, {'$push': {'chat': chat_obj}})
+
 
 '''
 INCOMPLETE
@@ -64,19 +103,19 @@ def create_user(user_template):
         return True
 
 
-# '''
-# INCOMPLETE
-# '''
-#
-#
-# def get_active(email):
-#     db = db_mc[dbContracts]
-#     dbc = db[cusers]
-#     temp_obj = dbc.find_one({'email': email})
-#     if temp_obj:
-#         return True
-#     else:
-#         return False
+'''
+INCOMPLETE
+'''
+
+
+def get_all_open():
+    db = db_mc[dbContracts]
+    dbc = db[ccontracts]
+    contract_cursor = dbc.find({'phase': 'open'})
+    if contract_cursor:
+        return list(contract_cursor)
+    return None
+
 
 '''
 INCOMPLETE
@@ -138,20 +177,6 @@ INCOMPLETE
 '''
 
 
-def get_all_open():
-    db = db_mc[dbContracts]
-    dbc = db[ccontracts]
-    contract_cursor = dbc.find({'phase': 'open'})
-    if contract_cursor:
-        return list(contract_cursor)
-    return None
-
-
-'''
-INCOMPLETE
-'''
-
-
 def get_sesh(userid):
     db = db_mc[dbUsers]
     dbc = db[cusers]
@@ -165,21 +190,6 @@ def get_sesh(userid):
         return temp_array
     else:
         return []
-
-
-'''
-INCOMPLETE
-'''
-
-
-def get_user_contracts(userid_obj):
-    db = db_mc[dbContracts]
-    dbc = db[ccontracts]
-    user_orders = dbc.find({"$or": [{"owner": userid_obj}, {"bhunter": userid_obj}]})
-    # print(user_orders)
-    # for doc in user_orders:
-    #     print(doc)
-    return user_orders
 
 
 '''
@@ -202,6 +212,21 @@ INCOMPLETE
 '''
 
 
+def get_user_contracts(userid_obj):
+    db = db_mc[dbContracts]
+    dbc = db[ccontracts]
+    user_orders = dbc.find({"$or": [{"owner": userid_obj}, {"bhunter": userid_obj}]})
+    # print(user_orders)
+    # for doc in user_orders:
+    #     print(doc)
+    return user_orders
+
+
+'''
+INCOMPLETE
+'''
+
+
 def get_username(userid_obj):
     db = db_mc[dbUsers]
     dbc = db[cusers]
@@ -216,10 +241,10 @@ INCOMPLETE
 '''
 
 
-def create_ip(contract_id, ip_object):
+def c_set_disputed(contract_id):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    return dbc.update_one({'_id': contract_id}, {'$push': {'iparties': ip_object}})
+    return dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'disputed'}})
 
 
 '''
@@ -227,29 +252,18 @@ INCOMPLETE
 '''
 
 
-def update_inprogress(contractid_obj, bhunterid_obj):
+def c_set_open(contract_id):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    result = dbc.update_one({'_id': contractid_obj}, {'$set': {'bhunter': bhunterid_obj, 'phase': 'inprogress'}})
-    print(result)
-    pass
+    return dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'open'}})
 
 
-# '''
-# INCOMPLETE
-# '''
-# def get_username(email):
-#     db = db_mc[dbUsers]
-#     dbc = db[cusers]
-#     username = dbc.find_one({'email': email}, {
-#         '_id': 0,
-#         'uName': 1
-#     })
-#     if username:
-#         return username['uName']
-#     else:
-#         return None
-
+'''
+'''
+def check_size():
+    db = db_mc[dbContracts]
+    dbc = db[ccontracts]
+    print(dbc.stats())
 
 if __name__ == '__main__':
-    print(create_user(dict_template))
+    print(check_size())

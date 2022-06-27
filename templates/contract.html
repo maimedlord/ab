@@ -5,7 +5,10 @@
     {{ data_obj['message'] }}
     <div>
         {% if contract_obj['phase'] == "creation" %}{# PHASE: CREATION #}
-            link: finish payment processing for your contract...<p></p>
+            <form id="set_open_form" method="post" name="set_open">
+                <input id="s_o_f_open" name="s_o_f_open" type="hidden" value="true">
+                set contract to open cuz you paid and stuff: <button type="submit">submit</button>
+            </form>
         {% endif %}{# PHASE: CREATION #}
         {% if contract_obj['phase'] == "open" %}{# PHASE: OPEN #}
             contract is phase: "open"<p></p>
@@ -28,20 +31,42 @@
                         time:    {{ party['time'] }}<p></p>
                         *** put here some type of JavaScript popup box that when submitted and upon successfully moving contract to "inprogress" then moves user to the contract page again, but this time the contract page will show for phase of inprogress ***<p></p>
                         <form id="accept_offer" method="post" name="accept_offer">
-                            <input id="contractid" name="contractid" type="hidden" value="{{ contract_obj['_id'] }}">
-                            <input id="bountyhunterid" name="bountyhunterid" type="hidden" value="{{ party['bhunter'] }}">
-                            accept this offer?    <button type="submit">submit</button>
+                            <input id="bhunterid" name="bhunterid" type="hidden" value="{{ party['bhunter'] }}">
+                            <input id="bhunteroffer" name="bhunteroffer" type="hidden" value="{{ party['offer'] }}">
+                            accept this offer?    <button type="submit">submit acceptance</button>
                         </form>
                     </div>
                 {% endfor %}
             {% endif %}
         {% endif %}{# PHASE: OPEN #}
         {% if contract_obj['phase'] == "inprogress" %}{# PHASE: INPROGRESS #}
+{#            <a href="{{ url_for('set_disputed', contractid=contract_obj['_id']) }}">link: set contract as disputed</a><p></p>#}
+            bounty hunter: {{ contract_obj['bhunter'] }}<p></p>
+            chat goes here...<p></p>
+            <div id="chat_main">
+                {% if contract_obj['chat']|length > 0 %}
+                    {% for chat in contract_obj['chat'] %}
+                        <div class="chat_row">
+                            user: {{ chat['user'] }}  //  mood: {{ chat['mood'] }}  // time: {{ chat['time'] }}<p></p>
+                            message: {{ chat['message'] }}<p></p>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                <div id="chat_send">
+                    chat send input and button...
+                    <form id="chat_send" method="post" name="chat_send">
+                        <input id="c_s_f_message" name="c_s_f_message" placeholder="your message here..." required type="text">
+                        <input id="c_s_f_mood" name="c_s_f_mood" placeholder="your mood here..." type="text"><p></p>
+                        send this chat?    <button type="submit">submit chat</button>
+                    </form>
+                </div>
+            </div>
         {% endif %}{# PHASE: INPROGRESS #}
         {% if contract_obj['phase'] == "stalled" %}{# PHASE: STALLED #}
         {% endif %}{# PHASE: STALLED #}
 {#        other phases ...#}
         <p></p>
+        <b>phase: {{ contract_obj['phase'] }}</b><p></p>
         {% if contract_obj['owner'] == current_user.id_object %}
             owner: you<p></p>
         {% else %}
