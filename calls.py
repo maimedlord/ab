@@ -252,13 +252,49 @@ INCOMPLETE
 '''
 
 
-def c_set_open(contract_id):
+def c_set_approved(contract_id):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    return dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'open'}})
+    return dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'approved'}})
 
 
 '''
+INCOMPLETE
+'''
+
+
+def c_set_open(contract_id):
+    db = db_mc[dbContracts]
+    dbc = db[ccontracts]
+    result = dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'open'}})
+    return result
+
+
+'''
+INCOMPLETE
+'''
+
+
+def c_set_g_validation(contract_id):
+    db = db_mc[dbContracts]
+    dbc = db[ccontracts]
+    result = dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'gradevalidation'}})
+    return result
+
+
+'''
+INCOMPLETE
+'''
+
+
+def c_set_validation(contract_id):
+    db = db_mc[dbContracts]
+    dbc = db[ccontracts]
+    return dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'validation'}})
+
+
+'''
+INCOMPLETE
 '''
 def check_size():
     db = db_mc[dbContracts]

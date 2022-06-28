@@ -75,6 +75,8 @@ INCOMPLETE
 
 def prc_set_disputed(contract_id):
     # need to also update changelog and message to both users...
+    # what phase is contract in when set to dispute?
+    # alert admin to look at contract and make a finding/judgement.
     return calls.c_set_disputed(ObjectId(contract_id))
 
 
@@ -85,6 +87,50 @@ INCOMPLETE
 
 def prc_set_open(contract_id):
     result = calls.c_set_open(contract_id)
+    if result:
+        if result.matched_count > 0 and result.matched_count == result.modified_count:
+            #  stuff to do...???
+            return True
+    return None
+
+
+'''
+INCOMPLETE
+'''
+
+
+def prc_set_approved(contract_id):
+    # bhunter gets paid
+
+    # once paid, update database:
+    result = calls.c_set_approved(ObjectId(contract_id))
+    if result:
+        if result.matched_count > 0 and result.matched_count == result.modified_count:
+            #  stuff to do...
+            return True
+    return None
+
+
+'''
+INCOMPLETE
+'''
+
+
+def prc_set_g_validation(contract_id):
+    result = calls.c_set_g_validation(ObjectId(contract_id))
+    if result:
+        if result.matched_count > 0 and result.matched_count == result.modified_count:
+            return True
+    return None
+
+
+'''
+INCOMPLETE
+'''
+
+
+def prc_set_validation(contract_id):
+    result = calls.c_set_validation(ObjectId(contract_id))
     if result:
         if result.matched_count > 0 and result.matched_count == result.modified_count:
             return True

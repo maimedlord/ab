@@ -53,7 +53,6 @@ INCOMPLETE
 @login_required
 def account():
     data_obj = {"ip_address": request.remote_addr}
-    data_obj.update({"ip_address": request.remote_addr})
     user_orders = prc.process_user_orders(current_user.id_object)
     for doc in user_orders:
         print(doc)
@@ -65,7 +64,33 @@ INCOMPLETE
 '''
 
 
-@app.route('/create_contract', methods=['post', 'get'])
+@app.route('/approve_submission/<contract_id>', methods=['GET', 'POST'])
+@login_required
+def approve_submission(contract_id):
+    data_obj = {'ip_address': request.remote_addr}
+    contract_obj = calls.get_contract(contract_id)
+    if contract_obj:
+        #  authorization...
+        if contract_obj['owner'] != current_user.id_object:
+            data_obj['message'] = 'you are not authorized to view this contract...'
+            return render_template('hmm.html', data_obj=data_obj)
+        # ...
+        if request.method == 'POST':
+            approval = request.form['a_f_approval']
+            result = prc.prc_set_approved(contract_id)
+            if result:
+                return redirect(url_for('contract', contract_id=contract_id))
+            return redirect(url_for('contract', contract_id=contract_id))  # need to fix this
+    data_obj['message'] = 'the contract was not found'
+    return redirect(url_for('contract', contract_id=contract_id))  # need to fix this
+
+
+'''
+INCOMPLETE
+'''
+
+
+@app.route('/create_contract', methods=['GET', 'POST'])
 @login_required
 def create_contract():
     data_obj = {"ip_address": request.remote_addr}
@@ -146,6 +171,16 @@ def contract(contract_id):
     # phase: stalled
     if contract_obj and contract_obj['phase'] == 'stalled':
         return redirect('/')
+    # phase: validation
+    if contract_obj and contract_obj['phase'] == 'validation' and contract_obj['owner'] == current_user.id_object or contract_obj['bhunter'] == current_user.id_object:
+        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
+    # phase: approved
+    if contract_obj and contract_obj['phase'] == 'approved' and contract_obj['owner'] == current_user.id_object or contract_obj['bhunter'] == current_user.id_object:
+        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
+        # phase: approved
+    if contract_obj and contract_obj['phase'] == 'gradevalidation' and contract_obj['owner'] == current_user.id_object or contract_obj['bhunter'] == current_user.id_object:
+        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
+    # phase: disputed
     if contract_obj and contract_obj['phase'] == 'disputed':
         print("disputed")
         return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
@@ -284,6 +319,89 @@ INCOMPLETE
 #     data_obj['message'] = 'setting phase to disputed failed!'
 #     return render_template('contract.html', data_obj=data_obj)
 
+
+'''
+INCOMPLETE
+'''
+
+
+@app.route('/set_dispute/<contract_id>', methods=['GET', 'POST'])
+@login_required
+def set_dispute(contract_id):
+    data_obj = {'ip_address': request.remote_addr}
+    contract_obj = calls.get_contract(contract_id)
+    if contract_obj:
+        #  authorization...
+        print(current_user.id_object)
+        print(contract_obj['bhunter'])
+        print(contract_obj['owner'])
+        if contract_obj['bhunter'] != current_user.id_object and contract_obj['owner'] != current_user.id_object:
+            data_obj['message'] = 'you are not authorized to view this contract...'
+            return render_template('hmm.html', data_obj=data_obj)
+        # ...
+        if request.method == 'POST':
+            dispute = request.form['s_f_dispute']
+            result = prc.prc_set_disputed(contract_id)
+            if result:
+                return redirect(url_for('contract', contract_id=contract_id))
+            return redirect(url_for('contract', contract_id=contract_id))  # need to fix this
+    data_obj['message'] = 'the contract was not found'
+    return redirect(url_for('contract', contract_id=contract_id))  # need to fix this
+
+
+'''
+INCOMPLETE
+'''
+
+
+@app.route('/submit_assignment/<contract_id>', methods=['GET', 'POST'])
+@login_required
+def submit_assignment(contract_id):
+    data_obj = {'ip_address': request.remote_addr}
+    contract_obj = calls.get_contract(contract_id)
+    if contract_obj:
+        #  authorization...
+        if contract_obj['bhunter'] != current_user.id_object:
+            data_obj['message'] = 'you are not authorized to view this contract...'
+            return render_template('hmm.html', data_obj=data_obj)
+        # ...
+        if request.method == 'POST':
+            submission = request.form['s_f_submission']
+            result = prc.prc_set_validation(contract_id)
+            if result:
+                return redirect(url_for('contract', contract_id=contract_id))
+            return redirect(url_for('contract', contract_id=contract_id))  # need to fix this
+    data_obj['message'] = 'the contract was not found'
+    return redirect(url_for('contract', contract_id=contract_id))  # need to fix this
+
+
+'''
+INCOMPLETE
+'''
+
+
+@app.route('/submit_grade/<contract_id>', methods=['GET', 'POST'])
+@login_required
+def submit_grade(contract_id):
+    data_obj = {'ip_address': request.remote_addr}
+    contract_obj = calls.get_contract(contract_id)
+    if contract_obj:
+        #  authorization...
+        if contract_obj['owner'] != current_user.id_object:
+            data_obj['message'] = 'you are not authorized to view this contract...'
+            return render_template('hmm.html', data_obj=data_obj)
+        # ...
+        if request.method == 'POST':
+            grade = request.form['s_f_grade']
+            grade_proof = request.form['s_f_yon']
+            result = prc.prc_set_g_validation(contract_id)
+            if result:
+                return redirect(url_for('contract', contract_id=contract_id))
+            return redirect(url_for('contract', contract_id=contract_id))  # need to fix this
+    data_obj['message'] = 'the contract was not found'
+    return redirect(url_for('contract', contract_id=contract_id))  # need to fix this
+
+
 '''
 INCOMPLETE
 '''
@@ -295,6 +413,21 @@ def success():
     data_obj = {"ip_address": request.remote_addr}
     return render_template('success.html', data_obj=data_obj)
 
+
+'''
+INCOMPLETE
+'''
+
+
+@app.route('/validate_submission/<contract_id>', methods=['GET', 'POST'])
+@login_required
+def validate_submission(contract_id):
+    data_obj = {'ip_address': request.remote_addr}
+    contract_obj = calls.get_contract(contract_id)
+    if contract_obj:
+        pass
+    data_obj['message'] = 'the contract was not found'
+    return redirect(url_for('contract', contract_id=contract_id))  # need to fix this
 
 '''
 INCOMPLETE
