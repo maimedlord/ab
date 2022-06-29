@@ -96,8 +96,10 @@
             {% if contract_obj['bhunter'] == current_user.id_object %}
                 bhunter view<p></p>
                 here is the proof of the grade: // proof here...<p></p>
-                <form action="{{ url_for('set_dispute', contract_id=contract_obj['_id']) }}" id="set_dispute" method="post" name="set_dispute">
-                    do you dispute the proof? <input id="s_f_dispute" name="s_f_dispute" required type="checkbox" value="true"><p></p>
+                <form action="{{ url_for('set_dors', contract_id=contract_obj['_id']) }}" id="set_dispute" method="post" name="set_dispute">
+                    do you dispute the proof?<p></p>
+                    yes: <input id="s_f_d_yes" name="s_f_d_yon" required type="radio" value="disputed">
+                    no: <input id="s_f_d_no" name="s_f_d_yon" required type="radio" value="rating"><p></p>
                     submit dispute    <button type="submit">submit dispute form</button>
                 </form>
             {% endif %}
@@ -105,6 +107,38 @@
                 owner view:<p></p>
             {% endif %}
         {% endif %}
+        {# PHASE: SUCCESSFUL #}
+        {% if contract_obj['phase'] == 'successful' %}
+            <b>successFUL</b><p></p>
+            {% if contract_obj['bhunter'] == current_user.id_object %}
+                bhunter view<p></p>
+            {% endif %}
+            {% if contract_obj['owner'] == current_user.id_object %}
+                owner view:<p></p>
+            {% endif %}
+        {% endif %}
+        {# PHASE: RATING #}
+        {% if contract_obj['phase'] == 'rating' %}
+            rating...<p></p>
+            {% if contract_obj['bhunter'] == current_user.id_object %}
+                bhunter view<p></p>
+                <form action="{{ url_for('submit_rating', contract_id=contract_obj['_id']) }}" id="submit_rating" method="post" name="submit_rating">
+                    how do you rate the owner of the bounty? <input id="s_r_f_rating" max="100" min="0" name="s_r_f_rating" required type="number"><p></p>
+                    comment: <p></p>
+                    <input id="s_r_f_comment" minlength="4" name="s_r_f_comment" required type="text"><p></p>
+                    submit rating    <button type="submit">submit rating</button>
+                </form>
+            {% endif %}
+            {% if contract_obj['owner'] == current_user.id_object %}
+                owner view:<p></p>
+                <form action="{{ url_for('submit_rating', contract_id=contract_obj['_id']) }}" id="submit_rating" method="post" name="submit_rating">
+                    how do you rate the bhunter? <input id="s_r_f_rating" max="100" min="0" name="s_r_f_rating" required type="number"><p></p>
+                    comment: <p></p>
+                    <input id="s_r_f_comment" minlength="4" name="s_r_f_comment" required type="text"><p></p>
+                    submit rating    <button type="submit">submit rating</button>
+                </form>
+            {% endif %}
+        {% endif %}{# PHASE: RATING #}
 {#        other phases ...#}
         <p></p>
         <b>phase: {{ contract_obj['phase'] }}</b><p></p>
@@ -128,7 +162,7 @@
             deadline: test end: {{ contract_obj['timeline'][3] }}<p></p>
         {% endif %}
         {# for chat #}
-        {% if contract_obj['phase'] == 'inprogress' or contract_obj['phase'] == 'stalled' or contract_obj['phase'] == 'disputed' or contract_obj['phase'] == 'validation' %}
+        {% if contract_obj['phase'] == 'inprogress' or contract_obj['phase'] == 'stalled' or contract_obj['phase'] == 'disputed' or contract_obj['phase'] == 'validation' or contract_obj['phase'] == 'gradevalidation' %}
             <b>chat goes here... ... ... ... ... ... ... ... ... ... ...</b><p></p>
             <div id="chat_main">{# CHAT: MAIN #}
                 {% if contract_obj['chat']|length > 0 %}

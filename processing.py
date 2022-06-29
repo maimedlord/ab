@@ -77,8 +77,27 @@ def prc_set_disputed(contract_id):
     # need to also update changelog and message to both users...
     # what phase is contract in when set to dispute?
     # alert admin to look at contract and make a finding/judgement.
-    return calls.c_set_disputed(ObjectId(contract_id))
+    # return calls.c_set_disputed(ObjectId(contract_id))
+    result = calls.c_set_disputed(ObjectId(contract_id))
+    if result:
+        if result.matched_count > 0 and result.matched_count == result.modified_count:
+            #  stuff to do...???
+            return True
+    return None
 
+
+'''
+INCOMPLETE
+'''
+
+
+def prc_set_successful(contract_id):
+    result = calls.c_set_successful(ObjectId(contract_id))
+    if result:
+        if result.matched_count > 0 and result.matched_count == result.modified_count:
+            #  stuff to do...???
+            return True
+    return None
 
 '''
 INCOMPLETE
@@ -138,10 +157,70 @@ def prc_set_validation(contract_id):
 
 
 '''
+INCOMPLETE
+'''
+
+
+def prc_submit_rating_c(comment, contract_id, rating, user_id):
+    now_time = datetime.fromisoformat(datetime.now().isoformat()[:-7])
+    review_obj = {
+        'comment': comment,
+        'rating': float(rating),
+        'time': now_time,
+        'user': ObjectId(user_id)
+    }
+    rating_obj = calls.get_rating_obj(ObjectId(contract_id))
+    if len(rating_obj['reviews']) == 0:
+        print('zero reviews')
+        result = calls.c_submit_rating_c(ObjectId(contract_id), review_obj)
+        if result.matched_count > 0 and result.matched_count == result.modified_count:
+            return True
+    if len(rating_obj['reviews']) == 1:
+        print('one existing review')
+        if rating_obj['reviews'][0]['user'] != ObjectId(user_id):
+            # update contract reviews
+            # rating submitted to contract
+            result = calls.c_submit_rating_c(ObjectId(contract_id), review_obj)
+            if result.matched_count > 0 and result.matched_count == result.modified_count:
+                # user1 from passed in values
+                user_review_obj1 = {
+                    'comment': comment,
+                    'contract': ObjectId(contract_id),
+                    'rating': float(rating),
+                    'reviewer': ObjectId(user_id),
+                    'time': now_time
+                }
+                # user2 from rating_obj
+                user_review_obj2 = {
+                    'comment': rating_obj['reviews'][0]['comment'],
+                    'contract': rating_obj['_id'],
+                    'rating': float(rating_obj['reviews'][0]['rating']),
+                    'reviewer': rating_obj['reviews'][0]['user'],
+                    'time': now_time
+                }
+                other_user = rating_obj['bhunter']
+                if other_user == ObjectId(user_id):
+                    other_user = rating_obj['owner']
+                result1a = calls.c_submit_rating_u(ObjectId(user_id), user_review_obj1)
+                result1b = calls.c_submit_rating_u(ObjectId(user_id), user_review_obj2)
+                result2a = calls.c_submit_rating_u(other_user, user_review_obj1)
+                result2b = calls.c_submit_rating_u(other_user, user_review_obj2)
+                result3 = calls.c_set_successful(rating_obj['_id'])
+                if result1a.acknowledged and result1b.acknowledged and result2a.acknowledged and result2b.acknowledged and result3.acknowledged:
+                    return True
+                return None
+            # update individual user reviewHistory for BOTH reviews
+            # update phase of contract
+    return None
+
+
+'''
 INCOMPLETE: 
 NEED TO VERIFY ALL INPUT HERE BEFORE SENDING TO CALLS
 good return = array of validated form data
 '''
+
+
 def process_new_contract(form_dict, userid):
     # handle a malformed dictionary...
     user_obj = {}

@@ -177,6 +177,22 @@ INCOMPLETE
 '''
 
 
+def get_rating_obj(contract_id):
+    db = db_mc[dbContracts]
+    dbc = db[ccontracts]
+    return dbc.find_one({'_id': contract_id}, {
+        '_id': 1,
+        'bhunter': 1,
+        'owner': 1,
+        'reviews': 1
+    })
+
+
+'''
+INCOMPLETE
+'''
+
+
 def get_sesh(userid):
     db = db_mc[dbUsers]
     dbc = db[cusers]
@@ -263,6 +279,18 @@ INCOMPLETE
 '''
 
 
+def c_set_successful(contract_id):
+    print('c ss')
+    db = db_mc[dbContracts]
+    dbc = db[ccontracts]
+    return dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'successful'}})
+
+
+'''
+INCOMPLETE
+'''
+
+
 def c_set_open(contract_id):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
@@ -291,6 +319,30 @@ def c_set_validation(contract_id):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
     return dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'validation'}})
+
+
+'''
+INCOMPLETE
+'''
+
+
+def c_submit_rating_c(contract_id, review_obj):
+    db = db_mc[dbContracts]
+    dbc = db[ccontracts]
+    print('c submit')
+    return dbc.update_one({'_id': contract_id}, {'$push': {'reviews': review_obj}})
+
+
+'''
+INCOMPLETE
+'''
+
+
+def c_submit_rating_u(user_id, review_obj):
+    db = db_mc[dbUsers]
+    dbc = db[cusers]
+    print('u submit')
+    return dbc.update_one({'_id': user_id}, {'$push': {'reviewHistory': review_obj}})
 
 
 '''

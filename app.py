@@ -177,8 +177,16 @@ def contract(contract_id):
     # phase: approved
     if contract_obj and contract_obj['phase'] == 'approved' and contract_obj['owner'] == current_user.id_object or contract_obj['bhunter'] == current_user.id_object:
         return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
-        # phase: approved
+    # phase: gradevalidation
     if contract_obj and contract_obj['phase'] == 'gradevalidation' and contract_obj['owner'] == current_user.id_object or contract_obj['bhunter'] == current_user.id_object:
+        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
+    # phase: rating
+    if contract_obj and contract_obj['phase'] == 'rating' and contract_obj[
+        'owner'] == current_user.id_object or contract_obj['bhunter'] == current_user.id_object:
+        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
+    # phase: successful
+    if contract_obj and contract_obj['phase'] == 'successful' and contract_obj[
+        'owner'] == current_user.id_object or contract_obj['bhunter'] == current_user.id_object:
         return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
     # phase: disputed
     if contract_obj and contract_obj['phase'] == 'disputed':
@@ -325,28 +333,47 @@ INCOMPLETE
 '''
 
 
-@app.route('/set_dispute/<contract_id>', methods=['GET', 'POST'])
+@app.route('/set_dors/<contract_id>', methods=['GET', 'POST'])
 @login_required
-def set_dispute(contract_id):
+def set_dors(contract_id):
     data_obj = {'ip_address': request.remote_addr}
     contract_obj = calls.get_contract(contract_id)
     if contract_obj:
         #  authorization...
-        print(current_user.id_object)
-        print(contract_obj['bhunter'])
-        print(contract_obj['owner'])
         if contract_obj['bhunter'] != current_user.id_object and contract_obj['owner'] != current_user.id_object:
             data_obj['message'] = 'you are not authorized to view this contract...'
             return render_template('hmm.html', data_obj=data_obj)
         # ...
         if request.method == 'POST':
-            dispute = request.form['s_f_dispute']
-            result = prc.prc_set_disputed(contract_id)
-            if result:
-                return redirect(url_for('contract', contract_id=contract_id))
+            dors = request.form['s_f_d_yon']
+            if dors == 'disputed':
+                result = prc.prc_set_disputed(contract_id)
+                if result:
+                    return redirect(url_for('contract', contract_id=contract_id))
+                return redirect(url_for('contract', contract_id=contract_id))  # need to fix this
+            if dors == 'rating':
+                print('rating')
+                result = prc.prc_set_rating(contract_id)
+                if result:
+                    return redirect(url_for('contract', contract_id=contract_id))
+                return redirect(url_for('contract', contract_id=contract_id))  # need to fix this
+            data_obj['message'] = 'dors didn\'t equal out to either option'
             return redirect(url_for('contract', contract_id=contract_id))  # need to fix this
     data_obj['message'] = 'the contract was not found'
     return redirect(url_for('contract', contract_id=contract_id))  # need to fix this
+
+
+'''
+INCOMPLETE
+'''
+
+
+@app.route('/set_successful/<contract_id>', methods=['GET', 'POST'])
+@login_required
+def set_successful(contract_id):
+    data_obj = {'ip_address': request.remote_addr}
+    contract_obj = calls.get_contract(contract_id)
+    pass
 
 
 '''
@@ -398,6 +425,35 @@ def submit_grade(contract_id):
             if result:
                 return redirect(url_for('contract', contract_id=contract_id))
             return redirect(url_for('contract', contract_id=contract_id))  # need to fix this
+    data_obj['message'] = 'the contract was not found'
+    return redirect(url_for('contract', contract_id=contract_id))  # need to fix this
+
+
+'''
+INCOMPLETE
+'''
+
+
+@app.route('/submit_rating/<contract_id>', methods=['GET', 'POST'])
+@login_required
+def submit_rating(contract_id):
+    data_obj = {'ip_address': request.remote_addr}
+    contract_obj = calls.get_contract(contract_id)
+    if contract_obj:
+        #  authorization...
+        if contract_obj['bhunter'] == current_user.id_object or contract_obj['owner'] == current_user.id_object:
+            if request.method == 'POST':
+                user_id = current_user.id_object
+                comment = request.form['s_r_f_comment']
+                rating = request.form['s_r_f_rating']
+                result = prc.prc_submit_rating_c(comment, contract_id, rating, user_id)
+                if result:
+                    print('form worked')
+                    return redirect(url_for('contract', contract_id=contract_id))
+            # form didn't work...
+            return redirect(url_for('contract', contract_id=contract_id))
+        data_obj['message'] = 'you are not authorized to view this contract...'
+        return render_template('hmm.html', data_obj=data_obj)
     data_obj['message'] = 'the contract was not found'
     return redirect(url_for('contract', contract_id=contract_id))  # need to fix this
 
