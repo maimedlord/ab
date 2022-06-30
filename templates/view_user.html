@@ -8,8 +8,8 @@
         username: {{ user_obj['uName'] }}<p></p>
         user since: {{ user_obj['joinDate'] }}<p></p>
         review history:<p></p>
-        {% for review in data_obj['reviewHistory'] %}
-            review<p></p>
+        {% for review in user_obj['reviewHistory'] %}
+            {{ review }}<p></p>
         {% endfor %}
     </div>
 {% endblock %}

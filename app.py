@@ -32,11 +32,6 @@ def user_loader(user_id):
         return None
 
 
-'''
-INCOMPLETE
-'''
-
-
 @app.route('/')
 def index():
     data_obj = {"ip_address": request.remote_addr}
@@ -44,9 +39,14 @@ def index():
     return render_template('index.html', c_top=c_top, data_obj=data_obj)
 
 
-'''
-INCOMPLETE
-'''
+@app.route('/accept_offer/<bhunter_id>/<contract_id>/<offer>')
+@login_required
+def accept_offer(bhunter_id, contract_id, offer):
+    result = prc.prc_accept_offer(bhunter_id, contract_id, offer)
+    if result:
+        return redirect(url_for('contract', contract_id=contract_id, message='none'))
+    message = 'there was an error processing your offer acceptance...'
+    return redirect(url_for('contract', contract_id=contract_id, message=message))
 
 
 @app.route('/account')
@@ -54,14 +54,7 @@ INCOMPLETE
 def account():
     data_obj = {"ip_address": request.remote_addr}
     user_orders = prc.process_user_orders(current_user.id_object)
-    for doc in user_orders:
-        print(doc)
     return render_template('account.html', data_obj=data_obj, user_orders=user_orders)
-
-
-'''
-INCOMPLETE
-'''
 
 
 @app.route('/approve_submission/<contract_id>', methods=['GET', 'POST'])
@@ -77,17 +70,28 @@ def approve_submission(contract_id):
         # ...
         if request.method == 'POST':
             approval = request.form['a_f_approval']
-            result = prc.prc_set_approved(contract_id)
+            result = prc.prc_submit_approval(contract_id)
             if result:
-                return redirect(url_for('contract', contract_id=contract_id))
-            return redirect(url_for('contract', contract_id=contract_id))  # need to fix this
+                return redirect(url_for('contract', contract_id=contract_id, message='none'))
+            return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
     data_obj['message'] = 'the contract was not found'
-    return redirect(url_for('contract', contract_id=contract_id))  # need to fix this
+    return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
 
 
-'''
-INCOMPLETE
-'''
+@app.route('/cancel_contract/<contract_id>')
+@login_required
+def cancel_contract(contract_id):
+    data_obj = {"ip_address": request.remote_addr}
+    contract_obj = calls.get_contract(contract_id)
+    if contract_obj and contract_obj['owner'] != current_user.id_object:
+        data_obj['message'] = 'you are not authorized to be here...'
+        return render_template('hmm.html', data_obj=data_obj)
+    result = calls.cancel_contract(contract_id)
+    if result.acknowledged:
+        return redirect(url_for('account'))
+    data_obj['message'] = 'there was an error canceling the contract'
+    return render_template('hmm.html', data_obj=data_obj)
+
 
 
 @app.route('/create_contract', methods=['GET', 'POST'])
@@ -99,37 +103,27 @@ def create_contract():
         if prc_return is None:
             data_obj.update({"message": "processing for your contract failed..."})
             return render_template('create_contract.html', data_obj=data_obj)
-        data_obj.update({"message": "you created a contract successfully"})
-        return render_template('success.html', data_obj=data_obj)
+        return redirect(url_for('account'))
+        # data_obj.update({"message": "you created a contract successfully"})
+        # return render_template('success.html', data_obj=data_obj)
     return render_template('create_contract.html', data_obj=data_obj)
 
 
-'''
-INCOMPLETE
-only can be viewed: all = ONLY open contract, owner,bhunter = inprogress contract
-'''
-
-
-@app.route('/contract/<contract_id>', methods=['GET', 'POST'])
+@app.route('/contract/<contract_id>/<message>', methods=['GET', 'POST'])
 @login_required
-def contract(contract_id):
+def contract(contract_id, message):
     data_obj = {'ip_address': request.remote_addr}
+    data_obj.update({'message': message})
     contract_obj = calls.get_contract(contract_id)
-    # safety checks...:
-    if contract_obj['phase'] == 'creation' and contract_obj['owner'] == current_user.id_object:
-        if request.method == 'POST':
-            if request.form['s_o_f_open'] == 'true':
-                result = prc.prc_set_open(contract_obj['_id'])
-                if result:
-                    return redirect(url_for('contract', contract_id=contract_id))
-                data_obj['message'] = 'form submit failed...'
+    # PHASE: CREATION
+    if contract_obj and contract_obj['phase'] == 'creation' and contract_obj['owner'] == current_user.id_object:
         return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
     # prepare for user having already submitted offer on this contract:
     iparty_arr = contract_obj['iparties']
     for doc in iparty_arr:
         if doc['bhunter'] == current_user.id_object:
             data_obj.update({'bhunter_offer': doc})
-    # phase: open
+    # PHASE: OPEN
     if contract_obj and contract_obj['phase'] == "open":
         if contract_obj['owner'] != current_user.id_object:
             # form for making an offer:
@@ -137,25 +131,13 @@ def contract(contract_id):
                 offer = float(request.form['m_o_f_offer'])
                 result = prc.prc_create_ip(contract_obj['_id'], current_user.id_object, offer)
                 if result:
-                    return redirect(url_for('contract', contract_id=contract_id))
+                    return redirect(url_for('contract', contract_id=contract_id, message='none'))
                 else:
-                    data_obj['message'] = 'fail!'
-                    return render_template('contract.html', data_obj=data_obj)
+                    return redirect(url_for('contract', contract_id=contract_id, message='error in process of updating interested parties...'))
             return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
         else:
-            # form for accepting an offer:
-            if request.method == 'POST':
-                contract_id = contract_obj['_id']
-                bhunter_id = request.form['bhunterid']
-                bhunter_offer = request.form['bhunteroffer']
-                result = prc.prc_accept_offer(contract_id, bhunter_id, bhunter_offer)
-                if result:
-                    return redirect(url_for('contract', contract_id=contract_id))
-                data_obj['message'] = 'form submit failed!'
-                return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
             return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
-            #redirect(url_for('contract', contract_id=contract_id))
-    # phase: inprogress
+    # PHASE: INPROGRESS
     if contract_obj and contract_obj['phase'] == 'inprogress' and contract_obj['owner'] == current_user.id_object or contract_obj['bhunter'] == current_user.id_object:
         # form for submitting chat
         if request.method == 'POST':
@@ -163,14 +145,12 @@ def contract(contract_id):
             mood = request.form['c_s_f_mood']
             result = prc.prc_send_chat(contract_obj['_id'], current_user.id, message, mood)
             if result:
-                return redirect(url_for('contract', contract_id=contract_obj['_id']))
+                return redirect(url_for('contract', contract_id=contract_id, message='none'))
             data_obj['message'] = 'chat send failed!'
-        print("inprogress before last return: a rendertemplate")
         return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
-        #return redirect(url_for('contract', contract_id=contract_id))
-    # phase: stalled
+    # PHASE: STALLED
     if contract_obj and contract_obj['phase'] == 'stalled':
-        return redirect('/')
+        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
     # phase: validation
     if contract_obj and contract_obj['phase'] == 'validation' and contract_obj['owner'] == current_user.id_object or contract_obj['bhunter'] == current_user.id_object:
         return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
@@ -197,11 +177,6 @@ def contract(contract_id):
     return render_template('hmm.html', data_obj=data_obj)
 
 
-'''
-INCOMPLETE
-'''
-
-
 @app.route('/login', methods=['post', 'get'])
 def login():
     data_obj = {"ip_address": request.remote_addr}
@@ -225,11 +200,6 @@ def login():
     return render_template('login.html', data_obj=data_obj)
 
 
-'''
-INCOMPLETE
-'''
-
-
 @app.route('/logout')
 def logout():
     data_obj = {"ip_address": request.remote_addr}
@@ -237,11 +207,6 @@ def logout():
         data_obj.update({"message": "You're already logged out tho..."})
     logout_user()
     return render_template('logout.html', data_obj=data_obj)
-
-
-'''
-INCOMPLETE
-'''
 
 
 @app.route('/market', methods=['post', 'get'])
@@ -252,12 +217,6 @@ def market():
     if all_open_arr:
         return render_template('market.html', all_open_arr=all_open_arr, data_obj=data_obj)
     return render_template('market.html', data_obj=data_obj)
-
-
-'''
-INCOMPLETE
-NEED REGISTRATION EMAIL SYSTEM
-'''
 
 
 @app.route('/register', methods=['post', 'get'])
@@ -280,39 +239,6 @@ def register():
             #     return flask.abort(400)
             return redirect('account')
     return render_template('register.html', data_obj=data_obj)
-    # if request.method == 'POST':
-    #     email = request.form.get('user_email')
-    #     password1 = request.form.get('user_password1')
-    #     password2 = request.form.get('user_password2')
-    #     username = request.form.get('username')
-    #     if email == '' or password1 == '' or password2 == '' or username == '':
-    #         return render_template('register.html', passed=data_obj, temp_array=temp_array)
-    #     dict_template = {
-    #         'active': True,
-    #         'email': email,
-    #         'pass': generate_password_hash(password1),
-    #         'uName': username,
-    #         'joinDate': 'some date for sure 2',
-    #         'orders': []
-    #     }
-    #     result = calls.create_user(dict_template)
-    #     if result:
-    #         user_obj = User(email, username)
-    #         login_user(user_obj)
-    #         # next = flask.request.args.get('next')
-    #         # if not is_safe_url(next):
-    #         #     return flask.abort(400)
-    #         return render_template('success.html')
-    #     else:
-    #         data_obj.update({"message": "email or username is already taken. try again"})
-    #         return render_template('register.html', data_obj=data_obj)
-    #
-    # return render_template('register.html', data_obj=data_obj)
-
-
-'''
-INCOMPLETE
-'''
 
 
 # @app.route('/set_disputed/<contract_id>')
@@ -326,11 +252,6 @@ INCOMPLETE
 #         return redirect(url_for('contract', contract_id=contract_id))
 #     data_obj['message'] = 'setting phase to disputed failed!'
 #     return render_template('contract.html', data_obj=data_obj)
-
-
-'''
-INCOMPLETE
-'''
 
 
 @app.route('/set_dors/<contract_id>', methods=['GET', 'POST'])
@@ -349,23 +270,32 @@ def set_dors(contract_id):
             if dors == 'disputed':
                 result = prc.prc_set_disputed(contract_id)
                 if result:
-                    return redirect(url_for('contract', contract_id=contract_id))
-                return redirect(url_for('contract', contract_id=contract_id))  # need to fix this
+                    return redirect(url_for('contract', contract_id=contract_id, message='none'))
+                return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
             if dors == 'rating':
                 print('rating')
                 result = prc.prc_set_rating(contract_id)
                 if result:
-                    return redirect(url_for('contract', contract_id=contract_id))
-                return redirect(url_for('contract', contract_id=contract_id))  # need to fix this
+                    return redirect(url_for('contract', contract_id=contract_id, message='none'))
+                return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
             data_obj['message'] = 'dors didn\'t equal out to either option'
-            return redirect(url_for('contract', contract_id=contract_id))  # need to fix this
+            return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
     data_obj['message'] = 'the contract was not found'
-    return redirect(url_for('contract', contract_id=contract_id))  # need to fix this
+    return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
 
 
-'''
-INCOMPLETE
-'''
+@app.route('/set_open/<contract_id>')
+@login_required
+def set_open(contract_id):
+    contract_obj = calls.get_contract(contract_id)
+    if contract_obj:
+        if contract_obj and contract_obj['owner'] == current_user.id_object:
+            result = prc.prc_set_open(contract_id)
+            if result:
+                return redirect(url_for('contract', contract_id=contract_id, message='none'))
+    data_obj = {'ip_address': request.remote_addr}
+    data_obj['message'] = 'there was an error setting the contract to open'
+    return render_template('hmm.html', data_obj=data_obj)
 
 
 @app.route('/set_successful/<contract_id>', methods=['GET', 'POST'])
@@ -374,11 +304,6 @@ def set_successful(contract_id):
     data_obj = {'ip_address': request.remote_addr}
     contract_obj = calls.get_contract(contract_id)
     pass
-
-
-'''
-INCOMPLETE
-'''
 
 
 @app.route('/submit_assignment/<contract_id>', methods=['GET', 'POST'])
@@ -394,17 +319,12 @@ def submit_assignment(contract_id):
         # ...
         if request.method == 'POST':
             submission = request.form['s_f_submission']
-            result = prc.prc_set_validation(contract_id)
+            result = prc.prc_submit_assignment(contract_id)
             if result:
-                return redirect(url_for('contract', contract_id=contract_id))
-            return redirect(url_for('contract', contract_id=contract_id))  # need to fix this
+                return redirect(url_for('contract', contract_id=contract_id, message='none'))
+            return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
     data_obj['message'] = 'the contract was not found'
-    return redirect(url_for('contract', contract_id=contract_id))  # need to fix this
-
-
-'''
-INCOMPLETE
-'''
+    return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
 
 
 @app.route('/submit_grade/<contract_id>', methods=['GET', 'POST'])
@@ -421,17 +341,12 @@ def submit_grade(contract_id):
         if request.method == 'POST':
             grade = request.form['s_f_grade']
             grade_proof = request.form['s_f_yon']
-            result = prc.prc_set_g_validation(contract_id)
+            result = prc.prc_submit_gvalidation(contract_id)
             if result:
-                return redirect(url_for('contract', contract_id=contract_id))
-            return redirect(url_for('contract', contract_id=contract_id))  # need to fix this
+                return redirect(url_for('contract', contract_id=contract_id, message='none'))
+            return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
     data_obj['message'] = 'the contract was not found'
-    return redirect(url_for('contract', contract_id=contract_id))  # need to fix this
-
-
-'''
-INCOMPLETE
-'''
+    return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
 
 
 @app.route('/submit_rating/<contract_id>', methods=['GET', 'POST'])
@@ -449,18 +364,13 @@ def submit_rating(contract_id):
                 result = prc.prc_submit_rating_c(comment, contract_id, rating, user_id)
                 if result:
                     print('form worked')
-                    return redirect(url_for('contract', contract_id=contract_id))
+                    return redirect(url_for('contract', contract_id=contract_id, message='none'))
             # form didn't work...
-            return redirect(url_for('contract', contract_id=contract_id))
+            return redirect(url_for('contract', contract_id=contract_id, message='none'))
         data_obj['message'] = 'you are not authorized to view this contract...'
         return render_template('hmm.html', data_obj=data_obj)
     data_obj['message'] = 'the contract was not found'
-    return redirect(url_for('contract', contract_id=contract_id))  # need to fix this
-
-
-'''
-INCOMPLETE
-'''
+    return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
 
 
 @app.route('/success')
@@ -468,11 +378,6 @@ INCOMPLETE
 def success():
     data_obj = {"ip_address": request.remote_addr}
     return render_template('success.html', data_obj=data_obj)
-
-
-'''
-INCOMPLETE
-'''
 
 
 @app.route('/validate_submission/<contract_id>', methods=['GET', 'POST'])
@@ -483,11 +388,7 @@ def validate_submission(contract_id):
     if contract_obj:
         pass
     data_obj['message'] = 'the contract was not found'
-    return redirect(url_for('contract', contract_id=contract_id))  # need to fix this
-
-'''
-INCOMPLETE
-'''
+    return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
 
 
 @app.route('/view_user/<userid>')
@@ -497,18 +398,10 @@ def view_user(userid):
     user_obj = calls.get_user(userid)
     if user_obj:
         user_obj = dict(user_obj)
+        print(user_obj)
         return render_template('view_user.html', data_obj=data_obj, user_obj=user_obj)
     data_obj['message'] = "no user found..."
     return render_template('view_user.html', data_obj=data_obj)
-
-
-# '''
-# INCOMPLETE
-# '''
-# @login_manager.unauthorized_handler
-# def unauthorized():
-#     temp_array = prc.get_orders_top()
-#     return render_template('index.html', temp_array=temp_array)
 
 
 if __name__ == '__main__':

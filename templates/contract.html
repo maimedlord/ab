@@ -4,41 +4,42 @@
 {% block body %}
     {{ data_obj['message'] }}
     <div>
-        {% if contract_obj['phase'] == "creation" %}{# PHASE: CREATION #}
-            <form id="set_open_form" method="post" name="set_open">
-                <input id="s_o_f_open" name="s_o_f_open" type="hidden" value="true">
-                set contract to open cuz you paid and stuff: <button type="submit">submit</button>
-            </form>
-        {% endif %}{# PHASE: CREATION #}
-        {% if contract_obj['phase'] == "open" %}{# PHASE: OPEN #}
+        {# PHASE: CREATION #}
+        {% if contract_obj['phase'] == "creation" %}
+            <a href="{{ url_for('set_open', contract_id=contract_obj['_id']) }}">MOVE TO OPEN</a><p></p>
+            <a href="{{ url_for('cancel_contract', contract_id=contract_obj['_id']) }}">CANCEL BOUNTY</a><p></p>
+        {% endif %}
+        {# PHASE: CREATION #}
+        {# PHASE: OPEN #}
+        {% if contract_obj['phase'] == "open" %}
             contract is phase: "open"<p></p>
-            {% if (current_user.id_object != contract_obj['owner']) and not data_obj['bhunter_offer'] %}{# show for anyone that's NOT the owner and has NOT offered on the contract yet #}
+            {# show for anyone that's NOT the owner and has NOT offered on the contract yet #}
+            {% if (current_user.id_object != contract_obj['owner']) and not data_obj['bhunter_offer'] %}
                 make an offer on this contract:<p></p>
                 <form id="make_offer_form" method="post" name="make_offer_form">
                     For what amount will you take on this contract? <input id="m_o_f_offer" min="{{ contract_obj['bounty'] }}" name="m_o_f_offer" placeholder="$0.00" step="0.01" required type="number"><p></p>
                     <button type="submit">submit</button>
                 </form>
-            {% elif data_obj['bhunter_offer'] %}{# show for bhunter that's already offered on contract #}
+            {# show for bhunter that's already offered on contract #}
+            {% elif data_obj['bhunter_offer'] %}
                 Your existing offer on this contract:<p></p>
                 offer: {{ data_obj['bhunter_offer']['offer'] }}
                 time: {{ data_obj['bhunter_offer']['time'] }}
-            {% else %}{# show for the contract owner... maybe add another elif here? #}
+                {# show for the contract owner... maybe add another elif here? #}
+            {% else %}
                 {% for party in contract_obj['iparties'] %}
                     <div id="div_i_party">
                         interested party:<p></p>
                         <a href="{{ url_for('view_user', userid=party['bhunter']) }}">bounty hunter:    {{ party['bhunter'] }}</a><p></p>
                         offer:    <b>$ {{ party['offer'] }}</b><p></p>
                         time:    {{ party['time'] }}<p></p>
-                        *** put here some type of JavaScript popup box that when submitted and upon successfully moving contract to "inprogress" then moves user to the contract page again, but this time the contract page will show for phase of inprogress ***<p></p>
-                        <form id="accept_offer" method="post" name="accept_offer">
-                            <input id="bhunterid" name="bhunterid" type="hidden" value="{{ party['bhunter'] }}">
-                            <input id="bhunteroffer" name="bhunteroffer" type="hidden" value="{{ party['offer'] }}">
-                            accept this offer?    <button type="submit">submit acceptance</button>
-                        </form>
+                        <a href="{{ url_for('accept_offer', bhunter_id=party['bhunter'], contract_id=contract_obj['_id'], offer=party['offer']) }}">ACCepT Offer</a>
                     </div>
                 {% endfor %}
             {% endif %}
-        {% endif %}{# PHASE: OPEN #}
+        {% endif %}
+        {# PHASE: OPEN #}
+        {# PHASE: INPROGRESS #}
         {% if contract_obj['phase'] == "inprogress" %}{# PHASE: INPROGRESS #}
 {#            <a href="{{ url_for('set_disputed', contractid=contract_obj['_id']) }}">link: set contract as disputed</a><p></p>#}
             bounty hunter: {{ contract_obj['bhunter'] }}<p></p>
@@ -53,9 +54,12 @@
                     submit this submission?    <button type="submit">submit submission</button>
                 </form>
             {% endif %}
-        {% endif %}{# PHASE: INPROGRESS #}
-        {% if contract_obj['phase'] == "stalled" %}{# PHASE: STALLED #}
-        {% endif %}{# PHASE: STALLED #}
+        {% endif %}
+        {# PHASE: INPROGRESS #}
+        {# PHASE: STALLED #}
+        {% if contract_obj['phase'] == "stalled" %}
+        {% endif %}
+        {# PHASE: STALLED #}
         {% if contract_obj['phase'] == 'validation' %}
             contract is in process of validation for assignment only???...<p></p>
             // submission goes here...<p></p><p></p>
@@ -70,6 +74,8 @@
                 // link for resubmission in case of submit mistake?
             {% endif %}
         {% endif %}
+        {# PHASE: STALLED #}
+        {# PHASE: APPROVED #}
         {% if contract_obj['phase'] == 'approved' %}
             approved contract for assignment only atm...<p></p><p></p>
             {% if contract_obj['bhunter'] == current_user.id_object %}
@@ -77,8 +83,6 @@
                 // if there was a good grade bonus you'll need to wait until the owner submits the grade or the deadline passes...
             {% endif %}
             {% if contract_obj['owner'] == current_user.id_object %}
-                // if you had an efbonus on this bounty it has been paid<p></p>
-                // if your grade deadline was the same as your due deadline then there is no excellent grade bonus<p></p><p></p>
                 <b>// waiting for grade</b><p></p>
                 // here will go a form for uploading proof of the grade:<p></p>
                 <form action="{{ url_for('submit_grade', contract_id=contract_obj['_id']) }}" id="submit_grade" method="post" name="submit_grade">
@@ -91,6 +95,8 @@
                 proof of grade:
             {% endif %}
         {% endif %}
+        {# PHASE: APPROVED #}
+        {# PHASE: GRADEVALIDATION #}
         {% if contract_obj['phase'] == 'gradevalidation' %}
             gradevalidation...<p></p>
             {% if contract_obj['bhunter'] == current_user.id_object %}
@@ -105,8 +111,10 @@
             {% endif %}
             {% if contract_obj['owner'] == current_user.id_object %}
                 owner view:<p></p>
+                waiting for bount hunter to accept your grade proof...
             {% endif %}
         {% endif %}
+        {# PHASE: GRADEVALIDATION #}
         {# PHASE: SUCCESSFUL #}
         {% if contract_obj['phase'] == 'successful' %}
             <b>successFUL</b><p></p>
@@ -117,6 +125,7 @@
                 owner view:<p></p>
             {% endif %}
         {% endif %}
+        {# PHASE: SUCCESSFUL #}
         {# PHASE: RATING #}
         {% if contract_obj['phase'] == 'rating' %}
             rating...<p></p>
@@ -138,8 +147,9 @@
                     submit rating    <button type="submit">submit rating</button>
                 </form>
             {% endif %}
-        {% endif %}{# PHASE: RATING #}
-{#        other phases ...#}
+        {% endif %}
+        {# PHASE: RATING #}
+        {# other phases ...#}
         <p></p>
         <b>phase: {{ contract_obj['phase'] }}</b><p></p>
         {% if contract_obj['owner'] == current_user.id_object %}
@@ -161,10 +171,11 @@
             deadline: test start: {{ contract_obj['timeline'][2] }}<p></p>
             deadline: test end: {{ contract_obj['timeline'][3] }}<p></p>
         {% endif %}
-        {# for chat #}
-        {% if contract_obj['phase'] == 'inprogress' or contract_obj['phase'] == 'stalled' or contract_obj['phase'] == 'disputed' or contract_obj['phase'] == 'validation' or contract_obj['phase'] == 'gradevalidation' %}
+        {# CHAT #}
+        {% if contract_obj['phase'] == 'inprogress' or contract_obj['phase'] == 'disputed' or contract_obj['phase'] == 'validation' or contract_obj['phase'] == 'gradevalidation' %}
             <b>chat goes here... ... ... ... ... ... ... ... ... ... ...</b><p></p>
-            <div id="chat_main">{# CHAT: MAIN #}
+            {# CHAT: MAIN #}
+            <div id="chat_main">
                 {% if contract_obj['chat']|length > 0 %}
                     {% for chat in contract_obj['chat'] %}
                         <div class="chat_row">
@@ -181,7 +192,8 @@
                         send this chat?    <button type="submit">submit chat</button>
                     </form>
                 </div>
-            </div>{# CHAT: MAIN #}
+            </div>
+            {# CHAT: MAIN #}
         {% endif %}
     </div>
 {% endblock %}

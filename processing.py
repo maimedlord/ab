@@ -5,9 +5,6 @@ from werkzeug.security import generate_password_hash
 from user import User
 
 
-'''
-INCOMPLETE
-'''
 def get_contracts_top():
     contracts_data = calls.get_contracts_top_10()
     if contracts_data:
@@ -15,10 +12,6 @@ def get_contracts_top():
     return contracts_data
 
 
-'''
-INCOMPLETE
-WHERE IS THIS?
-'''
 def get_user_record(email, password):
     user_record = calls.get_user_record(email, password)
     if user_record == {"error": "no record found"}:
@@ -27,22 +20,15 @@ def get_user_record(email, password):
         return user_record
 
 
-'''
-INCOMPLETE
-'''
-
-
-def prc_accept_offer(contract_id, bhunter_id, bhunter_offer):
-    print(contract_id, bhunter_id)
-    result = calls.c_accept_offer(ObjectId(contract_id), ObjectId(bhunter_id), float(bhunter_offer))
-    if result.matched_count > 0 and result.matched_count == result.modified_count:
+def prc_accept_offer(bhunter_id, contract_id, bhunter_offer):
+    clog_obj = {
+        'event': 'bounty hunter offer accepted and phase set to inprogress',
+        'time': datetime.fromisoformat(datetime.now().isoformat()[:-7])
+    }
+    result = calls.c_accept_offer(ObjectId(contract_id), ObjectId(bhunter_id), float(bhunter_offer), clog_obj)
+    if result.acknowledged:
         return True
     return None
-
-
-'''
-INCOMPLETE
-'''
 
 
 def prc_create_ip(contract_id, bhunter_user_id, offer):
@@ -54,23 +40,13 @@ def prc_create_ip(contract_id, bhunter_user_id, offer):
     return calls.c_create_ip(contract_id, ip_object)
 
 
-'''
-INCOMPLETE
-'''
-
-
 def prc_send_chat(contractid, userid, message, mood):
     nowtime = datetime.fromisoformat(datetime.now().isoformat()[:-7])
     result = calls.c_send_chat(ObjectId(contractid), {'message': message, 'mood': mood, 'time': nowtime, 'user': ObjectId(userid)})
     if result:
-        if result.matched_count > 0 and result.matched_count == result.modified_count:
+        if result.acknowledged:
             return True
     return None
-
-
-'''
-INCOMPLETE
-'''
 
 
 def prc_set_disputed(contract_id):
@@ -80,85 +56,63 @@ def prc_set_disputed(contract_id):
     # return calls.c_set_disputed(ObjectId(contract_id))
     result = calls.c_set_disputed(ObjectId(contract_id))
     if result:
-        if result.matched_count > 0 and result.matched_count == result.modified_count:
+        if result.acknowledged:
             #  stuff to do...???
             return True
     return None
-
-
-'''
-INCOMPLETE
-'''
 
 
 def prc_set_successful(contract_id):
     result = calls.c_set_successful(ObjectId(contract_id))
     if result:
-        if result.matched_count > 0 and result.matched_count == result.modified_count:
+        if result.acknowledged:
             #  stuff to do...???
             return True
     return None
-
-'''
-INCOMPLETE
-'''
 
 
 def prc_set_open(contract_id):
-    result = calls.c_set_open(contract_id)
-    if result:
-        if result.matched_count > 0 and result.matched_count == result.modified_count:
-            #  stuff to do...???
-            return True
+    result = calls.c_set_open(ObjectId(contract_id), {
+        'event': 'contract set to \'open\'',
+        'time': datetime.fromisoformat(datetime.now().isoformat()[:-7])
+    })
+    if result.acknowledged:
+        #  stuff to do...???
+        return True
     return None
 
 
-'''
-INCOMPLETE
-'''
-
-
-def prc_set_approved(contract_id):
+def prc_submit_approval(contract_id):
     # bhunter gets paid
-
     # once paid, update database:
-    result = calls.c_set_approved(ObjectId(contract_id))
-    if result:
-        if result.matched_count > 0 and result.matched_count == result.modified_count:
-            #  stuff to do...
-            return True
+    result = calls.c_submit_approval(ObjectId(contract_id), {
+        'event': 'assignment approved',
+        'time': datetime.fromisoformat(datetime.now().isoformat()[:-7])
+    })
+    if result.acknowledged:
+        #  stuff to do...
+        return True
     return None
 
 
-'''
-INCOMPLETE
-'''
-
-
-def prc_set_g_validation(contract_id):
-    result = calls.c_set_g_validation(ObjectId(contract_id))
-    if result:
-        if result.matched_count > 0 and result.matched_count == result.modified_count:
-            return True
+def prc_submit_gvalidation(contract_id):
+    result = calls.c_submit_gvalidation(ObjectId(contract_id), {
+        'event': 'owner has submitted grade proof',
+        'time': datetime.fromisoformat(datetime.now().isoformat()[:-7])
+    })
+    if result.acknowledged:
+        return True
     return None
 
 
-'''
-INCOMPLETE
-'''
-
-
-def prc_set_validation(contract_id):
-    result = calls.c_set_validation(ObjectId(contract_id))
-    if result:
-        if result.matched_count > 0 and result.matched_count == result.modified_count:
-            return True
+def prc_submit_assignment(contract_id):
+    result = calls.c_submit_assignment(ObjectId(contract_id), {
+        'event': 'assignment submitted and waiting validation',
+        'time': datetime.fromisoformat(datetime.now().isoformat()[:-7])
+    })
+    if result.acknowledged:
+        return True
     return None
-
-
-'''
-INCOMPLETE
-'''
 
 
 def prc_submit_rating_c(comment, contract_id, rating, user_id):
@@ -287,11 +241,6 @@ def process_new_contract(form_dict, userid):
     return result
 
 
-'''
-INCOMPLETE
-'''
-
-
 def process_new_user(email, password1, username):
     user_template = {
         'active': True,
@@ -305,18 +254,12 @@ def process_new_user(email, password1, username):
     return calls.create_user(user_template)
 
 
-'''
-INCOMPLETE
-'''
-
-
 def process_user_orders(userid_obj):
     cursor_obj = calls.get_user_contracts(userid_obj)
     if cursor_obj:
         obj_arr = []
         for doc in cursor_obj:
             obj_arr.append(doc)
-            print(obj_arr[-1]['timeline'][3]['time'])
         return obj_arr
     else:
         return None

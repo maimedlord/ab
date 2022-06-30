@@ -27,36 +27,19 @@ dict_template = {
             }
 
 
-'''
-INCOMPLETE
-'''
-
-
-def c_accept_offer(contractid_obj, bhunterid_obj, bhunter_offer):
+def c_accept_offer(contractid_obj, bhunterid_obj, bhunter_offer, clog_obj):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
     result = dbc.update_one({'_id': contractid_obj},
                             {'$set': {'bhunter': bhunterid_obj, 'phase': 'inprogress', 'bounty': bhunter_offer},
-                             '$push': {'clog': {'event': 'bounty hunter offer accepted and phase set to inprogress',
-                                                'time': datetime.fromisoformat(datetime.now().isoformat()[:-7])}}})
-    print(result)
+                             '$push': {'clog': clog_obj}})
     return result
-
-
-'''
-INCOMPLETE
-'''
 
 
 def c_create_ip(contract_id, ip_object):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    return dbc.update_one({'_id': contract_id}, {'$push': {'iparties': ip_object, 'clog': {'event': 'user has made offer on contract', 'time': datetime.fromisoformat(datetime.now().isoformat()[:-7])}}})
-
-
-'''
-INCOMPLETE
-'''
+    return dbc.update_one({'_id': contract_id}, {'$push': {'iparties': ip_object}})
 
 
 def c_send_chat(contractid_obj, chat_obj):
@@ -65,29 +48,22 @@ def c_send_chat(contractid_obj, chat_obj):
     return dbc.update_one({'_id': contractid_obj}, {'$push': {'chat': chat_obj}})
 
 
-'''
-INCOMPLETE
-'''
+def cancel_contract(contract_id):
+    db = db_mc[dbContracts]
+    dbc = db[ccontracts]
+    return dbc.delete_one({'_id': ObjectId(contract_id)})
 
 
 def create_contract(user_obj):
     db = db_mc[dbUsers]
     dbc = db[cusers]
-    print(user_obj)
     # check if user exists
     if dbc.find_one(user_obj['owner']):
         db = db_mc[dbContracts]
         dbc = db[ccontracts]
         result = dbc.insert_one(user_obj)
-        print("yups")
-        print(result)
-    #result = dbc.insert_one(user_obj)
+        return result.acknowledged
     return None
-
-
-'''
-INCOMPLETE
-'''
 
 
 def create_user(user_template):
@@ -101,11 +77,6 @@ def create_user(user_template):
     else:
         dbc.insert_one(user_template)
         return True
-
-
-'''
-INCOMPLETE
-'''
 
 
 def get_all_open():
@@ -158,11 +129,6 @@ def get_contract(contract_id):
     return contract_obj
 
 
-'''
-INCOMPLETE
-'''
-
-
 def get_contracts_top_10():
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
@@ -170,11 +136,6 @@ def get_contracts_top_10():
     if contract_cursor:
         return contract_cursor
     return None
-
-
-'''
-INCOMPLETE
-'''
 
 
 def get_rating_obj(contract_id):
@@ -186,11 +147,6 @@ def get_rating_obj(contract_id):
         'owner': 1,
         'reviews': 1
     })
-
-
-'''
-INCOMPLETE
-'''
 
 
 def get_sesh(userid):
@@ -208,39 +164,20 @@ def get_sesh(userid):
         return []
 
 
-'''
-INCOMPLETE
-add filter to returned object???
-'''
-
-
-def get_user(userid_obj):
+def get_user(user_id):
     db = db_mc[dbUsers]
     dbc = db[cusers]
-    user_record = dbc.find_one({'_id': ObjectId(userid_obj)}, {
+    user_record = dbc.find_one({'_id': ObjectId(user_id)}, {
         'pass': 0
     })# add filter?
     return user_record
 
 
-'''
-INCOMPLETE
-'''
-
-
 def get_user_contracts(userid_obj):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    user_orders = dbc.find({"$or": [{"owner": userid_obj}, {"bhunter": userid_obj}]})
-    # print(user_orders)
-    # for doc in user_orders:
-    #     print(doc)
+    user_orders = dbc.find({"$or": [{"owner": userid_obj}, {"bhunter": userid_obj}, {'$and': [{'phase': 'open'}, {'iparties.bhunter': userid_obj}]}]})
     return user_orders
-
-
-'''
-INCOMPLETE
-'''
 
 
 def get_username(userid_obj):
@@ -252,78 +189,42 @@ def get_username(userid_obj):
     return user_name
 
 
-'''
-INCOMPLETE
-'''
-
-
 def c_set_disputed(contract_id):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
     return dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'disputed'}})
 
 
-'''
-INCOMPLETE
-'''
-
-
-def c_set_approved(contract_id):
+def c_submit_approval(contract_id, clog_obj):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    return dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'approved'}})
-
-
-'''
-INCOMPLETE
-'''
+    return dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'approved'}, '$push': {'clog': clog_obj}})
 
 
 def c_set_successful(contract_id):
-    print('c ss')
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
     return dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'successful'}})
 
 
-'''
-INCOMPLETE
-'''
-
-
-def c_set_open(contract_id):
+def c_set_open(contract_id, clog_obj):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    result = dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'open'}})
+    result = dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'open'}, '$push': {'clog': clog_obj}})
     return result
 
 
-'''
-INCOMPLETE
-'''
-
-
-def c_set_g_validation(contract_id):
+def c_submit_gvalidation(contract_id, clog_obj):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    result = dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'gradevalidation'}})
+    result = dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'gradevalidation'}, '$push': {'clog': clog_obj}})
     return result
 
 
-'''
-INCOMPLETE
-'''
-
-
-def c_set_validation(contract_id):
+def c_submit_assignment(contract_id, clog_obj):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    return dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'validation'}})
-
-
-'''
-INCOMPLETE
-'''
+    return dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'validation'}, '$push': {'clog': clog_obj}})
 
 
 def c_submit_rating_c(contract_id, review_obj):
@@ -333,11 +234,6 @@ def c_submit_rating_c(contract_id, review_obj):
     return dbc.update_one({'_id': contract_id}, {'$push': {'reviews': review_obj}})
 
 
-'''
-INCOMPLETE
-'''
-
-
 def c_submit_rating_u(user_id, review_obj):
     db = db_mc[dbUsers]
     dbc = db[cusers]
@@ -345,9 +241,12 @@ def c_submit_rating_u(user_id, review_obj):
     return dbc.update_one({'_id': user_id}, {'$push': {'reviewHistory': review_obj}})
 
 
-'''
-INCOMPLETE
-'''
+def c_update_clog(contract_id, clog_obj):
+    db = db_mc[dbContracts]
+    dbc = db[ccontracts]
+    return dbc.update_one({'_id': contract_id}, {'$push': {'clog': clog_obj}})
+
+
 def check_size():
     db = db_mc[dbContracts]
     dbc = db[ccontracts]

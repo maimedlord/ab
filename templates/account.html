@@ -52,15 +52,16 @@
         </div>
         {% for doc in user_orders %}
             <!-- can wrap row with a link -->
-            <a href="{{ url_for('contract', contract_id=doc['_id']) }}">
+            <a href="{{ url_for('contract', contract_id=doc['_id'], message='none') }}">
                 <div class="row_contract">
                     <!-- can wrap column with a link -->
                     <div class="column_contract">
                         {% if current_user.id_object == doc['owner'] %}
                             owner
-                        {% endif %}
-                        {% if current_user.id_object == doc['bhunter'] %}
+                        {% elif current_user.id_object == doc['bhunter'] %}
                             hunter
+                        {% else %}
+                            interested party
                         {% endif %}
                     </div>
                     <div class="column_contract">
