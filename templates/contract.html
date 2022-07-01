@@ -25,8 +25,9 @@
                 Your existing offer on this contract:<p></p>
                 offer: {{ data_obj['bhunter_offer']['offer'] }}
                 time: {{ data_obj['bhunter_offer']['time'] }}
-                {# show for the contract owner... maybe add another elif here? #}
+            {# show for the contract owner... maybe add another elif here? #}
             {% else %}
+                <a href="{{ url_for('cancel_contract', contract_id=contract_obj['_id']) }}">CANCEL BOUNTY</a><p></p>
                 {% for party in contract_obj['iparties'] %}
                     <div id="div_i_party">
                         interested party:<p></p>
@@ -35,6 +36,7 @@
                         time:    {{ party['time'] }}<p></p>
                         <a href="{{ url_for('accept_offer', bhunter_id=party['bhunter'], contract_id=contract_obj['_id'], offer=party['offer']) }}">ACCepT Offer</a>
                     </div>
+                    <p></p>
                 {% endfor %}
             {% endif %}
         {% endif %}

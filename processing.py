@@ -49,25 +49,39 @@ def prc_send_chat(contractid, userid, message, mood):
     return None
 
 
-def prc_set_disputed(contract_id):
+def prc_set_disputed(contract_id, reason):
     # need to also update changelog and message to both users...
     # what phase is contract in when set to dispute?
     # alert admin to look at contract and make a finding/judgement.
     # return calls.c_set_disputed(ObjectId(contract_id))
-    result = calls.c_set_disputed(ObjectId(contract_id))
-    if result:
-        if result.acknowledged:
-            #  stuff to do...???
-            return True
+    result = calls.c_set_disputed(ObjectId(contract_id), {
+        'event': reason,
+        'time': datetime.fromisoformat(datetime.now().isoformat()[:-7])
+    })
+    if result.acknowledged:
+        #  stuff to do...???
+        return True
     return None
 
 
+def prc_set_rating(contract_id):
+    result = calls.c_set_rating(ObjectId(contract_id), {
+        'event': 'rating: bhunter approved grade proof',
+        'time': datetime.fromisoformat(datetime.now().isoformat()[:-7])
+    })
+    if result.acknowledged:
+        return True
+    return False
+
+
 def prc_set_successful(contract_id):
-    result = calls.c_set_successful(ObjectId(contract_id))
-    if result:
-        if result.acknowledged:
-            #  stuff to do...???
-            return True
+    result = calls.c_submit_successful(ObjectId(contract_id), {
+        'event': 'successful: both users have submitted their ratings',
+        'time': datetime.fromisoformat(datetime.now().isoformat()[:-7])
+    })
+    if result.acknowledged:
+        #  stuff to do...???
+        return True
     return None
 
 
@@ -159,13 +173,26 @@ def prc_submit_rating_c(comment, contract_id, rating, user_id):
                 result1b = calls.c_submit_rating_u(ObjectId(user_id), user_review_obj2)
                 result2a = calls.c_submit_rating_u(other_user, user_review_obj1)
                 result2b = calls.c_submit_rating_u(other_user, user_review_obj2)
-                result3 = calls.c_set_successful(rating_obj['_id'])
+                result3 = calls.c_submit_successful(rating_obj['_id'], {
+                    'event': 'successful: ratings submitted by both users',
+                    'time': datetime.fromisoformat(datetime.now().isoformat()[:-7])
+                })
                 if result1a.acknowledged and result1b.acknowledged and result2a.acknowledged and result2b.acknowledged and result3.acknowledged:
                     return True
                 return None
             # update individual user reviewHistory for BOTH reviews
             # update phase of contract
     return None
+
+
+# def prc_submit_successful(contract_id):
+#     result = calls.c_submit_successful(ObjectId(contract_id), {
+#         'event': 'successful: something about ratings being completed....',#HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#         'time': datetime.fromisoformat(datetime.now().isoformat()[:-7])
+#     })
+#     if result.acknowledged:
+#         return True
+#     return False
 
 
 '''

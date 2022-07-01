@@ -119,13 +119,9 @@ need to add filter to reduce returned data
 
 
 def get_contract(contract_id):
-    print(contract_id)
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
     contract_obj = dbc.find_one({'_id': ObjectId(contract_id)})
-    print(contract_obj)
-    if contract_obj:
-        dict(contract_obj)
     return contract_obj
 
 
@@ -189,10 +185,10 @@ def get_username(userid_obj):
     return user_name
 
 
-def c_set_disputed(contract_id):
+def c_set_disputed(contract_id, clog_obj):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    return dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'disputed'}})
+    return dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'disputed'}, '$push': {'clog': clog_obj}})
 
 
 def c_submit_approval(contract_id, clog_obj):
@@ -201,10 +197,10 @@ def c_submit_approval(contract_id, clog_obj):
     return dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'approved'}, '$push': {'clog': clog_obj}})
 
 
-def c_set_successful(contract_id):
+def c_submit_successful(contract_id, clog_obj):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    return dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'successful'}})
+    return dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'successful'}, '$push': {'clog': clog_obj}})
 
 
 def c_set_open(contract_id, clog_obj):
@@ -212,6 +208,12 @@ def c_set_open(contract_id, clog_obj):
     dbc = db[ccontracts]
     result = dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'open'}, '$push': {'clog': clog_obj}})
     return result
+
+
+def c_set_rating(contract_id, clog_obj):
+    db = db_mc[dbContracts]
+    dbc = db[ccontracts]
+    return dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'rating'}, '$push': {'clog': clog_obj}})
 
 
 def c_submit_gvalidation(contract_id, clog_obj):
@@ -230,14 +232,12 @@ def c_submit_assignment(contract_id, clog_obj):
 def c_submit_rating_c(contract_id, review_obj):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    print('c submit')
     return dbc.update_one({'_id': contract_id}, {'$push': {'reviews': review_obj}})
 
 
 def c_submit_rating_u(user_id, review_obj):
     db = db_mc[dbUsers]
     dbc = db[cusers]
-    print('u submit')
     return dbc.update_one({'_id': user_id}, {'$push': {'reviewHistory': review_obj}})
 
 
@@ -252,5 +252,3 @@ def check_size():
     dbc = db[ccontracts]
     print(dbc.stats())
 
-if __name__ == '__main__':
-    print(check_size())

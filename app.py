@@ -246,7 +246,7 @@ def register():
 # def set_disputed(contract_id):
 #     print(contract_id)
 #     data_obj = {"ip_address": request.remote_addr}
-#     result = prc.prc_set_disputed(contract_id)
+#     result = prc.prc_set_disputed(contract_id, 'reason')
 #     if result:
 #         #print(result)
 #         return redirect(url_for('contract', contract_id=contract_id))
@@ -268,12 +268,11 @@ def set_dors(contract_id):
         if request.method == 'POST':
             dors = request.form['s_f_d_yon']
             if dors == 'disputed':
-                result = prc.prc_set_disputed(contract_id)
+                result = prc.prc_set_disputed(contract_id, 'disputed: bhunter disputes grade proof')
                 if result:
                     return redirect(url_for('contract', contract_id=contract_id, message='none'))
                 return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
             if dors == 'rating':
-                print('rating')
                 result = prc.prc_set_rating(contract_id)
                 if result:
                     return redirect(url_for('contract', contract_id=contract_id, message='none'))
