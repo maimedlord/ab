@@ -12,9 +12,12 @@ dbContracts = 'ab_dbcontracts'
 dbUsers = 'ab_dbusers'
 dbSiteGen = 'ab_dbsitegen'
 dbGames = 'ab_dbgames'
+dbLogs = 'ab_dblogs'
 db_mc = MongoClient()
-ccontracts = "ccontracts"
-cusers = "cusers"
+ccontracts = 'ccontracts'
+cusers = 'cusers'
+login_log = 'loginlog'
+logout_log = 'logoutlog'
 
 
 dict_template = {
@@ -128,7 +131,7 @@ def get_contract(contract_id):
 def get_contracts_top_10():
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    contract_cursor = dbc.find().limit(10)
+    contract_cursor = dbc.find({'phase': 'open'}).limit(10)
     if contract_cursor:
         return contract_cursor
     return None
@@ -252,3 +255,28 @@ def check_size():
     dbc = db[ccontracts]
     print(dbc.stats())
 
+
+def log_userlogin(user_id):
+    db = db_mc[dbLogs]
+    dbc = db[login_log]
+    result = dbc.insert_one({
+        'time': datetime.fromisoformat(datetime.now().isoformat()),
+        'userid': user_id
+    })
+    if result.acknowledged:
+        print(str(user_id) + ' has logged in')
+    else:
+        print('failed to log user login for ' + str(user_id))
+
+
+def log_userlogout(user_id):
+    db = db_mc[dbLogs]
+    dbc = db[logout_log]
+    result = dbc.insert_one({
+        'time': datetime.fromisoformat(datetime.now().isoformat()),
+        'userid': user_id
+    })
+    if result.acknowledged:
+        print(str(user_id) + ' has logged out')
+    else:
+        print('failed to log user logout for ' + str(user_id))

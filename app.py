@@ -54,6 +54,16 @@ def accept_offer(bhunter_id, contract_id, offer):
 def account():
     data_obj = {"ip_address": request.remote_addr}
     user_orders = prc.process_user_orders(current_user.id_object)
+    if user_orders:
+        total_earned = 0.0
+        for obj in user_orders:
+            print(obj)
+            print('\n')
+            if obj['bhunter'] == current_user.id_object and obj['phase'] == 'successful':
+                total_earned += obj['bounty']
+                total_earned += obj['efbonus']
+                total_earned += obj['egbonus']
+                data_obj['total_earned'] = total_earned
     return render_template('account.html', data_obj=data_obj, user_orders=user_orders)
 
 
@@ -192,6 +202,7 @@ def login():
             #     print(doc)
             #print(user_arr)
             login_user(User(user_arr[0], user_arr[1], user_arr[2], user_arr[3]))
+            calls.log_userlogin(current_user.id_object)
             # next = flask.request.args.get('next')
             # if not is_safe_url(next):
             #     return flask.abort(400)
@@ -205,6 +216,7 @@ def logout():
     data_obj = {"ip_address": request.remote_addr}
     if not current_user.is_authenticated:
         data_obj.update({"message": "You're already logged out tho..."})
+    calls.log_userlogout(current_user.id_object)
     logout_user()
     return render_template('logout.html', data_obj=data_obj)
 

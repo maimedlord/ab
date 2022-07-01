@@ -5,7 +5,8 @@
 {% block body %}
     <div id="account_general">
         <div id="a_g_left">
-            a_g_left
+            a_g_left<p></p>
+            <b>total earned: ${{ data_obj['total_earned'] }}</b>
         </div>
         <div id="a_g_right">
             a_g_right
@@ -16,39 +17,17 @@
     </div>
     <div id="container_contracts">
         <div id="c_c_header">
-            <div class="column_contract">
-                <b>position</b>
-            </div>
-            <div class="column_contract">
-                <b>phase</b>
-            </div>
-            <div class="column_contract">
-                <b>type</b>
-            </div>
-            <div class="column_contract">
-                <b>level of study</b>
-            </div>
-            <div class="column_contract">
-                <b>subject</b>
-            </div>
-            <div class="column_contract" id="col_specialization">
-                <b>specialization</b>
-            </div>
-            <div class="column_contract">
-                <b>deadline 1</b>
-            </div>
-            <div class="column_contract">
-                <b>deadline 2</b>
-            </div>
-            <div class="column_contract">
-                <b>bounty</b>
-            </div>
-            <div class="column_contract">
-                <b>excellent grade bonus</b>
-            </div>
-            <div class="column_contract">
-                <b>early finish bonus</b>
-            </div>
+            <div class="column_contract"><b>position</b></div>
+            <div class="column_contract"><b>phase</b></div>
+            <div class="column_contract"><b>type</b></div>
+            <div class="column_contract"><b>level of study</b></div>
+            <div class="column_contract"><b>subject</b></div>
+            <div class="column_contract" id="col_specialization"><b>specialization</b></div>
+            <div class="column_contract"><b>deadline 1</b></div>
+            <div class="column_contract"><b>deadline 2</b></div>
+            <div class="column_contract"><b>bounty</b></div>
+            <div class="column_contract"><b>excellent grade bonus</b></div>
+            <div class="column_contract"><b>early finish bonus</b></div>
         </div>
         {% for doc in user_orders %}
             <!-- can wrap row with a link -->
