@@ -42,19 +42,25 @@
         {% endif %}
         {# PHASE: OPEN #}
         {# PHASE: INPROGRESS #}
-        {% if contract_obj['phase'] == "inprogress" %}{# PHASE: INPROGRESS #}
-{#            <a href="{{ url_for('set_disputed', contractid=contract_obj['_id']) }}">link: set contract as disputed</a><p></p>#}
-            bounty hunter: {{ contract_obj['bhunter'] }}<p></p>
-            -----<p></p>
-            {% if contract_obj['owner'] == current_user.id_object %}
-                waiting on submission from bount hunter...<p></p>
+        {% if contract_obj['phase'] == "inprogress" %}
+            {# PHASE: INPROGRESS: ASSIGNMENT #}
+            {% if contract_obj['type_contract'] == 'assignment' %}
+                {#            <a href="{{ url_for('set_disputed', contractid=contract_obj['_id']) }}">link: set contract as disputed</a><p></p>#}
+                bounty hunter: {{ contract_obj['bhunter'] }}<p></p>
+                -----<p></p>
+                {% if contract_obj['owner'] == current_user.id_object %}
+                    waiting on submission from bount hunter...<p></p>
+                {% endif %}
+                {% if contract_obj['bhunter'] == current_user.id_object %}
+                    submit assignment for validation:
+                    <form action="{{ url_for('submit_assignment', contract_id=contract_obj['_id']) }}" id="submission" method="post" name="submission">
+                        <input id="s_f_submission" minlength="4" name="s_f_submission" placeholder="your submission here..." required type="text"><p></p>
+                        submit this submission?    <button type="submit">submit submission</button>
+                    </form>
+                {% endif %}
             {% endif %}
-            {% if contract_obj['bhunter'] == current_user.id_object %}
-                submit assignment for validation:
-                <form action="{{ url_for('submit_assignment', contract_id=contract_obj['_id']) }}" id="submission" method="post" name="submission">
-                    <input id="s_f_submission" minlength="4" name="s_f_submission" placeholder="your submission here..." required type="text"><p></p>
-                    submit this submission?    <button type="submit">submit submission</button>
-                </form>
+            {# PHASE: INPROGRESS: TEST #}
+            {% if contract_obj['type_contract'] == 'test' %}
             {% endif %}
         {% endif %}
         {# PHASE: INPROGRESS #}
@@ -62,6 +68,7 @@
         {% if contract_obj['phase'] == "stalled" %}
         {% endif %}
         {# PHASE: STALLED #}
+        {# PHASE: VALIDATION #}
         {% if contract_obj['phase'] == 'validation' %}
             contract is in process of validation for assignment only???...<p></p>
             // submission goes here...<p></p><p></p>
@@ -76,7 +83,7 @@
                 // link for resubmission in case of submit mistake?
             {% endif %}
         {% endif %}
-        {# PHASE: STALLED #}
+        {# PHASE: VALIDATION #}
         {# PHASE: APPROVED #}
         {% if contract_obj['phase'] == 'approved' %}
             approved contract for assignment only atm...<p></p><p></p>
@@ -117,6 +124,11 @@
             {% endif %}
         {% endif %}
         {# PHASE: GRADEVALIDATION #}
+        {# PHASE: DISPUTED #}
+        {% if contract_obj['phase'] == 'disputed' %}
+            {{ contract_obj['clog'][-1] }}
+        {% endif %}
+        {# PHASE: DISPUTED #}
         {# PHASE: SUCCESSFUL #}
         {% if contract_obj['phase'] == 'successful' %}
             <b>successFUL</b><p></p>
@@ -168,6 +180,7 @@
         {% endif %}
         contractid: {{ contract_obj['_id'] }}<p></p>
         bounty: {{ contract_obj['bounty'] }}<p></p>
+        type: {{ contract_obj['type_contract'] }}<p></p>
         level of study: {{ contract_obj['lostudy'] }}<p></p>
         subject: {{ contract_obj['subject'] }}<p></p>
         specialization: {{ contract_obj['specialization'] }}<p></p>

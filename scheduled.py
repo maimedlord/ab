@@ -78,6 +78,27 @@ def failed_a_validation():
     return ['failed_a_validation: nothing to update']
 
 
+def failed_t_validation():
+    db = db_mc[dbContracts]
+    dbc = db[ccontracts]
+    nowtime = datetime.fromisoformat(datetime.now().isoformat()[:-7])
+    contracts = list(dbc.find({'$and': [{'phase': 'validation'},
+                                        {'type_contract': 'test'},
+                                        {'timeline': {'$elemMatch': {'event': 'deadline: test start', 'time': {'$lte': nowtime}}}}]}))
+    if len(contracts) > 0:
+        failed_arr = []
+        for obj in contracts:
+            failed_arr.append({'ownerid': obj['owner'], 'contractid': obj['_id']})
+        contracts = dbc.update_many({'$and': [{'phase': 'validation'},
+                                              {'type_contract': 'test'},
+                                              {'timeline': {'$elemMatch': {'event': 'deadline: test start', 'time': {'$lte': nowtime}}}}]},
+                                    {'$set': {'phase': 'disputed'}, '$push': {'clog': {'event': 'disputed: owner did not validate bhunter\'s performance', 'time': nowtime}}})
+        if contracts.acknowledged:
+            return [contracts, failed_arr]
+        return ['move_t_validation: error during update']
+    return ['move_t_validation: nothing to update']
+
+
 def failed_rating():
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
@@ -109,7 +130,8 @@ def move_stalled():
         stalled_arr = []
         for obj in contracts:
             stalled_arr.append({'ownerid': obj['owner'], 'contractid': obj['_id']})
-        contracts = dbc.update_many({'$and': [{'phase': 'open'}, {'timeline': {'$elemMatch': {'event': 'deadline: stall', 'time': {'$lte': nowtime}}}}]},
+        contracts = dbc.update_many({'$and': [{'phase': 'open'},
+                                              {'timeline': {'$elemMatch': {'event': 'deadline: stall', 'time': {'$lte': nowtime}}}}]},
                                     {'$set': {'phase': 'stalled'}, '$push': {'clog': {'event': 'stalled: failed deadline', 'time': nowtime}}})
         if contracts.acknowledged:
             # send alerts to all users that have had their contracts stall
@@ -118,6 +140,28 @@ def move_stalled():
         return ['moved_stalled: error during update']
     return ['move_stalled: nothing to update']
 
+
+def move_t_validation():
+    db = db_mc[dbContracts]
+    dbc = db[ccontracts]
+    nowtime = datetime.fromisoformat(datetime.now().isoformat()[:-7])
+    contracts = list(dbc.find({'$and': [{'phase': 'inprogress'},
+                                        {'type_contract': 'test'},
+                                        {'timeline': {'$elemMatch': {'event': 'deadline: test start', 'time': {'$lte': nowtime}}}}]}))
+    if len(contracts) > 0:
+        failed_arr = []
+        for obj in contracts:
+            failed_arr.append({'ownerid': obj['owner'], 'contractid': obj['_id']})
+        contracts = dbc.update_many({'$and': [{'phase': 'inprogress'},
+                                        {'type_contract': 'test'},
+                                        {'timeline': {'$elemMatch': {'event': 'deadline: test start', 'time': {'$lte': nowtime}}}}]},
+                                    {'$set': {'phase': 'validation'}, '$push': {'clog': {'event': 'validation: test has started', 'time': nowtime}}})
+        if contracts.acknowledged:
+            return [contracts, failed_arr]
+        return ['move_t_validation: error during update']
+    return ['move_t_validation: nothing to update']
+
+
 if __name__ == '__main__':
-    print(failed_rating(), '\n')
+    print(move_t_validation(), '\n')
     # print(user_loader("theman@gmail.com"))

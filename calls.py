@@ -3,7 +3,7 @@ Alex Haas
 functions that make the calls and then separate functions that prepare data for use by FE
 '''
 from werkzeug.security import check_password_hash
-from pymongo import MongoClient, DESCENDING
+from pymongo import MongoClient, DESCENDING, ReturnDocument
 from datetime import datetime
 from bson.objectid import ObjectId
 
@@ -72,7 +72,6 @@ def create_contract(user_obj):
 def create_user(user_template):
     db = db_mc[dbUsers]
     dbc = db[cusers]
-    print(user_template['email'])
     email_result = dbc.find_one({'email': user_template['email']})
     username_result = dbc.find_one({'uName': user_template['uName']})
     if email_result or username_result:
@@ -120,12 +119,17 @@ INCOMPLETE
 need to add filter to reduce returned data
 '''
 
-
-def get_contract(contract_id):
+def c_get_contract(contract_id):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    contract_obj = dbc.find_one({'_id': ObjectId(contract_id)})
-    return contract_obj
+    return dbc.find_one({'_id': ObjectId(contract_id)})
+
+# hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+def c_get_contract_account(contract_id, nowtime, user_id):
+    db = db_mc[dbContracts]
+    dbc = db[ccontracts]
+    return dbc.find_one_and_update({'_id': contract_id},
+                                   {'$addToSet': {'lastViewed': {'$elemMatch': {'time': {'$lte': nowtime}, 'userid': user_id}}}})
 
 
 def get_contracts_top_10():
@@ -175,7 +179,8 @@ def get_user(user_id):
 def get_user_contracts(userid_obj):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    user_orders = dbc.find({"$or": [{"owner": userid_obj}, {"bhunter": userid_obj}, {'$and': [{'phase': 'open'}, {'iparties.bhunter': userid_obj}]}]})
+    user_orders = dbc.find({"$or": [{"owner": userid_obj}, {"bhunter": userid_obj},
+                                    {'$and': [{'phase': 'open'}, {'iparties.bhunter': userid_obj}]}]})
     return user_orders
 
 

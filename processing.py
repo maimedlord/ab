@@ -23,7 +23,7 @@ def get_user_record(email, password):
 def prc_accept_offer(bhunter_id, contract_id, bhunter_offer):
     clog_obj = {
         'event': 'bounty hunter offer accepted and phase set to inprogress',
-        'time': datetime.fromisoformat(datetime.now().isoformat()[:-7])
+        'time': datetime.fromisoformat(datetime.now().isoformat())
     }
     result = calls.c_accept_offer(ObjectId(contract_id), ObjectId(bhunter_id), float(bhunter_offer), clog_obj)
     if result.acknowledged:
@@ -31,17 +31,23 @@ def prc_accept_offer(bhunter_id, contract_id, bhunter_offer):
     return None
 
 
+def prc_get_contract_account(contract_id, user_id):
+    nowtime = datetime.fromisoformat(datetime.now().isoformat())
+    return calls.c_get_contract_account(ObjectId(contract_id), nowtime, ObjectId(user_id))
+
+
+
 def prc_create_ip(contract_id, bhunter_user_id, offer):
     ip_object = {
         'bhunter': bhunter_user_id,
         'offer': offer,
-        'time': datetime.fromisoformat(datetime.now().isoformat()[:-7])
+        'time': datetime.fromisoformat(datetime.now().isoformat())
     }
     return calls.c_create_ip(contract_id, ip_object)
 
 
 def prc_send_chat(contractid, userid, message, mood):
-    nowtime = datetime.fromisoformat(datetime.now().isoformat()[:-7])
+    nowtime = datetime.fromisoformat(datetime.now().isoformat())
     result = calls.c_send_chat(ObjectId(contractid), {'message': message, 'mood': mood, 'time': nowtime, 'user': ObjectId(userid)})
     if result:
         if result.acknowledged:
@@ -56,7 +62,7 @@ def prc_set_disputed(contract_id, reason):
     # return calls.c_set_disputed(ObjectId(contract_id))
     result = calls.c_set_disputed(ObjectId(contract_id), {
         'event': reason,
-        'time': datetime.fromisoformat(datetime.now().isoformat()[:-7])
+        'time': datetime.fromisoformat(datetime.now().isoformat())
     })
     if result.acknowledged:
         #  stuff to do...???
@@ -67,7 +73,7 @@ def prc_set_disputed(contract_id, reason):
 def prc_set_rating(contract_id):
     result = calls.c_set_rating(ObjectId(contract_id), {
         'event': 'rating: bhunter approved grade proof',
-        'time': datetime.fromisoformat(datetime.now().isoformat()[:-7])
+        'time': datetime.fromisoformat(datetime.now().isoformat())
     })
     if result.acknowledged:
         return True
@@ -77,7 +83,7 @@ def prc_set_rating(contract_id):
 def prc_set_successful(contract_id):
     result = calls.c_submit_successful(ObjectId(contract_id), {
         'event': 'successful: both users have submitted their ratings',
-        'time': datetime.fromisoformat(datetime.now().isoformat()[:-7])
+        'time': datetime.fromisoformat(datetime.now().isoformat())
     })
     if result.acknowledged:
         #  stuff to do...???
@@ -88,7 +94,7 @@ def prc_set_successful(contract_id):
 def prc_set_open(contract_id):
     result = calls.c_set_open(ObjectId(contract_id), {
         'event': 'contract set to \'open\'',
-        'time': datetime.fromisoformat(datetime.now().isoformat()[:-7])
+        'time': datetime.fromisoformat(datetime.now().isoformat())
     })
     if result.acknowledged:
         #  stuff to do...???
@@ -101,7 +107,7 @@ def prc_submit_approval(contract_id):
     # once paid, update database:
     result = calls.c_submit_approval(ObjectId(contract_id), {
         'event': 'assignment approved',
-        'time': datetime.fromisoformat(datetime.now().isoformat()[:-7])
+        'time': datetime.fromisoformat(datetime.now().isoformat())
     })
     if result.acknowledged:
         #  stuff to do...
@@ -112,7 +118,7 @@ def prc_submit_approval(contract_id):
 def prc_submit_gvalidation(contract_id):
     result = calls.c_submit_gvalidation(ObjectId(contract_id), {
         'event': 'owner has submitted grade proof',
-        'time': datetime.fromisoformat(datetime.now().isoformat()[:-7])
+        'time': datetime.fromisoformat(datetime.now().isoformat())
     })
     if result.acknowledged:
         return True
@@ -122,7 +128,7 @@ def prc_submit_gvalidation(contract_id):
 def prc_submit_assignment(contract_id):
     result = calls.c_submit_assignment(ObjectId(contract_id), {
         'event': 'assignment submitted and waiting validation',
-        'time': datetime.fromisoformat(datetime.now().isoformat()[:-7])
+        'time': datetime.fromisoformat(datetime.now().isoformat())
     })
     if result.acknowledged:
         return True
@@ -130,7 +136,7 @@ def prc_submit_assignment(contract_id):
 
 
 def prc_submit_rating_c(comment, contract_id, rating, user_id):
-    now_time = datetime.fromisoformat(datetime.now().isoformat()[:-7])
+    now_time = datetime.fromisoformat(datetime.now().isoformat())
     review_obj = {
         'comment': comment,
         'rating': float(rating),
@@ -139,12 +145,10 @@ def prc_submit_rating_c(comment, contract_id, rating, user_id):
     }
     rating_obj = calls.get_rating_obj(ObjectId(contract_id))
     if len(rating_obj['reviews']) == 0:
-        print('zero reviews')
         result = calls.c_submit_rating_c(ObjectId(contract_id), review_obj)
         if result.matched_count > 0 and result.matched_count == result.modified_count:
             return True
     if len(rating_obj['reviews']) == 1:
-        print('one existing review')
         if rating_obj['reviews'][0]['user'] != ObjectId(user_id):
             # update contract reviews
             # rating submitted to contract
@@ -175,7 +179,7 @@ def prc_submit_rating_c(comment, contract_id, rating, user_id):
                 result2b = calls.c_submit_rating_u(other_user, user_review_obj2)
                 result3 = calls.c_submit_successful(rating_obj['_id'], {
                     'event': 'successful: ratings submitted by both users',
-                    'time': datetime.fromisoformat(datetime.now().isoformat()[:-7])
+                    'time': datetime.fromisoformat(datetime.now().isoformat())
                 })
                 if result1a.acknowledged and result1b.acknowledged and result2a.acknowledged and result2b.acknowledged and result3.acknowledged:
                     return True
@@ -207,7 +211,8 @@ def process_new_contract(form_dict, userid):
     user_obj = {}
     bounty = float(form_dict['c_f_bounty'])
     user_obj.update({"bounty": bounty})
-    user_obj.update({"bhunter": ObjectId("000000000000000000000000")})
+    #user_obj.update({"bhunter": ObjectId("000000000000000000000000")})
+    user_obj.update({"bhunter": None})
     e_f_bonus = float(form_dict['c_f_efbonus'])
     user_obj.update({"efbonus": float(e_f_bonus)})
     e_g_bonus = float(form_dict['c_f_egbonus'])
@@ -222,7 +227,7 @@ def process_new_contract(form_dict, userid):
     specialization = form_dict['c_f_specialization']
     user_obj.update({"specialization": specialization})
     stall_iso = datetime.fromisoformat(form_dict['c_f_t_stall'] + 'T' + form_dict['c_f_t_s_time'] + ':00')
-    start_iso = datetime.fromisoformat(datetime.now().isoformat()[:-7])
+    start_iso = datetime.fromisoformat(datetime.now().isoformat())
     user_obj.update({"clog": []})
     subject = form_dict['c_f_subject']
     user_obj.update({"subject": subject})
@@ -264,6 +269,7 @@ def process_new_contract(form_dict, userid):
     user_obj.update({'phase': "creation"})
     user_obj.update({'reviews': []})
     user_obj.update({'chat': []})
+    user_obj.update({'lastViewed': []})
     result = calls.create_contract(user_obj)
     return result
 
@@ -274,7 +280,7 @@ def process_new_user(email, password1, username):
         'email': email,
         'pass': generate_password_hash(password1),
         'uName': username,
-        'joinDate': datetime.fromisoformat(datetime.now().isoformat()[:-7]),
+        'joinDate': datetime.fromisoformat(datetime.now().isoformat()),
         'timezone': 'sometimezonezzz',
         'reviewHistory': []
     }

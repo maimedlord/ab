@@ -43,40 +43,20 @@
                             interested party
                         {% endif %}
                     </div>
-                    <div class="column_contract">
-                        {{ doc['phase'] }}
-                    </div>
-                    <div class="column_contract">
-                        {{ doc['type_contract'] }}
-                    </div>
-                    <div class="column_contract">
-                        {{ doc['lostudy'] }}
-                    </div>
-                    <div class="column_contract">
-                        {{ doc['subject'] }}
-                    </div>
-                    <div class="column_contract" id="col_specialization">
-                        {{ doc['specialization'] }}
-                    </div>
+                    <div class="column_contract">{{ doc['phase'] }}</div>
+                    <div class="column_contract">{{ doc['type_contract'] }}</div>
+                    <div class="column_contract">{{ doc['lostudy'] }}</div>
+                    <div class="column_contract">{{ doc['subject'] }}</div>
+                    <div class="column_contract" id="col_specialization">{{ doc['specialization'] }}</div>
                     {% if doc['type_contract'] == "assignment" %}
                         {% if doc['timeline']|length > 5 %}
-                            <div class="column_contract">
-                                {{ doc['timeline'][5]['time'] }}
-                            </div>
+                            <div class="column_contract">{{ doc['timeline'][5]['time'] }}</div>
                         {% else %}
-                            <div class="column_contract">
-                                no efbonus deadline
-                            </div>
+                            <div class="column_contract">no efbonus deadline</div>
                         {% endif %}
-                        <div class="column_contract">
-                            {{ doc['timeline'][3]['time'] }}
-                        </div>
-                        <div class="column_contract">
-                            {{ doc['bounty'] }}
-                        </div>
-                        <div class="column_contract">
-                            {{ doc['egbonus'] }}
-                        </div>
+                        <div class="column_contract">{{ doc['timeline'][3]['time'] }}</div>
+                        <div class="column_contract">{{ doc['bounty'] }}</div>
+                        <div class="column_contract">{{ doc['egbonus'] }}</div>
                         <div class="column_contract">
                             {{ doc['efbonus'] }}
                         </div>

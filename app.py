@@ -57,8 +57,6 @@ def account():
     if user_orders:
         total_earned = 0.0
         for obj in user_orders:
-            print(obj)
-            print('\n')
             if obj['bhunter'] == current_user.id_object and obj['phase'] == 'successful':
                 total_earned += obj['bounty']
                 total_earned += obj['efbonus']
@@ -71,7 +69,7 @@ def account():
 @login_required
 def approve_submission(contract_id):
     data_obj = {'ip_address': request.remote_addr}
-    contract_obj = calls.get_contract(contract_id)
+    contract_obj = calls.c_get_contract(contract_id)
     if contract_obj:
         #  authorization...
         if contract_obj['owner'] != current_user.id_object:
@@ -92,7 +90,7 @@ def approve_submission(contract_id):
 @login_required
 def cancel_contract(contract_id):
     data_obj = {"ip_address": request.remote_addr}
-    contract_obj = calls.get_contract(contract_id)
+    contract_obj = calls.c_get_contract(contract_id)
     if contract_obj and contract_obj['owner'] != current_user.id_object:
         data_obj['message'] = 'you are not authorized to be here...'
         return render_template('hmm.html', data_obj=data_obj)
@@ -124,11 +122,15 @@ def create_contract():
 def contract(contract_id, message):
     data_obj = {'ip_address': request.remote_addr}
     data_obj.update({'message': message})
-    contract_obj = calls.get_contract(contract_id)
+    contract_obj = calls.c_get_contract(contract_id)
+    #contract_obj = prc.prc_get_contract_account(contract_id, current_user.id_object)
+    if not contract_obj:
+        data_obj.update({'message': 'contract not found or you are not permitted to view it'})
+        return render_template('hmm.html', data_obj=data_obj)
     # PHASE: CREATION
     if contract_obj and contract_obj['phase'] == 'creation' and contract_obj['owner'] == current_user.id_object:
         return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
-    # prepare for user having already submitted offer on this contract:
+    # IPARTIES
     iparty_arr = contract_obj['iparties']
     for doc in iparty_arr:
         if doc['bhunter'] == current_user.id_object:
@@ -180,7 +182,6 @@ def contract(contract_id, message):
         return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
     # phase: disputed
     if contract_obj and contract_obj['phase'] == 'disputed':
-        print("disputed")
         return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
     # rejected
     data_obj.update({'message': 'contract not found or you are not permitted to view it'})
@@ -270,7 +271,7 @@ def register():
 @login_required
 def set_dors(contract_id):
     data_obj = {'ip_address': request.remote_addr}
-    contract_obj = calls.get_contract(contract_id)
+    contract_obj = calls.c_get_contract(contract_id)
     if contract_obj:
         #  authorization...
         if contract_obj['bhunter'] != current_user.id_object and contract_obj['owner'] != current_user.id_object:
@@ -298,7 +299,7 @@ def set_dors(contract_id):
 @app.route('/set_open/<contract_id>')
 @login_required
 def set_open(contract_id):
-    contract_obj = calls.get_contract(contract_id)
+    contract_obj = calls.c_get_contract(contract_id)
     if contract_obj:
         if contract_obj and contract_obj['owner'] == current_user.id_object:
             result = prc.prc_set_open(contract_id)
@@ -313,7 +314,7 @@ def set_open(contract_id):
 @login_required
 def set_successful(contract_id):
     data_obj = {'ip_address': request.remote_addr}
-    contract_obj = calls.get_contract(contract_id)
+    contract_obj = calls.c_get_contract(contract_id)
     pass
 
 
@@ -321,7 +322,7 @@ def set_successful(contract_id):
 @login_required
 def submit_assignment(contract_id):
     data_obj = {'ip_address': request.remote_addr}
-    contract_obj = calls.get_contract(contract_id)
+    contract_obj = calls.c_get_contract(contract_id)
     if contract_obj:
         #  authorization...
         if contract_obj['bhunter'] != current_user.id_object:
@@ -342,7 +343,7 @@ def submit_assignment(contract_id):
 @login_required
 def submit_grade(contract_id):
     data_obj = {'ip_address': request.remote_addr}
-    contract_obj = calls.get_contract(contract_id)
+    contract_obj = calls.c_get_contract(contract_id)
     if contract_obj:
         #  authorization...
         if contract_obj['owner'] != current_user.id_object:
@@ -364,7 +365,7 @@ def submit_grade(contract_id):
 @login_required
 def submit_rating(contract_id):
     data_obj = {'ip_address': request.remote_addr}
-    contract_obj = calls.get_contract(contract_id)
+    contract_obj = calls.c_get_contract(contract_id)
     if contract_obj:
         #  authorization...
         if contract_obj['bhunter'] == current_user.id_object or contract_obj['owner'] == current_user.id_object:
@@ -395,7 +396,7 @@ def success():
 @login_required
 def validate_submission(contract_id):
     data_obj = {'ip_address': request.remote_addr}
-    contract_obj = calls.get_contract(contract_id)
+    contract_obj = calls.c_get_contract(contract_id)
     if contract_obj:
         pass
     data_obj['message'] = 'the contract was not found'
