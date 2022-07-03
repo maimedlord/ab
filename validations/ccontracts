@@ -1,0 +1,229 @@
+{
+  $jsonSchema: {
+    bsonType: 'object',
+    required: [
+      'bounty',
+      'bhunter',
+      'chat',
+      'clog',
+      'efbonus',
+      'egbonus',
+      'instructions',
+      'iparties',
+      'lvbhunter',
+      'lvowner',
+      'lostudy',
+      'owner',
+      'phase',
+      'reviews',
+      'sample',
+      'specialization',
+      'subject',
+      'timeline',
+      'type_contract'
+    ],
+    properties: {
+      bounty: {
+        bsonType: 'double',
+        description: 'contract: bounty'
+      },
+      bhunter: {
+        bsonType: [
+          'null',
+          'objectId'
+        ],
+        description: 'contract: bhunter'
+      },
+      chat: {
+        bsonType: 'array',
+        description: 'contract: chat',
+        uniqueItems: true,
+        minItems: 0,
+        items: {
+          bsonType: 'object',
+          description: 'contract: chat: item',
+          required: [
+            'message',
+            'mood',
+            'time',
+            'user'
+          ],
+          properties: {
+            message: {
+              bsonType: 'string',
+              description: 'contract: chat: item: message'
+            },
+            mood: {
+              bsonType: 'string',
+              description: 'contract: chat: item: mood'
+            },
+            time: {
+              bsonType: 'date',
+              description: 'contract: chat: item: date'
+            },
+            user: {
+              bsonType: 'objectId',
+              description: 'contract: chat: item: user'
+            }
+          }
+        }
+      },
+      clog: {
+        bsonType: 'array',
+        description: 'contract: clog',
+        items: {
+          bsonType: 'object',
+          required: [
+            'time',
+            'event'
+          ],
+          properties: {
+            time: {
+              bsonType: 'date'
+            },
+            event: {
+              bsonType: 'string'
+            }
+          }
+        },
+        uniqueItems: true
+      },
+      efbonus: {
+        bsonType: 'double',
+        description: 'contract: efbonus'
+      },
+      egbonus: {
+        bsonType: 'double',
+        description: 'contract: egbonus'
+      },
+      instructions: {
+        bsonType: 'string',
+        description: 'contract: instructions'
+      },
+      iparties: {
+        bsonType: 'array',
+        description: 'contract: iparties',
+        uniqueItems: true,
+        minItems: 0,
+        items: {
+          bsonType: 'object',
+          description: 'contract: iparties: item',
+          required: [
+            'time',
+            'bhunter',
+            'offer'
+          ],
+          properties: {
+            time: {
+              bsonType: 'date',
+              description: 'contract: iparties: time'
+            },
+            bhunter: {
+              bsonType: 'objectId',
+              description: 'contract: iparties: bhunter'
+            },
+            offer: {
+              bsonType: 'double',
+              description: 'contract: iparties: coffer'
+            }
+          }
+        }
+      },
+      lvbhunter: {
+        bsonType: [
+          'date',
+          'null'
+        ],
+        description: 'contract: lvbhunter'
+      },
+      lvowner: {
+        bsonType: [
+          'date',
+          'null'
+        ],
+        description: 'contract: lvbhunter'
+      },
+      lostudy: {
+        bsonType: 'string',
+        description: 'contract: lostudy',
+        pattern: '^high school$|^undergraduate$|^graduate$'
+      },
+      owner: {
+        bsonType: 'objectId',
+        description: 'contract: owner'
+      },
+      phase: {
+        bsonType: 'string',
+        description: 'contract: phase'
+      },
+      reviews: {
+        bsonType: 'array',
+        description: 'contracts: reviews',
+        maxItems: 2,
+        minItems: 0,
+        uniqueItems: true,
+        items: {
+          bsonType: 'object',
+          description: 'contracts: reviews: item',
+          required: [
+            'comment',
+            'rating',
+            'time',
+            'user'
+          ],
+          properties: {
+            comment: {
+              bsonType: 'string',
+              description: 'contracts: reviews: item: review'
+            },
+            rating: {
+              bsonType: 'double',
+              description: 'contracts: reviews: item: rating'
+            },
+            time: {
+              bsonType: 'date',
+              description: 'contracts: reviews: item: time'
+            },
+            user: {
+              bsonType: 'objectId',
+              description: 'contracts: reviews: item: user'
+            }
+          }
+        }
+      },
+      sample: {
+        bsonType: 'string',
+        description: 'contract: sample'
+      },
+      specialization: {
+        bsonType: 'string',
+        description: 'contract: specialization'
+      },
+      subject: {
+        bsonType: 'string',
+        description: 'contract: subject'
+      },
+      timeline: {
+        bsonType: 'array',
+        description: 'contract: timeline',
+        items: {
+          bsonType: 'object',
+          required: [
+            'time',
+            'event'
+          ],
+          properties: {
+            time: {
+              bsonType: 'date'
+            },
+            event: {
+              bsonType: 'string'
+            }
+          },
+          minItems: 4,
+          uniqueItems: true
+        }
+      }
+    }
+  }
+}

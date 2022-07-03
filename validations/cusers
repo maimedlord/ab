@@ -7,7 +7,8 @@
       'pass',
       'uName',
       'joinDate',
-      'orders'
+      'timezone',
+      'reviewHistory'
     ],
     properties: {
       active: {
@@ -20,21 +21,58 @@
       },
       pass: {
         bsonType: 'string',
-        description: 'required: pass',
-        minLength: 12,
-        maxLength: 64
+        description: 'required: pass'
       },
       uName: {
         bsonType: 'string',
         description: 'required: uName'
       },
       joinDate: {
-        bsonType: 'string',
+        bsonType: 'date',
         description: 'required: joinDate'
       },
-      orders: {
+      timezone: {
+        bsonType: 'string',
+        description: 'user: timezone'
+      },
+      reviewHistory: {
         bsonType: 'array',
-        description: 'required: array of order objects'
+        description: 'user: reviewHistory',
+        minItems: 0,
+        uniqueItems: true,
+        items: {
+          bsonType: 'object',
+          description: 'user: reviewHistory item',
+          required: [
+            'comment',
+            'contract',
+            'rating',
+            'reviewer',
+            'time'
+          ],
+          properties: {
+            comment: {
+              bsonType: 'string',
+              description: 'user: reviewHistory: review'
+            },
+            contract: {
+              bsonType: 'objectId',
+              description: 'user: reviewHistory: contract'
+            },
+            rating: {
+              bsonType: 'double',
+              description: 'user: reviewHistory: rating'
+            },
+            reviewer: {
+              bsonType: 'objectId',
+              description: 'user: reviewHistory: reviewer'
+            },
+            time: {
+              bsonType: 'date',
+              description: 'user: reviewHistory: time'
+            }
+          }
+        }
       }
     }
   }
