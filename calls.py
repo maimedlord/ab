@@ -124,12 +124,17 @@ def c_get_contract(contract_id):
     dbc = db[ccontracts]
     return dbc.find_one({'_id': ObjectId(contract_id)})
 
-# hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+# MAKE THIS USE ONE QUERY WITH AGGREGATION... MAYBE BATCHES?
 def c_get_contract_account(contract_id, nowtime, user_id):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    return dbc.find_one_and_update({'_id': contract_id},
-                                   {'$addToSet': {'lastViewed': {'$elemMatch': {'time': {'$lte': nowtime}, 'userid': user_id}}}})
+    # AGGREGATION ...
+    # result =  dbc.find_one_and_update({'_id': contract_id},
+    #                                [{'$bucket': {
+    #                                    '$groupBy': 'owner',
+    #                                }}])
+    # print(result)
+    # return result
 
 
 def get_contracts_top_10():
@@ -211,11 +216,22 @@ def c_submit_successful(contract_id, clog_obj):
     return dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'successful'}, '$push': {'clog': clog_obj}})
 
 
+def c_getset_lvbhunter(contract_id, time):
+    db = db_mc[dbContracts]
+    dbc = db[ccontracts]
+    return dbc.find_one_and_update({'_id': contract_id}, {'$set': {'lvbhunter': time}})
+
+
+def c_getset_lvowner(contract_id, time):
+    db = db_mc[dbContracts]
+    dbc = db[ccontracts]
+    return dbc.find_one_and_update({'_id': contract_id}, {'$set': {'lvowner': time}})
+
+
 def c_set_open(contract_id, clog_obj):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    result = dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'open'}, '$push': {'clog': clog_obj}})
-    return result
+    return dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'open'}, '$push': {'clog': clog_obj}})
 
 
 def c_set_rating(contract_id, clog_obj):

@@ -33,7 +33,13 @@ def prc_accept_offer(bhunter_id, contract_id, bhunter_offer):
 
 def prc_get_contract_account(contract_id, user_id):
     nowtime = datetime.fromisoformat(datetime.now().isoformat())
-    return calls.c_get_contract_account(ObjectId(contract_id), nowtime, ObjectId(user_id))
+    result = calls.c_get_contract(ObjectId(contract_id))
+    if result:
+        if result['bhunter'] == ObjectId(user_id):
+            return calls.c_getset_lvbhunter(ObjectId(contract_id), datetime.fromisoformat(datetime.now().isoformat()))
+        if result['owner'] == ObjectId(user_id):
+            return calls.c_getset_lvowner(ObjectId(contract_id), datetime.fromisoformat(datetime.now().isoformat()))
+    return result
 
 
 
@@ -269,7 +275,8 @@ def process_new_contract(form_dict, userid):
     user_obj.update({'phase': "creation"})
     user_obj.update({'reviews': []})
     user_obj.update({'chat': []})
-    user_obj.update({'lastViewed': []})
+    user_obj.update({'lvbhunter': None})
+    user_obj.update({'lvowner': None})
     result = calls.create_contract(user_obj)
     return result
 

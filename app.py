@@ -122,8 +122,8 @@ def create_contract():
 def contract(contract_id, message):
     data_obj = {'ip_address': request.remote_addr}
     data_obj.update({'message': message})
-    contract_obj = calls.c_get_contract(contract_id)
-    #contract_obj = prc.prc_get_contract_account(contract_id, current_user.id_object)
+    #contract_obj = calls.c_get_contract(contract_id)
+    contract_obj = prc.prc_get_contract_account(contract_id, current_user.id_object)
     if not contract_obj:
         data_obj.update({'message': 'contract not found or you are not permitted to view it'})
         return render_template('hmm.html', data_obj=data_obj)
