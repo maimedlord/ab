@@ -2,8 +2,8 @@ import calls
 from datetime import datetime, timedelta
 from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash
+from werkzeug.utils import secure_filename
 from user import User
-
 
 def get_contracts_top():
     contracts_data = calls.get_contracts_top_10()
@@ -228,8 +228,11 @@ def process_new_contract(form_dict, userid):
         g_deadline = datetime.fromisoformat(form_dict['c_f_t_g_deadline'] + 'T' + form_dict['c_f_t_g_d_time'] + ':00.000000')
     lostudy = form_dict['c_f_lostudy']
     user_obj.update({"lostudy": lostudy})
-    sample = form_dict['c_f_sample']
-    user_obj.update({"sample": sample})
+    sampleText = form_dict['c_f_sample_str']
+    if sampleText == '':
+        user_obj.update({'sampleText': None})
+    else:
+        user_obj.update({"sampleText": sampleText})
     specialization = form_dict['c_f_specialization']
     user_obj.update({"specialization": specialization})
     stall_iso = datetime.fromisoformat(form_dict['c_f_t_stall'] + 'T' + form_dict['c_f_t_s_time'] + ':00')
@@ -277,8 +280,10 @@ def process_new_contract(form_dict, userid):
     user_obj.update({'chat': []})
     user_obj.update({'lvbhunter': None})
     user_obj.update({'lvowner': None})
-    result = calls.create_contract(user_obj)
-    return result
+    # insert contract before uploading sample as need contractid:
+    user_obj.update({'sampleUpId': None})
+    c_insert_return = calls.create_contract(user_obj)
+    return c_insert_return.acknowledged
 
 
 def process_new_user(email, password1, username):

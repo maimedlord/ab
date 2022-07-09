@@ -1,5 +1,7 @@
+import os
 from flask import Flask, redirect, render_template, request, session, url_for, flash, Markup
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
+from werkzeug.utils import secure_filename
 import processing as prc
 import calls
 # import html
@@ -16,6 +18,14 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 app.config['SECRET_KEY'] = 'secret!'  # put in config file?
+app.config['UPLOAD_FOLDER'] = 'uploads'
+
+ALLOWED_EXTENSIONS = {'gif', 'jpg', 'pdf', 'png', 'txt'}
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 '''
@@ -107,6 +117,13 @@ def cancel_contract(contract_id):
 def create_contract():
     data_obj = {"ip_address": request.remote_addr}
     if request.method == 'POST':
+        # if 'file' not in request.files:
+        if 'file' in request.files:
+            the_file = request.files['file']
+            if the_file and the_file.filename != '' and allowed_file(the_file.filename):
+                filename = secure_filename(the_file.filename)
+                the_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                print('file was saved????')
         prc_return = prc.process_new_contract(request.form, current_user.id_object)
         if prc_return is None:
             data_obj.update({"message": "processing for your contract failed..."})

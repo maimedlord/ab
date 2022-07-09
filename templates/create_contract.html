@@ -5,7 +5,7 @@
 {% block body %}
     <div id="cc_main">
         {{ data_obj['message'] }}
-        <form action="" id="c_form" method="post" name="c_form">
+        <form action="" enctype="multipart/form-data" id="c_form" method="post" name="c_form">
             <input id="c_f_lostudy" name="c_f_lostudy" type="hidden" value="none">
             <input id="c_f_type" name="c_f_type" type="hidden" value="none">
             <input id="c_f_t_r_deadline" name="c_f_t_r_deadline" type="hidden" value="none">
@@ -51,8 +51,12 @@
             <div class="all" id="div_instructions">
                 instructions: <input id="c_f_instructions" placeholder="instructions..." name="c_f_instructions" required type="text">
             </div>
-            <div class="all" id="div_sample">
-                sample: <input id="c_f_sample" placeholder="sample..." name="c_f_sample" required type="text">
+{#            NEEDS TO HAVE ONE OF THEM BE REQUIRED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#}
+            <div class="all" id="div_sample_str">
+                sample text box: <input id="c_f_sample_str" placeholder="sample..." name="c_f_sample_str" type="text">{# required ??? #}
+            </div>
+            <div class="all" id="div_sample_up">
+                sample file upload: <input id="file" name="file" type="file">{# required ??? #}
             </div>
             <div class="therest" id="div_timezone">
                 make sure to have a timezone setting for each user...

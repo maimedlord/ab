@@ -13,11 +13,13 @@ dbUsers = 'ab_dbusers'
 dbSiteGen = 'ab_dbsitegen'
 dbGames = 'ab_dbgames'
 dbLogs = 'ab_dblogs'
+dbUploads = 'ab_dbuploads'
 db_mc = MongoClient()
 ccontracts = 'ccontracts'
 cusers = 'cusers'
 login_log = 'loginlog'
 logout_log = 'logoutlog'
+samples = 'samples'
 
 
 dict_template = {
@@ -65,7 +67,7 @@ def create_contract(user_obj):
         db = db_mc[dbContracts]
         dbc = db[ccontracts]
         result = dbc.insert_one(user_obj)
-        return result.acknowledged
+        return result
     return None
 
 
@@ -301,3 +303,9 @@ def log_userlogout(user_id):
         print(str(user_id) + ' has logged out')
     else:
         print('failed to log user logout for ' + str(user_id))
+
+
+def upload_sample(sample_obj):
+    db = db_mc[dbUploads]
+    dbc = db[samples]
+    return dbc.insert_one(sample_obj)
