@@ -117,12 +117,12 @@ def create_contract():
     data_obj = {"ip_address": request.remote_addr}
     if request.method == 'POST':
     # if 'file' in request.files:
-        the_file = request.files['file']
+        the_file = request.files['sample_file']
         if the_file and the_file.filename != '' and allowed_file(the_file.filename):
             prc_return = prc.process_new_contract(request.form, current_user.id_object)
             if prc_return.acknowledged:
                 filename = secure_filename(the_file.filename)
-                filename = str(prc_return.inserted_id) + '-' + filename
+                filename = str(prc_return.inserted_id) + '-sample-' + filename
                 the_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 result = calls.c_set_sampleUp(prc_return.inserted_id, filename)
                 if result.acknowledged is False:
@@ -210,10 +210,21 @@ def contract(contract_id, message):
     return render_template('hmm.html', data_obj=data_obj)
 
 
+@app.route('/download_grade_proof/<filename>', methods=['GET'])
+@login_required
+def download_grade_proof(filename):
+    return send_from_directory(directory=app.config['UPLOAD_FOLDER'], path='/', filename=filename)
+
+
 @app.route('/download_sample/<filename>', methods=['GET'])
 @login_required
 def download_sample(filename):
-    uploads = os.path.join(app.root_path, app.config['UPLOAD_FOLDER'])
+    return send_from_directory(directory=app.config['UPLOAD_FOLDER'], path='/', filename=filename)
+
+
+@app.route('/download_submission/<filename>', methods=['GET'])
+@login_required
+def download_submission(filename):
     return send_from_directory(directory=app.config['UPLOAD_FOLDER'], path='/', filename=filename)
 
 
@@ -347,6 +358,7 @@ def set_successful(contract_id):
     pass
 
 
+# NEED TO FIX MAJOR
 @app.route('/submit_assignment/<contract_id>', methods=['GET', 'POST'])
 @login_required
 def submit_assignment(contract_id):
@@ -359,10 +371,15 @@ def submit_assignment(contract_id):
             return render_template('hmm.html', data_obj=data_obj)
         # ...
         if request.method == 'POST':
-            print('here')
-            the_file = request.files['file']
+            the_file = request.files['assignment_file']
             if the_file and the_file.filename != '' and allowed_file(the_file.filename):
-                print('passed and stuff')
+                filename = secure_filename(the_file.filename)
+                filename = contract_id + '-asubmit-' + filename
+                the_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                result = prc.prc_submit_assignment(contract_id, filename)
+                if result:
+                    return redirect(url_for('contract', contract_id=contract_id, message='none'))
+                return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
 
             # submission = request.form['s_f_submission']
             # result = prc.prc_submit_assignment(contract_id)
@@ -373,6 +390,7 @@ def submit_assignment(contract_id):
     return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
 
 
+# NEED TO FIX MAJOR
 @app.route('/submit_grade/<contract_id>', methods=['GET', 'POST'])
 @login_required
 def submit_grade(contract_id):
@@ -385,12 +403,16 @@ def submit_grade(contract_id):
             return render_template('hmm.html', data_obj=data_obj)
         # ...
         if request.method == 'POST':
-            grade = request.form['s_f_grade']
-            grade_proof = request.form['s_f_yon']
-            result = prc.prc_submit_gvalidation(contract_id)
-            if result:
-                return redirect(url_for('contract', contract_id=contract_id, message='none'))
-            return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
+            the_file = request.files['grade_file']
+            yon = request.form['s_f_yon']# NEED TO USE
+            if the_file and the_file.filename != '' and allowed_file(the_file.filename):
+                filename = secure_filename(the_file.filename)
+                filename = contract_id + '-grade-' + filename
+                the_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                result = prc.prc_submit_gvalidation(contract_id, filename)
+                if result:
+                    return redirect(url_for('contract', contract_id=contract_id, message='none'))
+                return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
     data_obj['message'] = 'the contract was not found'
     return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
 

@@ -248,17 +248,17 @@ def c_set_rating(contract_id, clog_obj):
     return dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'rating'}, '$push': {'clog': clog_obj}})
 
 
-def c_submit_gvalidation(contract_id, clog_obj):
+def c_submit_gvalidation(contract_id, clog_obj, filename):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    result = dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'gradevalidation'}, '$push': {'clog': clog_obj}})
+    result = dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'gradevalidation', 'gsubmission': filename}, '$push': {'clog': clog_obj}})
     return result
 
 
-def c_submit_assignment(contract_id, clog_obj):
+def c_submit_assignment(contract_id, clog_obj, filename):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    return dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'validation'}, '$push': {'clog': clog_obj}})
+    return dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'validation', 'asubmission': filename}, '$push': {'clog': clog_obj}})
 
 
 def c_submit_rating_c(contract_id, review_obj):

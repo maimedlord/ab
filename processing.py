@@ -121,21 +121,21 @@ def prc_submit_approval(contract_id):
     return None
 
 
-def prc_submit_gvalidation(contract_id):
+def prc_submit_gvalidation(contract_id, filename):
     result = calls.c_submit_gvalidation(ObjectId(contract_id), {
         'event': 'owner has submitted grade proof',
         'time': datetime.fromisoformat(datetime.now().isoformat())
-    })
+    }, filename)
     if result.acknowledged:
         return True
     return None
 
 
-def prc_submit_assignment(contract_id):
+def prc_submit_assignment(contract_id, filename):
     result = calls.c_submit_assignment(ObjectId(contract_id), {
         'event': 'assignment submitted and waiting validation',
         'time': datetime.fromisoformat(datetime.now().isoformat())
-    })
+    }, filename)
     if result.acknowledged:
         return True
     return None
@@ -281,6 +281,8 @@ def process_new_contract(form_dict, userid):
     user_obj.update({'lvbhunter': None})
     user_obj.update({'lvowner': None})
     user_obj.update({'sampleUp': None})
+    user_obj.update({'asubmission': None})
+    user_obj.update({'gsubmission': None})
     c_insert_return = calls.create_contract(user_obj)
     return c_insert_return
 

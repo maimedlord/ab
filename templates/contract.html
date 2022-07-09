@@ -54,7 +54,7 @@
                 {% if contract_obj['bhunter'] == current_user.id_object %}
                     submit assignment for validation:
                     <form action="{{ url_for('submit_assignment', contract_id=contract_obj['_id']) }}" enctype="multipart/form-data" id="submission" method="post" name="submission">
-                        <input id="file" name="file" required type="file"><p></p>
+                        <input id="afile" name="assignment_file" required type="file"><p></p>
                         submit file?    <button type="submit">submit submission</button>
                     </form>
                 {% endif %}
@@ -73,6 +73,7 @@
             contract is in process of validation for assignment only???...<p></p>
             // submission goes here...<p></p><p></p>
             {% if current_user.id_object == contract_obj['owner'] %}
+                <a href="{{ url_for('download_submission', filename=contract_obj['asubmission']) }}" download>DOWNLOAD bhunter's submission</a><p></p>
                 <form action="{{ url_for('approve_submission', contract_id=contract_obj['_id']) }}" id="approve_submission" method="post" name="approve_submission">
                     <input id="a_f_approval" name="a_f_approval" required type="checkbox" value="true"><p></p>
                     approve this submission?    <button type="submit">approve submission</button>
@@ -94,11 +95,11 @@
             {% if contract_obj['owner'] == current_user.id_object %}
                 <b>// waiting for grade</b><p></p>
                 // here will go a form for uploading proof of the grade:<p></p>
-                <form action="{{ url_for('submit_grade', contract_id=contract_obj['_id']) }}" id="submit_grade" method="post" name="submit_grade">
+                <form action="{{ url_for('submit_grade', contract_id=contract_obj['_id']) }}" enctype="multipart/form-data" id="submit_grade" method="post" name="submit_grade">
                     did the grade meet or exceed the excellent grade bonus requirement?
                     yes: <input id="s_f_yes" name="s_f_yon" required type="radio" value="true">
                     no: <input id="s_f_no" name="s_f_yon" required type="radio" value="false"><p></p>
-                    grade proof: <input id="s_f_grade" minlength="4" name="s_f_grade" required type="text"><p></p>
+                    grade proof: <input id="grade_file" name="grade_file" required type="file"><p></p>
                     submit grade proof    <button type="submit">submit grade</button>
                 </form>
                 proof of grade:
@@ -110,7 +111,7 @@
             gradevalidation...<p></p>
             {% if contract_obj['bhunter'] == current_user.id_object %}
                 bhunter view<p></p>
-                here is the proof of the grade: // proof here...<p></p>
+                <a href="{{ url_for('download_grade_proof', filename=contract_obj['gsubmission']) }}" download>DOWNLOAD leh gradepruf</a><p></p>
                 <form action="{{ url_for('set_dors', contract_id=contract_obj['_id']) }}" id="set_dispute" method="post" name="set_dispute">
                     do you dispute the proof?<p></p>
                     yes: <input id="s_f_d_yes" name="s_f_d_yon" required type="radio" value="disputed">

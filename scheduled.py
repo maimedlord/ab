@@ -163,5 +163,5 @@ def move_t_validation():
 
 
 if __name__ == '__main__':
-    print(failed_t_validation(), '\n')
+    print(failed_g_submit(), '\n')
     # print(user_loader("theman@gmail.com"))
