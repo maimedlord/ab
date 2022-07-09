@@ -123,7 +123,7 @@ def create_contract():
             if the_file and the_file.filename != '' and allowed_file(the_file.filename):
                 filename = secure_filename(the_file.filename)
                 the_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                print('file was saved????')
+                #############################################################################################
         prc_return = prc.process_new_contract(request.form, current_user.id_object)
         if prc_return is None:
             data_obj.update({"message": "processing for your contract failed..."})
