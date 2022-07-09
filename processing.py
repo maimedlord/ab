@@ -280,10 +280,9 @@ def process_new_contract(form_dict, userid):
     user_obj.update({'chat': []})
     user_obj.update({'lvbhunter': None})
     user_obj.update({'lvowner': None})
-    # insert contract before uploading sample as need contractid:
-    user_obj.update({'sampleUpId': None})
+    user_obj.update({'sampleUp': None})
     c_insert_return = calls.create_contract(user_obj)
-    return c_insert_return.acknowledged
+    return c_insert_return
 
 
 def process_new_user(email, password1, username):

@@ -1,5 +1,5 @@
 import os
-from flask import Flask, redirect, render_template, request, session, url_for, flash, Markup
+from flask import Flask, redirect, render_template, request, session, url_for, flash, Markup, send_from_directory
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from werkzeug.utils import secure_filename
 import processing as prc
@@ -111,23 +111,28 @@ def cancel_contract(contract_id):
     return render_template('hmm.html', data_obj=data_obj)
 
 
-
 @app.route('/create_contract', methods=['GET', 'POST'])
 @login_required
 def create_contract():
     data_obj = {"ip_address": request.remote_addr}
     if request.method == 'POST':
-        # if 'file' not in request.files:
-        if 'file' in request.files:
-            the_file = request.files['file']
-            if the_file and the_file.filename != '' and allowed_file(the_file.filename):
+    # if 'file' in request.files:
+        the_file = request.files['file']
+        if the_file and the_file.filename != '' and allowed_file(the_file.filename):
+            prc_return = prc.process_new_contract(request.form, current_user.id_object)
+            if prc_return.acknowledged:
                 filename = secure_filename(the_file.filename)
+                filename = str(prc_return.inserted_id) + '-' + filename
                 the_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                #############################################################################################
-        prc_return = prc.process_new_contract(request.form, current_user.id_object)
-        if prc_return is None:
-            data_obj.update({"message": "processing for your contract failed..."})
-            return render_template('create_contract.html', data_obj=data_obj)
+                result = calls.c_set_sampleUp(prc_return.inserted_id, filename)
+                if result.acknowledged is False:
+                    data_obj.update({"message": "processing for your contract failed..."})
+                    return render_template('create_contract.html', data_obj=data_obj)
+        else:
+            prc_return = prc.process_new_contract(request.form, current_user.id_object)
+            if prc_return.acknowledged is False:
+                data_obj.update({"message": "processing for your contract failed..."})
+                return render_template('create_contract.html', data_obj=data_obj)
         return redirect(url_for('account'))
         # data_obj.update({"message": "you created a contract successfully"})
         # return render_template('success.html', data_obj=data_obj)
@@ -203,6 +208,13 @@ def contract(contract_id, message):
     # rejected
     data_obj.update({'message': 'contract not found or you are not permitted to view it'})
     return render_template('hmm.html', data_obj=data_obj)
+
+
+@app.route('/download_sample/<filename>', methods=['GET'])
+@login_required
+def download_sample(filename):
+    uploads = os.path.join(app.root_path, app.config['UPLOAD_FOLDER'])
+    return send_from_directory(directory=app.config['UPLOAD_FOLDER'], path='/', filename=filename)
 
 
 @app.route('/login', methods=['post', 'get'])
@@ -347,11 +359,16 @@ def submit_assignment(contract_id):
             return render_template('hmm.html', data_obj=data_obj)
         # ...
         if request.method == 'POST':
-            submission = request.form['s_f_submission']
-            result = prc.prc_submit_assignment(contract_id)
-            if result:
-                return redirect(url_for('contract', contract_id=contract_id, message='none'))
-            return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
+            print('here')
+            the_file = request.files['file']
+            if the_file and the_file.filename != '' and allowed_file(the_file.filename):
+                print('passed and stuff')
+
+            # submission = request.form['s_f_submission']
+            # result = prc.prc_submit_assignment(contract_id)
+            # if result:
+            #     return redirect(url_for('contract', contract_id=contract_id, message='none'))
+            # return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
     data_obj['message'] = 'the contract was not found'
     return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
 

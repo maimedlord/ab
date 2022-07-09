@@ -206,6 +206,12 @@ def c_set_disputed(contract_id, clog_obj):
     return dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'disputed'}, '$push': {'clog': clog_obj}})
 
 
+def c_set_sampleUp(contract_id, loc_string):
+    db = db_mc[dbContracts]
+    dbc = db[ccontracts]
+    return dbc.update_one({'_id': ObjectId(contract_id)}, {'$set': {'sampleUp': loc_string}})
+
+
 def c_submit_approval(contract_id, clog_obj):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
