@@ -85,7 +85,6 @@ def approve_submission(contract_id):
         if contract_obj['owner'] != current_user.id_object:
             data_obj['message'] = 'you are not authorized to view this contract...'
             return render_template('hmm.html', data_obj=data_obj)
-        # ...
         if request.method == 'POST':
             approval = request.form['a_f_approval']
             result = prc.prc_submit_approval(contract_id)
@@ -116,26 +115,32 @@ def cancel_contract(contract_id):
 def create_contract():
     data_obj = {"ip_address": request.remote_addr}
     if request.method == 'POST':
-    # if 'file' in request.files:
         the_file = request.files['sample_file']
         if the_file and the_file.filename != '' and allowed_file(the_file.filename):
+            # process new contract first in db before saving:
             prc_return = prc.process_new_contract(request.form, current_user.id_object)
             if prc_return.acknowledged:
                 filename = secure_filename(the_file.filename)
                 filename = str(prc_return.inserted_id) + '-sample-' + filename
+                # save uploaded file:
                 the_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                # update db with filename of uploaded file:
                 result = calls.c_set_sampleUp(prc_return.inserted_id, filename)
                 if result.acknowledged is False:
-                    data_obj.update({"message": "processing for your contract failed..."})
+                    with open('/logs/errors', 'a') as file:
+                        file.write('create_contract(): c_set_sampleUp(prc.return.inserted_id, filename)')
+                    data_obj.update({'message': 'processing for your contract failed... This error has been logged.'})
                     return render_template('create_contract.html', data_obj=data_obj)
         else:
             prc_return = prc.process_new_contract(request.form, current_user.id_object)
             if prc_return.acknowledged is False:
-                data_obj.update({"message": "processing for your contract failed..."})
+                with open('/logs/errors', 'a') as file:
+                    file.write('create_contract(): prc.process_new_contract(request.form, current_user.id_object)')
+                data_obj.update({'message': 'processing for your contract failed...'})
                 return render_template('create_contract.html', data_obj=data_obj)
+        # successful:
         return redirect(url_for('account'))
-        # data_obj.update({"message": "you created a contract successfully"})
-        # return render_template('success.html', data_obj=data_obj)
+    # initial view:
     return render_template('create_contract.html', data_obj=data_obj)
 
 

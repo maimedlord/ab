@@ -217,7 +217,6 @@ def process_new_contract(form_dict, userid):
     user_obj = {}
     bounty = float(form_dict['c_f_bounty'])
     user_obj.update({"bounty": bounty})
-    #user_obj.update({"bhunter": ObjectId("000000000000000000000000")})
     user_obj.update({"bhunter": None})
     e_f_bonus = float(form_dict['c_f_efbonus'])
     user_obj.update({"efbonus": float(e_f_bonus)})
@@ -228,11 +227,6 @@ def process_new_contract(form_dict, userid):
         g_deadline = datetime.fromisoformat(form_dict['c_f_t_g_deadline'] + 'T' + form_dict['c_f_t_g_d_time'] + ':00.000000')
     lostudy = form_dict['c_f_lostudy']
     user_obj.update({"lostudy": lostudy})
-    sampleText = form_dict['c_f_sample_str']
-    if sampleText == '':
-        user_obj.update({'sampleText': None})
-    else:
-        user_obj.update({"sampleText": sampleText})
     specialization = form_dict['c_f_specialization']
     user_obj.update({"specialization": specialization})
     stall_iso = datetime.fromisoformat(form_dict['c_f_t_stall'] + 'T' + form_dict['c_f_t_s_time'] + ':00')
@@ -283,8 +277,7 @@ def process_new_contract(form_dict, userid):
     user_obj.update({'sampleUp': None})
     user_obj.update({'asubmission': None})
     user_obj.update({'gsubmission': None})
-    c_insert_return = calls.create_contract(user_obj)
-    return c_insert_return
+    return calls.create_contract(user_obj)
 
 
 def process_new_user(email, password1, username):
