@@ -102,10 +102,10 @@ def yon_asubmission(contract_id):
         if request.method == 'POST':
             result = prc.prc_yon_asubmission(request.form, contract_id)
             if result:
-                return redirect(url_for('contract', contract_id=contract_id, message='none'))
+                return redirect(url_for('contract', contract_id=contract_id, message='success'))
             return redirect(url_for('contract', contract_id=contract_id,
                                     message='error: processing your submission'))
-    return redirect(url_for('contract', contract_id=contract_id, message='error: unable to look up contract...'))  # need to fix this
+    return redirect(url_for('contract', contract_id=contract_id, message='error: unable to look up contract...'))
 
 
 @app.route('/cancel_contract/<contract_id>')
@@ -189,7 +189,7 @@ def contract(contract_id, message):
                 offer = float(request.form['m_o_f_offer'])
                 result = prc.prc_create_ip(contract_obj['_id'], current_user.id_object, offer)
                 if result:
-                    return redirect(url_for('contract', contract_id=contract_id, message='none'))
+                    return redirect(url_for('contract', contract_id=contract_id, message='offer success'))
                 return redirect(url_for('contract', contract_id=contract_id, message='error in process of updating interested parties...'))
             # default view for non-owner:
             return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
