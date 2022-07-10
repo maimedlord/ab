@@ -72,8 +72,8 @@ def prc_set_disputed(contract_id, reason):
     })
     if result.acknowledged:
         #  stuff to do...???
-        return True
-    return None
+        pass
+    return result
 
 
 def prc_set_rating(contract_id):
@@ -108,16 +108,29 @@ def prc_set_open(contract_id):
     return None
 
 
-def prc_submit_approval(contract_id):
+# still needs checkboxes...
+def prc_yon_asubmission(form_dict, contract_id):
     # bhunter gets paid
     # once paid, update database:
-    result = calls.c_submit_approval(ObjectId(contract_id), {
-        'event': 'assignment approved',
-        'time': datetime.fromisoformat(datetime.now().isoformat())
-    })
-    if result.acknowledged:
-        #  stuff to do...
-        return True
+    if len(form_dict) > 0:
+        yon = form_dict['s_d_yon']
+        if yon =='false':
+            # accept checkboxes that map to reasons why user feels bhunter's submission was deficient...
+            result = prc_set_disputed(contract_id,
+                                      'disputed: adjust function to input reasons why bhunters submission was '
+                                      'deficient to owner')
+            if result.acknowledged:
+                # stuff to do...
+                return True
+        if yon == 'true':
+            # submit approval:
+            result = calls.c_submit_approval(ObjectId(contract_id), {
+                'event': 'assignment approved',
+                'time': datetime.fromisoformat(datetime.now().isoformat())
+            })
+            if result.acknowledged:
+                #  stuff to do...
+                return True
     return None
 
 

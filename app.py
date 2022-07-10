@@ -1,15 +1,15 @@
 import os
-from flask import Flask, redirect, render_template, request, session, url_for, flash, Markup, send_from_directory
+from flask import Flask, redirect, render_template, request, session, url_for, flash, Markup, send_from_directory, abort
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from werkzeug.utils import secure_filename
+from urllib.parse import urlparse, urljoin
 import processing as prc
 import calls
+import contextlib
+import re
 # import html
 from user import User
 from forms import CContract, LoginForm, RegistrationForm
-
-
-# NEXT AFTER LOGIN_USER - SEE FLASK-LOGIN DOCUMENTATION
 
 
 app = Flask(__name__)
@@ -23,14 +23,23 @@ app.config['UPLOAD_FOLDER'] = 'uploads'
 ALLOWED_EXTENSIONS = {'gif', 'jpg', 'pdf', 'png', 'txt'}
 
 
+# for uploading files...
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-'''
-...
-'''
+# for logging in user... // MIGHT NEED TO GET PRESENT FOR ALL REDIRECTS???
+def is_safe_url(target):
+    ref_url = urlparse(request.host_url)
+    test_url = urlparse(urljoin(request.host_url, target))
+    return test_url.scheme in ('http', 'https') and \
+           ref_url.netloc == test_url.netloc
+
+
+# for removing dangerous characters from strings passed to routes via POST/address
+def remove_danger_chars(passed_string):
+    return re.sub("[$;:&@?*%<>{}|,\[\]^]", '', passed_string)
 
 
 @login_manager.user_loader
@@ -42,6 +51,9 @@ def user_loader(user_id):
         return None
 
 
+#######################################################################################################################
+
+
 @app.route('/')
 def index():
     data_obj = {"ip_address": request.remote_addr}
@@ -49,9 +61,12 @@ def index():
     return render_template('index.html', c_top=c_top, data_obj=data_obj)
 
 
-@app.route('/accept_offer/<bhunter_id>/<contract_id>/<offer>')
+@app.route('/accept_ip_offer/<bhunter_id>/<contract_id>/<offer>')
 @login_required
-def accept_offer(bhunter_id, contract_id, offer):
+def accept_ip_offer(bhunter_id, contract_id, offer):
+    bhunter_id = remove_danger_chars(bhunter_id)
+    contract_id = remove_danger_chars(contract_id)
+    offer = remove_danger_chars(offer)
     result = prc.prc_accept_offer(bhunter_id, contract_id, offer)
     if result:
         return redirect(url_for('contract', contract_id=contract_id, message='none'))
@@ -75,34 +90,39 @@ def account():
     return render_template('account.html', data_obj=data_obj, user_orders=user_orders)
 
 
-@app.route('/approve_submission/<contract_id>', methods=['GET', 'POST'])
+@app.route('/yon_asubmission/<contract_id>', methods=['GET', 'POST'])
 @login_required
-def approve_submission(contract_id):
-    data_obj = {'ip_address': request.remote_addr}
+def yon_asubmission(contract_id):
+    contract_id = remove_danger_chars(contract_id)
     contract_obj = calls.c_get_contract(contract_id)
     if contract_obj:
         #  authorization...
         if contract_obj['owner'] != current_user.id_object:
-            data_obj['message'] = 'you are not authorized to view this contract...'
-            return render_template('hmm.html', data_obj=data_obj)
+            return redirect(url_for('hmm', message='you are not authorized to view this contract...'))
         if request.method == 'POST':
-            approval = request.form['a_f_approval']
-            result = prc.prc_submit_approval(contract_id)
+            result = prc.prc_yon_asubmission(request.form, contract_id)
             if result:
                 return redirect(url_for('contract', contract_id=contract_id, message='none'))
-            return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
-    data_obj['message'] = 'the contract was not found'
-    return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
+            return redirect(url_for('contract', contract_id=contract_id,
+                                    message='error: processing your submission'))
+    return redirect(url_for('contract', contract_id=contract_id, message='error: unable to look up contract...'))  # need to fix this
 
 
 @app.route('/cancel_contract/<contract_id>')
 @login_required
 def cancel_contract(contract_id):
+    contract_id = remove_danger_chars(contract_id)
     data_obj = {"ip_address": request.remote_addr}
     contract_obj = calls.c_get_contract(contract_id)
-    if contract_obj and contract_obj['owner'] != current_user.id_object:
+    if contract_obj and contract_obj['phase'] != 'creation' and contract_obj['owner'] != current_user.id_object:
         data_obj['message'] = 'you are not authorized to be here...'
         return render_template('hmm.html', data_obj=data_obj)
+    if contract_obj['sampleUp'] is not None:
+        # suppressing FileNotFoundError:
+        with contextlib.suppress(FileNotFoundError):
+            # remove from local storage:
+            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], contract_obj['sampleUp']))
+    # remove contract from db:
     result = calls.cancel_contract(contract_id)
     if result.acknowledged:
         return redirect(url_for('account'))
@@ -110,6 +130,7 @@ def cancel_contract(contract_id):
     return render_template('hmm.html', data_obj=data_obj)
 
 
+# disable back button?
 @app.route('/create_contract', methods=['GET', 'POST'])
 @login_required
 def create_contract():
@@ -127,15 +148,13 @@ def create_contract():
                 # update db with filename of uploaded file:
                 result = calls.c_set_sampleUp(prc_return.inserted_id, filename)
                 if result.acknowledged is False:
-                    with open('/logs/errors', 'a') as file:
-                        file.write('create_contract(): c_set_sampleUp(prc.return.inserted_id, filename)')
-                    data_obj.update({'message': 'processing for your contract failed... This error has been logged.'})
+                    # write to error log
+                    data_obj.update({'message': 'processing for your contract failed...'})
                     return render_template('create_contract.html', data_obj=data_obj)
         else:
             prc_return = prc.process_new_contract(request.form, current_user.id_object)
             if prc_return.acknowledged is False:
-                with open('/logs/errors', 'a') as file:
-                    file.write('create_contract(): prc.process_new_contract(request.form, current_user.id_object)')
+                # write to error log
                 data_obj.update({'message': 'processing for your contract failed...'})
                 return render_template('create_contract.html', data_obj=data_obj)
         # successful:
@@ -147,17 +166,17 @@ def create_contract():
 @app.route('/contract/<contract_id>/<message>', methods=['GET', 'POST'])
 @login_required
 def contract(contract_id, message):
+    contract_id = remove_danger_chars(contract_id)
+    message = remove_danger_chars(message)
     data_obj = {'ip_address': request.remote_addr}
     data_obj.update({'message': message})
-    #contract_obj = calls.c_get_contract(contract_id)
     contract_obj = prc.prc_get_contract_account(contract_id, current_user.id_object)
     if not contract_obj:
-        data_obj.update({'message': 'contract not found or you are not permitted to view it'})
-        return render_template('hmm.html', data_obj=data_obj)
+        return redirect(url_for('hmm', message='contract not found or you are not permitted to view it...'))
     # PHASE: CREATION
     if contract_obj and contract_obj['phase'] == 'creation' and contract_obj['owner'] == current_user.id_object:
         return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
-    # IPARTIES
+    # looks for existing offer in iparties and if exists, passes to data_obj
     iparty_arr = contract_obj['iparties']
     for doc in iparty_arr:
         if doc['bhunter'] == current_user.id_object:
@@ -171,11 +190,11 @@ def contract(contract_id, message):
                 result = prc.prc_create_ip(contract_obj['_id'], current_user.id_object, offer)
                 if result:
                     return redirect(url_for('contract', contract_id=contract_id, message='none'))
-                else:
-                    return redirect(url_for('contract', contract_id=contract_id, message='error in process of updating interested parties...'))
+                return redirect(url_for('contract', contract_id=contract_id, message='error in process of updating interested parties...'))
+            # default view for non-owner:
             return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
-        else:
-            return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
+        # owner view:
+        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
     # PHASE: INPROGRESS
     if contract_obj and contract_obj['phase'] == 'inprogress' and contract_obj['owner'] == current_user.id_object or contract_obj['bhunter'] == current_user.id_object:
         # form for submitting chat
@@ -211,49 +230,53 @@ def contract(contract_id, message):
     if contract_obj and contract_obj['phase'] == 'disputed':
         return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
     # rejected
-    data_obj.update({'message': 'contract not found or you are not permitted to view it'})
-    return render_template('hmm.html', data_obj=data_obj)
+    return redirect(url_for('hmm', message='contract not found or you are not permitted to view it...'))
 
 
-@app.route('/download_grade_proof/<filename>', methods=['GET'])
+@app.route('/download_grade_proof/<filename>')
 @login_required
 def download_grade_proof(filename):
+    filename = remove_danger_chars(filename)
     return send_from_directory(directory=app.config['UPLOAD_FOLDER'], path='/', filename=filename)
 
 
-@app.route('/download_sample/<filename>', methods=['GET'])
+@app.route('/download_sample/<filename>')
 @login_required
 def download_sample(filename):
+    filename = remove_danger_chars(filename)
     return send_from_directory(directory=app.config['UPLOAD_FOLDER'], path='/', filename=filename)
 
 
-@app.route('/download_submission/<filename>', methods=['GET'])
+@app.route('/download_submission/<filename>')
 @login_required
 def download_submission(filename):
+    filename = remove_danger_chars(filename)
     return send_from_directory(directory=app.config['UPLOAD_FOLDER'], path='/', filename=filename)
+
+
+@app.route('/hmm/<message>')
+def hmm(message):
+    message = remove_danger_chars(message)
+    data_obj = {"ip_address": request.remote_addr, 'message': message}
+    return render_template('hmm.html', data_obj=data_obj)
 
 
 @app.route('/login', methods=['post', 'get'])
 def login():
     data_obj = {"ip_address": request.remote_addr}
     if current_user.is_authenticated:
-        return redirect('/')
+        return redirect(url_for('index'))
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
         user_arr = calls.get_auth_user(email, password)
-        # userid = str(user_obj['_id'])
         if user_arr:
-            # for doc in user_arr:
-            #     print(doc)
-            #print(user_arr)
             login_user(User(user_arr[0], user_arr[1], user_arr[2], user_arr[3]))
             calls.log_userlogin(current_user.id_object)
-            # next = flask.request.args.get('next')
-            # if not is_safe_url(next):
-            #     return flask.abort(400)
-            return redirect('account')
-            # return render_template('login.html', user_obj=user_obj)
+            next = request.args.get('next')
+            if not is_safe_url(next):
+                return abort(400)
+            return redirect(url_for('account'))
     return render_template('login.html', data_obj=data_obj)
 
 
@@ -315,6 +338,7 @@ def register():
 @app.route('/set_dors/<contract_id>', methods=['GET', 'POST'])
 @login_required
 def set_dors(contract_id):
+    contract_id = remove_danger_chars(contract_id)
     data_obj = {'ip_address': request.remote_addr}
     contract_obj = calls.c_get_contract(contract_id)
     if contract_obj:
@@ -344,37 +368,35 @@ def set_dors(contract_id):
 @app.route('/set_open/<contract_id>')
 @login_required
 def set_open(contract_id):
+    contract_id = remove_danger_chars(contract_id)
     contract_obj = calls.c_get_contract(contract_id)
     if contract_obj:
         if contract_obj and contract_obj['owner'] == current_user.id_object:
             result = prc.prc_set_open(contract_id)
             if result:
                 return redirect(url_for('contract', contract_id=contract_id, message='none'))
-    data_obj = {'ip_address': request.remote_addr}
-    data_obj['message'] = 'there was an error setting the contract to open'
+    data_obj = {'ip_address': request.remote_addr, 'message': 'there was an error setting the contract to open'}
     return render_template('hmm.html', data_obj=data_obj)
 
 
 @app.route('/set_successful/<contract_id>', methods=['GET', 'POST'])
 @login_required
 def set_successful(contract_id):
+    contract_id = remove_danger_chars(contract_id)
     data_obj = {'ip_address': request.remote_addr}
     contract_obj = calls.c_get_contract(contract_id)
     pass
 
 
-# NEED TO FIX MAJOR
 @app.route('/submit_assignment/<contract_id>', methods=['GET', 'POST'])
 @login_required
 def submit_assignment(contract_id):
-    data_obj = {'ip_address': request.remote_addr}
+    contract_id = remove_danger_chars(contract_id)
     contract_obj = calls.c_get_contract(contract_id)
     if contract_obj:
         #  authorization...
         if contract_obj['bhunter'] != current_user.id_object:
-            data_obj['message'] = 'you are not authorized to view this contract...'
-            return render_template('hmm.html', data_obj=data_obj)
-        # ...
+            return redirect(url_for('hmm'), message='you are not authorized to view this contract...')
         if request.method == 'POST':
             the_file = request.files['assignment_file']
             if the_file and the_file.filename != '' and allowed_file(the_file.filename):
@@ -383,22 +405,21 @@ def submit_assignment(contract_id):
                 the_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 result = prc.prc_submit_assignment(contract_id, filename)
                 if result:
-                    return redirect(url_for('contract', contract_id=contract_id, message='none'))
-                return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
-
-            # submission = request.form['s_f_submission']
-            # result = prc.prc_submit_assignment(contract_id)
-            # if result:
-            #     return redirect(url_for('contract', contract_id=contract_id, message='none'))
-            # return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
-    data_obj['message'] = 'the contract was not found'
-    return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
+                    return redirect(url_for('contract', contract_id=contract_id,
+                                            message='assignment successfully submitted...'))
+                return redirect(url_for('contract', contract_id=contract_id,
+                                        message='there was an error submitting the assignment...'))
+            return redirect(url_for('contract', contract_id=contract_id,
+                                    message='there was an error processing the uploaded file...'))
+    return redirect(url_for('contract', contract_id=contract_id,
+                            message='there was an error finding the contract...'))
 
 
 # NEED TO FIX MAJOR
 @app.route('/submit_grade/<contract_id>', methods=['GET', 'POST'])
 @login_required
 def submit_grade(contract_id):
+    contract_id = remove_danger_chars(contract_id)
     data_obj = {'ip_address': request.remote_addr}
     contract_obj = calls.c_get_contract(contract_id)
     if contract_obj:
@@ -425,6 +446,7 @@ def submit_grade(contract_id):
 @app.route('/submit_rating/<contract_id>', methods=['GET', 'POST'])
 @login_required
 def submit_rating(contract_id):
+    contract_id = remove_danger_chars(contract_id)
     data_obj = {'ip_address': request.remote_addr}
     contract_obj = calls.c_get_contract(contract_id)
     if contract_obj:
@@ -453,15 +475,16 @@ def success():
     return render_template('success.html', data_obj=data_obj)
 
 
-@app.route('/validate_submission/<contract_id>', methods=['GET', 'POST'])
-@login_required
-def validate_submission(contract_id):
-    data_obj = {'ip_address': request.remote_addr}
-    contract_obj = calls.c_get_contract(contract_id)
-    if contract_obj:
-        pass
-    data_obj['message'] = 'the contract was not found'
-    return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
+# appears to have been deprecated in favor of approve_submission()
+# @app.route('/validate_asubmission/<contract_id>', methods=['GET', 'POST'])
+# @login_required
+# def validate_asubmission(contract_id):
+#     data_obj = {'ip_address': request.remote_addr}
+#     contract_obj = calls.c_get_contract(contract_id)
+#     if contract_obj:
+#         pass
+#     data_obj['message'] = 'the contract was not found'
+#     return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
 
 
 @app.route('/view_user/<userid>')

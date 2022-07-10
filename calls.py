@@ -108,23 +108,19 @@ def get_auth_user(email, password):
         'pass': 1
     })
     if user_record and check_password_hash(user_record['pass'], password):
+        # remove password from the object before returning:
         user_record.pop('pass')
-        tstring = str(user_record['_id'])
-        temp_array = [tstring, email, user_record['uName'], user_record['_id']]
-        return temp_array
+        return [str(user_record['_id']), email, user_record['uName'], user_record['_id']]
     else:
-        return []
+        return None
 
 
-'''
-INCOMPLETE
-need to add filter to reduce returned data
-'''
-
+# returns contract or None
 def c_get_contract(contract_id):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
     return dbc.find_one({'_id': ObjectId(contract_id)})
+
 
 # MAKE THIS USE ONE QUERY WITH AGGREGATION... MAYBE BATCHES?
 def c_get_contract_account(contract_id, nowtime, user_id):

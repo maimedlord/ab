@@ -31,10 +31,10 @@
                 {% for party in contract_obj['iparties'] %}
                     <div id="div_i_party">
                         interested party:<p></p>
-                        <a href="{{ url_for('view_user', userid=party['bhunter']) }}">bounty hunter:    {{ party['bhunter'] }}</a><p></p>
+                        <a href="{{ url_for('view_user', userid=party['bhunter']) }}">bounty hunter: {{ party['bhunter'] }}</a><p></p>
                         offer:    <b>$ {{ party['offer'] }}</b><p></p>
                         time:    {{ party['time'] }}<p></p>
-                        <a href="{{ url_for('accept_offer', bhunter_id=party['bhunter'], contract_id=contract_obj['_id'], offer=party['offer']) }}">ACCepT Offer</a>
+                        <a href="{{ url_for('accept_ip_offer', bhunter_id=party['bhunter'], contract_id=contract_obj['_id'], offer=party['offer']) }}">accept offer</a>
                     </div>
                     <p></p>
                 {% endfor %}
@@ -70,13 +70,15 @@
         {# PHASE: STALLED #}
         {# PHASE: VALIDATION #}
         {% if contract_obj['phase'] == 'validation' %}
-            contract is in process of validation for assignment only???...<p></p>
-            // submission goes here...<p></p><p></p>
+            <b><i>there should be a test AND assignment version...</i></b><p></p>
             {% if current_user.id_object == contract_obj['owner'] %}
                 <a href="{{ url_for('download_submission', filename=contract_obj['asubmission']) }}" download>DOWNLOAD bhunter's submission</a><p></p>
-                <form action="{{ url_for('approve_submission', contract_id=contract_obj['_id']) }}" id="approve_submission" method="post" name="approve_submission">
-                    <input id="a_f_approval" name="a_f_approval" required type="checkbox" value="true"><p></p>
-                    approve this submission?    <button type="submit">approve submission</button>
+                Does the submission meet the standard as defined in: <i>stuff here...</i> ???
+                <form action="{{ url_for('yon_asubmission', contract_id=contract_obj['_id']) }}" id="submission_decision" method="post" name="submission_decision">
+                    no: <input id="s_d_no" name="s_d_yon" required type="radio" value="false">
+                    yes: <input id="s_d_yes" name="s_d_yon" required type="radio" value="true"><p></p>
+                    <b><i>here will go a series of checkboxes that represent the many different reasons why a submission might be deficient</i></b><p></p>
+                    Submit to accept submission or set contract into dispute    <button type="submit">submit grade</button>
                 </form>
             {% endif %}
             {% if current_user.id_object == contract_obj['bhunter'] %}

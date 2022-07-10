@@ -5,8 +5,9 @@ class User(UserMixin):
     def __init__(self, id_string, email, username, id_object):
         self.email = email
         self.id = id_string
-        self.username = username
         self.id_object = id_object
+        self.username = username
+
 
     def is_active(self):
         return True
