@@ -7,6 +7,7 @@ import processing as prc
 import calls
 import contextlib
 import re
+from datetime import datetime  # get this moved to prc...
 # import html
 from user import User
 from forms import CContract, LoginForm, RegistrationForm
@@ -77,17 +78,36 @@ def accept_ip_offer(bhunter_id, contract_id, offer):
 @app.route('/account')
 @login_required
 def account():
-    data_obj = {"ip_address": request.remote_addr}
-    user_orders = prc.process_user_orders(current_user.id_object)
-    if user_orders:
+    data_obj = {"ip_address": request.remote_addr, 'new_msg_arr': None}
+    user_contracts_obj = prc.process_user_orders(current_user.id_object)
+    user_obj = prc.get_user_record(current_user.id_object)
+    # average rating:
+    if user_obj:
+        user_obj = dict(user_obj)
+        if len(user_obj['reviewHistory']) > 0:
+            data_obj['review_avg'] = 0.0
+        counter = 0
+        for x in user_obj['reviewHistory']:
+            data_obj['review_avg'] += x['rating']
+            counter += 1
+        data_obj['review_avg'] = data_obj['review_avg'] / counter
+    # total earned, msg_arr:
+    if user_contracts_obj:
+        msg_arr = []
         total_earned = 0.0
-        for obj in user_orders:
+        for obj in user_contracts_obj:
+            # msg_arr:
+            if obj['bhunter'] == current_user.id_object and obj['chatnewmsgbhunter']:
+                msg_arr.append(str(obj['_id']))
+            elif obj['owner'] == current_user.id_object and obj['chatnewmsgowner']:
+                msg_arr.append(str(obj['_id']))
+            # total earned:
             if obj['bhunter'] == current_user.id_object and obj['phase'] == 'successful':
                 total_earned += obj['bounty']
                 total_earned += obj['efbonus']
                 total_earned += obj['egbonus']
                 data_obj['total_earned'] = total_earned
-    return render_template('account.html', data_obj=data_obj, user_orders=user_orders)
+    return render_template('account.html', data_obj=data_obj, msg_arr=msg_arr, user_contracts=user_contracts_obj)
 
 
 @app.route('/yon_asubmission/<contract_id>', methods=['GET', 'POST'])
@@ -201,7 +221,11 @@ def contract(contract_id, message):
         if request.method == 'POST':
             message = request.form['c_s_f_message']
             mood = request.form['c_s_f_mood']
-            result = prc.prc_send_chat(contract_obj['_id'], current_user.id, message, mood)
+            # if current user is not bhunter then submit and update bhunter's message bool
+            if contract_obj['bhunter'] != current_user.id_object:
+                result = prc.prc_send_chat(contract_obj['_id'], current_user.id, 'chatnewmsgbhunter', message, mood)
+            else:
+                result = prc.prc_send_chat(contract_obj['_id'], current_user.id, 'chatnewmsgowner', message, mood)
             if result:
                 return redirect(url_for('contract', contract_id=contract_id, message='none'))
             data_obj['message'] = 'chat send failed!'
@@ -221,6 +245,14 @@ def contract(contract_id, message):
     # phase: rating
     if contract_obj and contract_obj['phase'] == 'rating' and contract_obj[
         'owner'] == current_user.id_object or contract_obj['bhunter'] == current_user.id_object:
+        print(contract_obj)
+        if len(contract_obj['reviews']) == 1:
+            if contract_obj['reviews'][0]['user'] == contract_obj['owner']:
+                print('user OWNER has already rated...')
+                data_obj['review'] = 'owner'
+            if contract_obj['reviews'][0]['user'] == contract_obj['bhunter']:
+                print('user BHUNTER has already rated...')
+                data_obj['review'] = 'bhunter'
         return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
     # phase: successful
     if contract_obj and contract_obj['phase'] == 'successful' and contract_obj[
@@ -430,15 +462,20 @@ def submit_grade(contract_id):
         # ...
         if request.method == 'POST':
             the_file = request.files['grade_file']
-            yon = request.form['s_f_yon']# NEED TO USE
-            if the_file and the_file.filename != '' and allowed_file(the_file.filename):
+            yon = request.form['s_f_yon']
+            if yon == 'true':
+                result = prc.prc_submit_gvalidation(contract_id, None)
+                if result:
+                    return redirect(url_for('contract', contract_id=contract_id, message='success'))
+                return redirect(url_for('contract', contract_id=contract_id, message='error: submission process has failed...'))
+            if yon == 'false' and the_file and the_file.filename != '' and allowed_file(the_file.filename):
                 filename = secure_filename(the_file.filename)
                 filename = contract_id + '-grade-' + filename
                 the_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 result = prc.prc_submit_gvalidation(contract_id, filename)
                 if result:
-                    return redirect(url_for('contract', contract_id=contract_id, message='none'))
-                return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
+                    return redirect(url_for('contract', contract_id=contract_id, message='success'))
+                return redirect(url_for('contract', contract_id=contract_id, message='error: submission process has failed...'))
     data_obj['message'] = 'the contract was not found'
     return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
 
@@ -458,14 +495,13 @@ def submit_rating(contract_id):
                 rating = request.form['s_r_f_rating']
                 result = prc.prc_submit_rating_c(comment, contract_id, rating, user_id)
                 if result:
-                    print('form worked')
-                    return redirect(url_for('contract', contract_id=contract_id, message='none'))
+                    return redirect(url_for('contract', contract_id=contract_id, message='success'))
             # form didn't work...
-            return redirect(url_for('contract', contract_id=contract_id, message='none'))
+            return redirect(url_for('contract', contract_id=contract_id,
+                                    message='error: something went wrong during submission...'))
         data_obj['message'] = 'you are not authorized to view this contract...'
         return render_template('hmm.html', data_obj=data_obj)
-    data_obj['message'] = 'the contract was not found'
-    return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
+    return redirect(url_for('contract', contract_id=contract_id, message='error: the contract could not be found...'))
 
 
 @app.route('/success')
@@ -490,11 +526,19 @@ def success():
 @app.route('/view_user/<userid>')
 @login_required
 def view_user(userid):
-    data_obj = {"ip_address": request.remote_addr}
+    userid = remove_danger_chars(userid)
+    data_obj = {"ip_address": request.remote_addr, 'review_avg': None}
     user_obj = calls.get_user(userid)
     if user_obj:
         user_obj = dict(user_obj)
-        print(user_obj)
+        # average rating:
+        if len(user_obj['reviewHistory']) > 0:
+            data_obj['review_avg'] = 0.0
+        counter = 0
+        for x in user_obj['reviewHistory']:
+            data_obj['review_avg'] += x['rating']
+            counter += 1
+        data_obj['review_avg'] = data_obj['review_avg'] / counter
         return render_template('view_user.html', data_obj=data_obj, user_obj=user_obj)
     data_obj['message'] = "no user found..."
     return render_template('view_user.html', data_obj=data_obj)

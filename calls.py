@@ -47,10 +47,12 @@ def c_create_ip(contract_id, ip_object):
     return dbc.update_one({'_id': contract_id}, {'$push': {'iparties': ip_object}})
 
 
-def c_send_chat(contractid_obj, chat_obj):
+def c_send_chat(contract_id_obj, chatnewmsguser, chat_obj):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    return dbc.update_one({'_id': contractid_obj}, {'$push': {'chat': chat_obj}})
+    print(chatnewmsguser)
+    return dbc.update_one({'_id': contract_id_obj}, {'$push': {'chat': chat_obj},
+                                                     '$set': {chatnewmsguser: True}})
 
 
 def cancel_contract(contract_id):
@@ -223,13 +225,13 @@ def c_submit_successful(contract_id, clog_obj):
 def c_getset_lvbhunter(contract_id, time):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    return dbc.find_one_and_update({'_id': contract_id}, {'$set': {'lvbhunter': time}})
+    return dbc.find_one_and_update({'_id': contract_id}, {'$set': {'lvbhunter': time, 'chatnewmsgbhunter': False}})
 
 
 def c_getset_lvowner(contract_id, time):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    return dbc.find_one_and_update({'_id': contract_id}, {'$set': {'lvowner': time}})
+    return dbc.find_one_and_update({'_id': contract_id}, {'$set': {'lvowner': time, 'chatnewmsgowner': False}})
 
 
 def c_set_open(contract_id, clog_obj):

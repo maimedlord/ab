@@ -6,10 +6,19 @@
     <div id="account_general">
         <div id="a_g_left">
             a_g_left<p></p>
-            <b>total earned: ${{ data_obj['total_earned'] }}</b>
+            <b>total earned: ${{ data_obj['total_earned'] }}</b><p></p>
+            avg rating: {{ data_obj['review_avg'] }}<p></p>
+            <i><a href="{{ url_for('view_user', userid=current_user.id_object) }}">view your public profile:</a></i><p></p>
         </div>
         <div id="a_g_right">
-            a_g_right
+            a_g_right:<p></p>
+            {% if msg_arr|length > 0 %}
+                {% for each in msg_arr %}
+                    <a href="{{ url_for('contract', contract_id=each, message='check new message') }}">{{ each }} has a new message</a>
+                {% endfor %}
+            {% endif %}
+            ####################################################<p></p>
+            deadline less than 24hrs: ...<p></p>
         </div>
     </div>
     <div>
@@ -28,8 +37,9 @@
             <div class="column_contract"><b>bounty</b></div>
             <div class="column_contract"><b>excellent grade bonus</b></div>
             <div class="column_contract"><b>early finish bonus</b></div>
+            <div class="column_contract"><b>new chat msg</b></div>
         </div>
-        {% for doc in user_orders %}
+        {% for doc in user_contracts|reverse %}
             <!-- can wrap row with a link -->
             <a href="{{ url_for('contract', contract_id=doc['_id'], message='none') }}">
                 <div class="row_contract">
@@ -76,6 +86,11 @@
                         <div class="column_contract">
                             0.0
                         </div>
+                    {% endif %}
+                    {% if doc['_id']|string in msg_arr %}
+                        NEW msg!
+                    {% else %}
+                        no new msg
                     {% endif %}
                 </div>
             </a>

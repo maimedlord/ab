@@ -7,6 +7,7 @@
         {{ data_obj['message'] }}<p></p>
         username: {{ user_obj['uName'] }}<p></p>
         user since: {{ user_obj['joinDate'] }}<p></p>
+        average review rating: {{ data_obj['review_avg'] }}<p></p>
         review history:<p></p>
         {% for review in user_obj['reviewHistory'] %}
             {{ review }}<p></p>

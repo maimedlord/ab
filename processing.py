@@ -12,7 +12,15 @@ def get_contracts_top():
     return contracts_data
 
 
-def get_user_record(email, password):
+def get_user_record(user_id):
+    user_record = calls.get_user(ObjectId(user_id))
+    if user_record == {"error": "no record found"}:
+        return {}
+    else:
+        return user_record
+
+
+def get_user_record_l(email, password):
     user_record = calls.get_user_record(email, password)
     if user_record == {"error": "no record found"}:
         return {}
@@ -31,9 +39,13 @@ def prc_accept_offer(bhunter_id, contract_id, bhunter_offer):
     return None
 
 
+def prc_arrange_msg_arr():
+    pass
+
+
 def prc_get_contract_account(contract_id, user_id):
-    nowtime = datetime.fromisoformat(datetime.now().isoformat())
     result = calls.c_get_contract(ObjectId(contract_id))
+    # also updates chat:
     if result:
         if result['bhunter'] == ObjectId(user_id):
             return calls.c_getset_lvbhunter(ObjectId(contract_id), datetime.fromisoformat(datetime.now().isoformat()))
@@ -52,9 +64,10 @@ def prc_create_ip(contract_id, bhunter_user_id, offer):
     return calls.c_create_ip(contract_id, ip_object)
 
 
-def prc_send_chat(contractid, userid, message, mood):
+# need mechanism to alert other use of chat...
+def prc_send_chat(contract_id, userid, chatnewmsguser, message, mood):
     nowtime = datetime.fromisoformat(datetime.now().isoformat())
-    result = calls.c_send_chat(ObjectId(contractid), {'message': message, 'mood': mood, 'time': nowtime, 'user': ObjectId(userid)})
+    result = calls.c_send_chat(ObjectId(contract_id), chatnewmsguser, {'message': message, 'mood': mood, 'time': nowtime, 'user': ObjectId(userid)})
     if result:
         if result.acknowledged:
             return True
@@ -135,10 +148,20 @@ def prc_yon_asubmission(form_dict, contract_id):
 
 
 def prc_submit_gvalidation(contract_id, filename):
-    result = calls.c_submit_gvalidation(ObjectId(contract_id), {
-        'event': 'owner has submitted grade proof',
+    if filename is not None:
+        result = calls.c_submit_gvalidation(ObjectId(contract_id), {
+            'event': 'owner has submitted grade proof',
+            'time': datetime.fromisoformat(datetime.now().isoformat())
+        }, filename)
+        # other stuff like alerts, etc. ...
+        if result.acknowledged:
+            return True
+        return None
+    result = calls.c_set_rating(ObjectId(contract_id), {
+        'event': 'gvalidation-skipto-rating: owner has claimed the grade was sufficient!',
         'time': datetime.fromisoformat(datetime.now().isoformat())
-    }, filename)
+    })
+    # other stuff here like releasing egbonus...
     if result.acknowledged:
         return True
     return None
@@ -290,6 +313,8 @@ def process_new_contract(form_dict, userid):
     user_obj.update({'sampleUp': None})
     user_obj.update({'asubmission': None})
     user_obj.update({'gsubmission': None})
+    user_obj.update({'chatnewmsgbhunter': False})
+    user_obj.update({'chatnewmsgowner': False})
     return calls.create_contract(user_obj)
 
 
@@ -318,4 +343,4 @@ def process_user_orders(userid_obj):
 
 
 if __name__ == '__main__':
-    print(get_user_record('theman@gmail.com', 'passwordpass'))
+    print(get_user_record_l('theman@gmail.com', 'passwordpass'))
