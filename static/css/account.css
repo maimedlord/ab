@@ -1,11 +1,11 @@
-.column_contract {
+.c_contract {
     background-color: orange;
     display: flex;
-    flex-basis: 80px;
+    flex-basis: 90px;
     flex-direction: column;
     text-align: center;
 }
-.row_contract {
+.r_contract {
     background-color: plum;
     border-style: dashed;
     display: flex;
@@ -29,17 +29,18 @@
     flex-basis: 300px;
     flex-grow: 1;
 }
-#c_c_header {
+#r_header {
     display: flex;
     flex-direction: row;
     width: 100%;
 }
-#container_contracts {
+#container_contracts_table {
     background-color: dodgerblue;
     display: flex;
     flex-direction: column;
+    font-size: smaller;
     width: 100%;
 }
-#col_specialization {
+#c_specialization {
     flex-basis: 150px;
 }

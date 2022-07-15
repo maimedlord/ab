@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}<title>answerBlasters: your account</title>{% endblock %}
 {% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/account.css') }}">{% endblock %}
-{% block scripts %}{% endblock %}
+{% block scripts %}<script src="{{url_for('static', filename='scripts/account.js')}}"></script>{% endblock %}
 {% block body %}
     <div id="account_general">
         <div id="a_g_left">
@@ -14,7 +14,7 @@
             a_g_right:<p></p>
             {% if msg_arr|length > 0 %}
                 {% for each in msg_arr %}
-                    <a href="{{ url_for('contract', contract_id=each, message='check new message') }}">{{ each }} has a new message</a>
+                    <a href="{{ url_for('contract', contract_id=each, message='check new message') }}">{{ each }} has a new message</a><p></p>
                 {% endfor %}
             {% endif %}
             ####################################################<p></p>
@@ -24,27 +24,32 @@
     <div>
         <a href="{{ url_for('create_contract') }}">CREATE CONtrACt</a>
     </div>
-    <div id="container_contracts">
-        <div id="c_c_header">
-            <div class="column_contract"><b>position</b></div>
-            <div class="column_contract"><b>phase</b></div>
-            <div class="column_contract"><b>type</b></div>
-            <div class="column_contract"><b>level of study</b></div>
-            <div class="column_contract"><b>subject</b></div>
-            <div class="column_contract" id="col_specialization"><b>specialization</b></div>
-            <div class="column_contract"><b>deadline 1</b></div>
-            <div class="column_contract"><b>deadline 2</b></div>
-            <div class="column_contract"><b>bounty</b></div>
-            <div class="column_contract"><b>excellent grade bonus</b></div>
-            <div class="column_contract"><b>early finish bonus</b></div>
-            <div class="column_contract"><b>new chat msg</b></div>
+    <div id="container_contracts_header">
+        <div id="r_header">
+            <div class="c_contract" id="c_position"><b>position</b><p></p>
+                <button id="down" onclick="sort_alpha_ascending('position')">down</button><p></p>
+                <button id="up" onclick="sort_alpha_descending('position')">up</button>
+            </div>
+            <div class="c_contract" id="c_phase"><b>phase</b><p></p>down - up</div>
+            <div class="c_contract" id="c_type"><b>type</b><p></p>down - up</div>
+            <div class="c_contract" id="c_lostudy"><b>level of study</b><p></p>down - up</div>
+            <div class="c_contract" id="c_subject"><b>subject</b><p></p>down - up</div>
+            <div class="c_contract" id="c_specialization"><b>specialization</b><p></p>down - up</div>
+            <div class="c_contract" id="c_deadline1"><b>deadline 1</b><p></p>down - up</div>
+            <div class="c_contract" id="c_deadline2"><b>deadline 2</b><p></p>down - up</div>
+            <div class="c_contract" id="c_bounty"><b>bounty</b><p></p>down - up</div>
+            <div class="c_contract" id="c_egbonus"><b>excellent grade bonus</b><p></p>down - up</div>
+            <div class="c_contract" id="c_efbonus"><b>early finish bonus</b><p></p>down - up</div>
+            <div class="c_contract" id="c_newmsg"><b>new chat msg</b><p></p>down - up</div>
         </div>
+    </div>
+    <div id="container_contracts_table">
         {% for doc in user_contracts|reverse %}
             <!-- can wrap row with a link -->
             <a href="{{ url_for('contract', contract_id=doc['_id'], message='none') }}">
-                <div class="row_contract">
+                <div class="r_contract">
                     <!-- can wrap column with a link -->
-                    <div class="column_contract">
+                    <div class="c_contract">
                         {% if current_user.id_object == doc['owner'] %}
                             owner
                         {% elif current_user.id_object == doc['bhunter'] %}
@@ -53,43 +58,43 @@
                             interested party
                         {% endif %}
                     </div>
-                    <div class="column_contract">{{ doc['phase'] }}</div>
-                    <div class="column_contract">{{ doc['type_contract'] }}</div>
-                    <div class="column_contract">{{ doc['lostudy'] }}</div>
-                    <div class="column_contract">{{ doc['subject'] }}</div>
-                    <div class="column_contract" id="col_specialization">{{ doc['specialization'] }}</div>
+                    <div class="c_contract">{{ doc['phase'] }}</div>
+                    <div class="c_contract">{{ doc['type_contract'] }}</div>
+                    <div class="c_contract">{{ doc['lostudy'] }}</div>
+                    <div class="c_contract">{{ doc['subject'] }}</div>
+                    <div class="c_contract" id="c_specialization">{{ doc['specialization'] }}</div>
                     {% if doc['type_contract'] == "assignment" %}
                         {% if doc['timeline']|length > 5 %}
-                            <div class="column_contract">{{ doc['timeline'][5]['time'] }}</div>
+                            <div class="c_contract">{{ doc['timeline'][5]['time'] }}</div>
                         {% else %}
-                            <div class="column_contract">no efbonus deadline</div>
+                            <div class="c_contract">no efbonus deadline</div>
                         {% endif %}
-                        <div class="column_contract">{{ doc['timeline'][3]['time'] }}</div>
-                        <div class="column_contract">{{ doc['bounty'] }}</div>
-                        <div class="column_contract">{{ doc['egbonus'] }}</div>
-                        <div class="column_contract">
+                        <div class="c_contract">{{ doc['timeline'][3]['time'] }}</div>
+                        <div class="c_contract">{{ doc['bounty'] }}</div>
+                        <div class="c_contract">{{ doc['egbonus'] }}</div>
+                        <div class="c_contract">
                             {{ doc['efbonus'] }}
                         </div>
                     {% else %}
-                        <div class="column_contract">
+                        <div class="c_contract">
                             {{ doc['timeline'][3]['time'] }}
                         </div>
-                        <div class="column_contract">
+                        <div class="c_contract">
                             {{ doc['timeline'][4]['time'] }}
                         </div>
-                        <div class="column_contract">
+                        <div class="c_contract">
                             {{ doc['bounty'] }}
                         </div>
-                        <div class="column_contract">
+                        <div class="c_contract">
                             {{ doc['egbonus'] }}
                         </div>
-                        <div class="column_contract">
+                        <div class="c_contract">
                             0.0
                         </div>
                     {% endif %}
-                    {% if doc['_id']|string in msg_arr %}
+                    {% if doc['phase'] not in data_obj['no_chat_msg_arr'] and doc['_id']|string in msg_arr %}
                         NEW msg!
-                    {% else %}
+                    {% elif doc['phase'] not in data_obj['no_chat_msg_arr'] %}
                         no new msg
                     {% endif %}
                 </div>

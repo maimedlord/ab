@@ -22,6 +22,7 @@ app.config['SECRET_KEY'] = 'secret!'  # put in config file?
 app.config['UPLOAD_FOLDER'] = 'uploads'
 
 ALLOWED_EXTENSIONS = {'gif', 'jpg', 'pdf', 'png', 'txt'}
+NO_CHAT_MSG_ARR = ['creation', 'open', 'successful']
 
 
 # for uploading files...
@@ -78,7 +79,7 @@ def accept_ip_offer(bhunter_id, contract_id, offer):
 @app.route('/account')
 @login_required
 def account():
-    data_obj = {"ip_address": request.remote_addr, 'new_msg_arr': None}
+    data_obj = {"ip_address": request.remote_addr, 'new_msg_arr': None, 'no_chat_msg_arr': NO_CHAT_MSG_ARR}
     user_contracts_obj = prc.process_user_orders(current_user.id_object)
     user_obj = prc.get_user_record(current_user.id_object)
     # average rating:
