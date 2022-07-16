@@ -27,20 +27,41 @@
     <div id="container_contracts_header">
         <div id="r_header">
             <div class="c_contract" id="c_position"><b>position</b><p></p>
-                <button id="down" onclick="sort_alpha_ascending('position')">down</button><p></p>
-                <button id="up" onclick="sort_alpha_descending('position')">up</button>
+                <button id="down" onclick="sort_alpha('down', 'position')">down</button><p></p>
+                <button id="up" onclick="sort_alpha('up', 'position')">up</button>
             </div>
-            <div class="c_contract" id="c_phase"><b>phase</b><p></p>down - up</div>
-            <div class="c_contract" id="c_type"><b>type</b><p></p>down - up</div>
-            <div class="c_contract" id="c_lostudy"><b>level of study</b><p></p>down - up</div>
-            <div class="c_contract" id="c_subject"><b>subject</b><p></p>down - up</div>
-            <div class="c_contract" id="c_specialization"><b>specialization</b><p></p>down - up</div>
+            <div class="c_contract" id="c_phase"><b>phase</b><p></p>
+                <button id="down" onclick="sort_alpha('down', 'phase')">down</button><p></p>
+                <button id="up" onclick="sort_alpha('up', 'phase')">up</button>
+            </div>
+            <div class="c_contract" id="c_type"><b>type</b><p></p>
+                <button id="down" onclick="sort_alpha('down', 'type')">down</button><p></p>
+                <button id="up" onclick="sort_alpha('up', 'type')">up</button>
+            </div>
+            <div class="c_contract" id="c_lostudy"><b>level of study</b><p></p>
+                <button id="down" onclick="sort_alpha('down', 'lostudy')">down</button><p></p>
+                <button id="up" onclick="sort_alpha('up', 'lostudy')">up</button>
+            </div>
+            <div class="c_contract" id="c_subject"><b>subject</b><p></p>
+                <button id="down" onclick="sort_alpha('down', 'subject')">down</button><p></p>
+                <button id="up" onclick="sort_alpha('up', 'subject')">up</button>
+            </div>
+            <div class="c_contract" id="c_specialization"><b>specialization</b><p></p>
+                <button id="down" onclick="sort_alpha('down', 'specialization')">down</button><p></p>
+                <button id="up" onclick="sort_alpha('up', 'specialization')">up</button>
+            </div>
             <div class="c_contract" id="c_deadline1"><b>deadline 1</b><p></p>down - up</div>
-            <div class="c_contract" id="c_deadline2"><b>deadline 2</b><p></p>down - up</div>
-            <div class="c_contract" id="c_bounty"><b>bounty</b><p></p>down - up</div>
-            <div class="c_contract" id="c_egbonus"><b>excellent grade bonus</b><p></p>down - up</div>
-            <div class="c_contract" id="c_efbonus"><b>early finish bonus</b><p></p>down - up</div>
-            <div class="c_contract" id="c_newmsg"><b>new chat msg</b><p></p>down - up</div>
+            <div class="c_contract" id="c_deadline2"><b>deadline 2</b><p></p>
+                <button id="down" onclick="sort_date('down', 'deadline2')">down</button><p></p>
+                <button id="up" onclick="sort_date('up', 'deadline2')">up</button>
+            </div>
+            <div class="c_contract" id="c_bounty"><b>bounty</b><p></p>
+                <button id="down" onclick="sort_num('down', 'bounty')">down</button><p></p>
+                <button id="up" onclick="sort_num('up', 'bounty')">up</button>
+            </div>
+            <div class="c_contract" id="c_egbonus"><b>excellent grade bonus</b><p></p></div>
+            <div class="c_contract" id="c_efbonus"><b>early finish bonus</b><p></p></div>
+            <div class="c_contract" id="c_newmsg"><b>new chat msg</b><p></p></div>
         </div>
     </div>
     <div id="container_contracts_table">
