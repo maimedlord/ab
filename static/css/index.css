@@ -1,32 +1,107 @@
 /* CLASSES */
 .column_market {
-    background-color: plum;
+    align-items: center;
+    background-color: silver;
+    border-radius: 15px;
+    box-shadow: 3px 3px darkorange;
     display: flex;
-    flex-basis: 80px;
     flex-direction: column;
+    justify-content: space-around;
+    min-height: 60px;
+    min-width: 100px;
+    text-align: center;
+}
+.column_market_specialization {
+    align-items: center;
+    background-color: silver;
+    border-radius: 15px;
+    box-shadow: 3px 3px darkorange;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 120px;
+    text-align: center;
+}
+.column_market_subject {
+    align-items: center;
+    background-color: silver;
+    border-radius: 15px;
+    box-shadow: 3px 3px darkorange;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 120px;
     text-align: center;
 }
 .row_market {
-    background-color: lightgreen;
-    border-style: dashed;
+    background-color: orange;
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding-bottom: 10px;
+    width: 100%;
+}
+.spacer {
+    background-color: orange;
+    height: 10px;
+    width: 92%;
 }
 /* ID'S */
+#c_m_bottom {
+    background-color: orange;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 92%;
+}
 #c_m_header {
     background-color: deepskyblue;
     display: flex;
     flex-direction: row;
-    width: 100%;
+    width: 92%;
+}
+#c_m_top {
+    align-items: center;
+    background-color: orange;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 92%;
 }
 #col_specialization {
     flex-basis: 150px;
 }
-#container_market {
-    background-color: khaki;
+#container_header {
+    background-color: coral;
     display: flex;
     flex-direction: column;
+    height: 200px;
     width: 100%;
+}
+#container_how {
+    background-color: green;
+    border-radius: 50px;
+    box-shadow: 10px 10px dimgray;
+    display: flex;
+    flex-direction: column;
+    margin-left: 5px;
+    margin-right: auto;
+    width: 92%;
+}
+#container_market {
+    align-items: center;
+    background-color: orange;
+    border-radius: 50px;
+    box-shadow: 10px 10px dimgray;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15px;
+    width: 92%;
 }
 #market_display {
     background-color: dodgerblue;

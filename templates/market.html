@@ -1,37 +1,50 @@
 {% extends "base.html" %}
 {% block title %}<title>MARKET</title>{% endblock %}
 {% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/market.css') }}">{% endblock %}
+{% block scripts %}<script src="{{url_for('static', filename='scripts/market.js')}}"></script>{% endblock %}
 {% block body %}
     {{ data_obj['message'] }}
     <div>
         market
         <p></p>
         <a href="{{ url_for('create_contract', message='none') }}">CREATE CONtrACt</a><p></p>
-        <div id="container_market">
+        <div id="container_market_header">
             <div id="c_m_header">
                 <div class="column_market">
-                    <b>phase</b>
+                    <b>phase</b><p></p>
                 </div>
                 <div class="column_market">
-                    <b>type</b>
+                    <b>type</b><p></p>
+                    <button id="down" onclick="sort_alpha('container_market_table', 'down', 'type')">down</button><p></p>
+                    <button id="up" onclick="sort_alpha('container_market_table', 'up', 'type')">up</button>
                 </div>
                 <div class="column_market">
-                    <b>level of study</b>
+                    <b>level of study</b><p></p>
+                    <button id="down" onclick="sort_alpha('container_market_table', 'down', 'lostudy')">down</button><p></p>
+                    <button id="up" onclick="sort_alpha('container_market_table', 'up', 'lostudy')">up</button>
                 </div>
                 <div class="column_market">
-                    <b>subject</b>
+                    <b>subject</b><p></p>
+                    <button id="down" onclick="sort_alpha('container_market_table', 'down', 'subject')">down</button><p></p>
+                    <button id="up" onclick="sort_alpha('container_market_table', 'up', 'subject')">up</button>
                 </div>
                 <div class="column_market" id="col_specialization">
-                    <b>specialization</b>
+                    <b>specialization</b><p></p>
+                    <button id="down" onclick="sort_alpha('container_market_table', 'down', 'specialization')">down</button><p></p>
+                    <button id="up" onclick="sort_alpha('container_market_table', 'up', 'specialization')">up</button>
                 </div>
                 <div class="column_market">
                     <b>deadline 1</b>
                 </div>
                 <div class="column_market">
-                    <b>deadline 2</b>
+                    <b>deadline 2</b><p></p>
+                <button id="down" onclick="sort_date('container_market_table', 'down', 'deadline2')">down</button><p></p>
+                <button id="up" onclick="sort_date('container_market_table', 'up', 'deadline2')">up</button>
                 </div>
                 <div class="column_market">
-                    <b>bounty</b>
+                    <b>bounty</b><p></p>
+                    <button id="down" onclick="sort_num('container_market_table', 'down', 'bounty')">down</button><p></p>
+                    <button id="up" onclick="sort_num('container_market_table', 'up', 'bounty')">up</button>
                 </div>
                 <div class="column_market">
                     <b>excellent grade bonus</b>
@@ -43,6 +56,8 @@
                     <b>owner</b>
                 </div>
             </div>
+        </div>
+        <div id="container_market_table">
             {% for doc in all_open_arr %}
             <!-- can wrap row with a link -->
             <a href="{{ url_for('contract', contract_id=doc['_id'], message='none') }}">

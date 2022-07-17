@@ -26,40 +26,39 @@
             <div id="navbar">
                 {% if current_user.is_authenticated %}
                     <div>
-                        IS AUTHENTICATED @ {{ data_obj['ip_address'] }}<p></p>
-                        {{ current_user.id }}<p></p>
-                        {{ current_user.email }}<p></p>
-                        {{ current_user.username }}
+                        <a href="{{ url_for('account') }}">AcCoUnT</a> -
+                        <a href="{{ url_for('market') }}">MARKet</a> -
+                        <i>settings</i><p></p>
                     </div>
                     <div>
-                        here should go a popout element...
-                        <p></p>
-                        <a href="{{ url_for('logout') }}">LOGOUT</a>
-                        <p></p>
-                        <a href="{{ url_for('account') }}">AcCoUnT</a>
-                        <p></p>
-                        <a href="{{ url_for('index') }}">HOmE</a>
-                        <p></p>
-                        <a href="{{ url_for('market') }}">MARKet</a>
+                        <a href="{{ url_for('logout') }}">LOGOUT</a><p></p>
                     </div>
                 {% else %}
                     <div>
-                        IS NOT AUTHENTICATED @ {{ data_obj['ip_address'] }}
+                        <a href="{{ url_for('index') }}">HOme</a><p></p>
                     </div>
                     <div>
-                        <a href="{{ url_for('login') }}">LOGin proper</a>
-                        <p></p>
-                        <a href="{{ url_for('register') }}">REGisTER</a>
-                        <p></p>
-                        <a href="{{ url_for('index') }}">HOme</a>
+                        <a href="{{ url_for('login') }}">LOGin proper</a> -
+                        <a href="{{ url_for('register') }}">REGisTER</a><p></p>
                     </div>
-
                 {% endif %}
             </div>
             {% block body %}{% endblock %}
             <div id="footer">
-                answerBlasters © 2022
+                answerBlasters © 2022 - <a href="{{ url_for('index') }}">home</a>
             </div>
+            {% if current_user.is_authenticated %}
+                <div>
+                    IS AUTHENTICATED @ {{ data_obj['ip_address'] }}<p></p>
+                    {{ current_user.id }}<p></p>
+                    {{ current_user.email }}<p></p>
+                    {{ current_user.username }}
+                </div>
+            {% else %}
+                <div>
+                    IS NOT AUTHENTICATED @ {{ data_obj['ip_address'] }}
+                </div>
+            {% endif %}
         </div>
     </body>
 </html>

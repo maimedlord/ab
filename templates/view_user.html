@@ -7,10 +7,20 @@
         {{ data_obj['message'] }}<p></p>
         username: {{ user_obj['uName'] }}<p></p>
         user since: {{ user_obj['joinDate'] }}<p></p>
-        average review rating: {{ data_obj['review_avg'] }}<p></p>
-        review history:<p></p>
+        average given review rating: <p></p>
+        average received review rating: <p></p>
+        average total review rating: {{ data_obj['review_avg'] }}<p></p>
+        <h3>review history:</h3><p></p>
         {% for review in user_obj['reviewHistory'] %}
-            {{ review }}<p></p>
+            time: {{ review['time'] }}<p></p>
+            user: {{ review['reviewer'] }}<p></p>
+            {% if review['reviewer'] == user_obj['_id'] %}
+                <b>gave</b> rating: {{ review['rating'] }}<p></p>
+            {% else %}
+                <b>recieved</b> rating {{ review['rating'] }}<p></p>
+            {% endif %}
+            comment: {{ review['comment'] }}<p></p>
+            <h3>---</h3>
         {% endfor %}
     </div>
 {% endblock %}

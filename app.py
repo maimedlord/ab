@@ -254,7 +254,22 @@ def contract(contract_id, message):
             if contract_obj['reviews'][0]['user'] == contract_obj['bhunter']:
                 print('user BHUNTER has already rated...')
                 data_obj['review'] = 'bhunter'
+        # form for submitting chat
+        if request.method == 'POST':
+            message = request.form['c_s_f_message']
+            mood = request.form['c_s_f_mood']
+            # if current user is not bhunter then submit and update bhunter's message bool
+            if contract_obj['bhunter'] != current_user.id_object:
+                result = prc.prc_send_chat(contract_obj['_id'], current_user.id, 'chatnewmsgbhunter', message,
+                                           mood)
+            else:
+                result = prc.prc_send_chat(contract_obj['_id'], current_user.id, 'chatnewmsgowner', message,
+                                           mood)
+            if result:
+                return redirect(url_for('contract', contract_id=contract_id, message='none'))
+            data_obj['message'] = 'chat send failed!'
         return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
+        # return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
     # phase: successful
     if contract_obj and contract_obj['phase'] == 'successful' and contract_obj[
         'owner'] == current_user.id_object or contract_obj['bhunter'] == current_user.id_object:
@@ -316,10 +331,11 @@ def login():
 @app.route('/logout')
 def logout():
     data_obj = {"ip_address": request.remote_addr}
-    if not current_user.is_authenticated:
+    if current_user.is_authenticated:
+        calls.log_userlogout(current_user.id_object)
+        logout_user()
+    else:
         data_obj.update({"message": "You're already logged out tho..."})
-    calls.log_userlogout(current_user.id_object)
-    logout_user()
     return render_template('logout.html', data_obj=data_obj)
 
 

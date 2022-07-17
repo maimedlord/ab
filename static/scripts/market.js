@@ -1,5 +1,5 @@
 // values in table columns mapped to array values:
-COLUMN_TO_NUM_ARR = ['position', 'phase', 'type', 'lostudy', 'subject', 'specialization', 'deadline1', 'deadline2', 'bounty', 'efbonus', 'egbonus', 'newchatmsg']
+COLUMN_TO_NUM_ARR = ['phase', 'type', 'lostudy', 'subject', 'specialization', 'deadline1', 'deadline2', 'bounty', 'egbonus', 'efbonus']
 
 function sort_alpha(container, direction, sortby) {
     // sorting function:
