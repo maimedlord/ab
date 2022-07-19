@@ -3,38 +3,48 @@
 {% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/market.css') }}">{% endblock %}
 {% block scripts %}<script src="{{url_for('static', filename='scripts/market.js')}}"></script>{% endblock %}
 {% block body %}
-    {{ data_obj['message'] }}
-    <div>
-        market
-        <p></p>
-        <a href="{{ url_for('create_contract', message='none') }}">CREATE CONtrACt</a><p></p>
+    <div id="container_header">
+        <div id="header_logo">
+        </div>
+    </div>
+    <div id="market_main">
+        {{ data_obj['message'] }}
         <div id="container_market_header">
-            <div id="c_m_header">
+            <div id="c_m_h_row">
                 <div class="column_market">
-                    <b>phase</b><p></p>
+                    <b>type</b>
+                    <div class="c_inner_row">
+                        <text onclick="sort_alpha('container_market_table', 'down', 'type')">down</text>
+                        <text onclick="sort_alpha('container_market_table', 'up', 'type')">up</text>
+                    </div>
                 </div>
                 <div class="column_market">
-                    <b>type</b><p></p>
-                    <button id="down" onclick="sort_alpha('container_market_table', 'down', 'type')">down</button><p></p>
-                    <button id="up" onclick="sort_alpha('container_market_table', 'up', 'type')">up</button>
+                    <b>level of study</b>
+                    <div class="c_inner_row">
+                        <text onclick="sort_alpha('container_market_table', 'down', 'lostudy')">down</text>
+                        <text onclick="sort_alpha('container_market_table', 'up', 'lostudy')">up</text>
+                    </div>
                 </div>
                 <div class="column_market">
-                    <b>level of study</b><p></p>
-                    <button id="down" onclick="sort_alpha('container_market_table', 'down', 'lostudy')">down</button><p></p>
-                    <button id="up" onclick="sort_alpha('container_market_table', 'up', 'lostudy')">up</button>
-                </div>
-                <div class="column_market">
-                    <b>subject</b><p></p>
-                    <button id="down" onclick="sort_alpha('container_market_table', 'down', 'subject')">down</button><p></p>
-                    <button id="up" onclick="sort_alpha('container_market_table', 'up', 'subject')">up</button>
+                    <b>subject</b>
+                    <div class="c_inner_row">
+                        <text onclick="sort_alpha('container_market_table', 'down', 'subject')">down</text>
+                        <text onclick="sort_alpha('container_market_table', 'up', 'subject')">up</text>
+                    </div>
                 </div>
                 <div class="column_market" id="col_specialization">
-                    <b>specialization</b><p></p>
-                    <button id="down" onclick="sort_alpha('container_market_table', 'down', 'specialization')">down</button><p></p>
-                    <button id="up" onclick="sort_alpha('container_market_table', 'up', 'specialization')">up</button>
+                    <b>specialization</b>
+                    <div class="c_inner_row">
+                        <text onclick="sort_alpha('container_market_table', 'down', 'specialization')">down</text>
+                        <text onclick="sort_alpha('container_market_table', 'up', 'specialization')">up</text>
+                    </div>
                 </div>
                 <div class="column_market">
                     <b>deadline 1</b>
+                    <div class="c_inner_row">
+                        <text onclick="sort_alpha('container_market_table', 'down', 'deadline1')">down</text>
+                        <text onclick="sort_alpha('container_market_table', 'up', 'deadline1')">up</text>
+                    </div>
                 </div>
                 <div class="column_market">
                     <b>deadline 2</b><p></p>
@@ -42,9 +52,11 @@
                 <button id="up" onclick="sort_date('container_market_table', 'up', 'deadline2')">up</button>
                 </div>
                 <div class="column_market">
-                    <b>bounty</b><p></p>
-                    <button id="down" onclick="sort_num('container_market_table', 'down', 'bounty')">down</button><p></p>
-                    <button id="up" onclick="sort_num('container_market_table', 'up', 'bounty')">up</button>
+                    <b>bounty</b>
+                    <div class="c_inner_row">
+                        <text onclick="sort_alpha('container_market_table', 'down', 'bounty')">down</text>
+                        <text onclick="sort_alpha('container_market_table', 'up', 'bounty')">up</text>
+                    </div>
                 </div>
                 <div class="column_market">
                     <b>excellent grade bonus</b>
@@ -57,6 +69,9 @@
                 </div>
             </div>
         </div>
+        <div id="create_contract">
+            <a href="{{ url_for('create_contract') }}"><h3>create a new contract</h3></a>
+        </div>
         <div id="container_market_table">
             {% for doc in all_open_arr %}
             <!-- can wrap row with a link -->
@@ -64,19 +79,16 @@
                 <div class="row_market">
                     <!-- can wrap column with a link -->
                     <div class="column_market">
-                        {{ doc['phase'] }}
+                        <b>type:</b><p>{{ doc['type_contract'] }}</p>
                     </div>
                     <div class="column_market">
-                        {{ doc['type_contract'] }}
+                        <b>lvl of study:</b><p>{{ doc['lostudy'] }}</p>
                     </div>
                     <div class="column_market">
-                        {{ doc['lostudy'] }}
-                    </div>
-                    <div class="column_market">
-                        {{ doc['subject'] }}
+                        <b>subject:</b><p>{{ doc['subject'] }}</p>
                     </div>
                     <div class="column_market" id="col_specialization">
-                        {{ doc['specialization'] }}
+                        <b>subject:</b><p>{{ doc['specialization'] }}</p>
                     </div>
                     {% if doc['type_contract'] == "assignment" %}
                         {% if doc['timeline']|length > 5 %}
@@ -89,26 +101,26 @@
                             </div>
                         {% endif %}
                         <div class="column_market">
-                            {{ doc['timeline'][3]['time'] }}
+                            <b>assignment due:</b><p>{{ doc['timeline'][2]['time'] }}</p>
                         </div>
                         <div class="column_market">
-                            {{ doc['bounty'] }}
+                            <b>bounty:</b><p>{{ doc['bounty'] }}</p>
                         </div>
                         <div class="column_market">
-                            {{ doc['egbonus'] }}
+                            <b>egbonus:</b><p>{{ doc['egbonus'] }}</p>
                         </div>
                         <div class="column_market">
-                            {{ doc['efbonus'] }}
+                            <b>efbonus:</b><p>{{ doc['efbonus'] }}</p>
                         </div>
                     {% else %}
                         <div class="column_market">
+                            {{ doc['timeline'][2]['time'] }}
+                        </div>
+                        <div class="column_market">
                             {{ doc['timeline'][3]['time'] }}
                         </div>
                         <div class="column_market">
-                            {{ doc['timeline'][4]['time'] }}
-                        </div>
-                        <div class="column_market">
-                            {{ doc['bounty'] }}
+                            <b>bounty:</b><p>{{ doc['bounty'] }}</p>
                         </div>
                         <div class="column_market">
                             {{ doc['egbonus'] }}

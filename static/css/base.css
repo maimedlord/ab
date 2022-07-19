@@ -1,33 +1,79 @@
 body {
-    background-color: darkgrey;
+    margin: 0;
+    padding: 0;
     width: 100%;
 }
-#container_main {
-    background-color: white;
+.footer_row_item {
+    min-width: 150px;
+}
+.navbar_item {
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+}
+#container_header {
+    background-image: url("../imgs/abheader1.png");
+    background-position: center;
+    background-repeat: no-repeat;
     display: flex;
     flex-direction: column;
-    margin: auto;
-    max-width: 1200px;
-    min-width: 400px;
-    padding: 0;
+    height: 354px;
+    position: fixed;
+    width: 100%;
+    z-index: -1;
+}
+/* z-index here is critical for static header image that hides behind scrolling divs */
+#container_main {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    z-index: -10;
+}
+#container_navbar {
+    align-items: center;
+    background-color: dimgray;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    position: fixed;
+    top: 0px;
+    width: 100%;
 }
 #navbar {
     align-items: center;
-    background-color: dimgray;
-    color: white;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    gap: 50%;
     width: 100%;
 }
-
+#navbar_spacer {
+    background-color: transparent;
+    display: flex;
+    flex-direction: row;
+    height: 40px;
+    width: 100%;
+}
+#notice_construction {
+    align-items: center;
+}
 /*     */
 #footer {
+    align-self: center;
     background-color: black;
+    border-radius: 50px;
     color: white;
-    margin: auto;
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    padding: 10px;
     text-align: center;
-    width: 100%;
+}
+#footer_row {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    justify-content: space-between;
+    padding: 0px 20px 0px 20px;
 }
 #notice_construction {
     background-color: black;

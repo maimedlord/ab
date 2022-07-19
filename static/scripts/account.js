@@ -6,12 +6,12 @@ function sort_alpha(container, direction, sortby) {
     var fn;
     if (direction == 'up') {
         fn = function (a, b) {
-            return ('' + a.children[0].children[COLUMN_TO_NUM_ARR.indexOf(sortby)].innerHTML.toString()).localeCompare(b.children[0].children[COLUMN_TO_NUM_ARR.indexOf(sortby)].innerHTML.toString());
+            return ('' + a.children[0].children[COLUMN_TO_NUM_ARR.indexOf(sortby)].innerText.match('^[A-Za-z ]+\:[ \n]+(.+)$')[1].localeCompare(b.children[0].children[COLUMN_TO_NUM_ARR.indexOf(sortby)].innerText.match('^[A-Za-z ]+\:[ \n]+(.+)$')[1]));
         }
     }
     else {
         fn = function (a, b) {
-            return -1 * ('' + a.children[0].children[COLUMN_TO_NUM_ARR.indexOf(sortby)].innerHTML.toString()).localeCompare(b.children[0].children[COLUMN_TO_NUM_ARR.indexOf(sortby)].innerHTML.toString());
+            return -1 * ('' + a.children[0].children[COLUMN_TO_NUM_ARR.indexOf(sortby)].innerText.match('^[A-Za-z ]+\:[ \n]+(.+)$')[1].localeCompare(b.children[0].children[COLUMN_TO_NUM_ARR.indexOf(sortby)].innerText.match('^[A-Za-z ]+\:[ \n]+(.+)$')[1]));
         }
     }
     table_div = $('#' +  container);
@@ -34,8 +34,8 @@ function sort_date(container, direction, sortby) {
     var fn;
     if (direction == 'up') {
         fn = function (a, b) {
-            var a_result = new Date(a.children[0].children[COLUMN_TO_NUM_ARR.indexOf(sortby)].innerHTML).toISOString();
-            var b_result = new Date(b.children[0].children[COLUMN_TO_NUM_ARR.indexOf(sortby)].innerHTML).toISOString();
+            var a_result = new Date(a.children[0].children[COLUMN_TO_NUM_ARR.indexOf(sortby)].innerText.match('2[0-9 \:-]+')[0]).toISOString();
+            var b_result = new Date(b.children[0].children[COLUMN_TO_NUM_ARR.indexOf(sortby)].innerText.match('2[0-9 \:-]+')[0]).toISOString();
             if (a_result > b_result) {
                 return 1;
             }
@@ -46,8 +46,8 @@ function sort_date(container, direction, sortby) {
     }
     else {
         fn = function (a, b) {
-            var a_result = new Date(a.children[0].children[COLUMN_TO_NUM_ARR.indexOf(sortby)].innerHTML).toISOString();
-            var b_result = new Date(b.children[0].children[COLUMN_TO_NUM_ARR.indexOf(sortby)].innerHTML).toISOString();
+            var a_result = new Date(a.children[0].children[COLUMN_TO_NUM_ARR.indexOf(sortby)].innerText.match('2[0-9 \:-]+')[0]).toISOString();
+            var b_result = new Date(b.children[0].children[COLUMN_TO_NUM_ARR.indexOf(sortby)].innerText.match('2[0-9 \:-]+')[0]).toISOString();
             if (a_result > b_result) {
                 return -1;
             }
@@ -75,12 +75,12 @@ function sort_num(container, direction, sortby) {
     var fn;
     if (direction == 'up') {
         fn = function (a, b) {
-            return parseFloat(a.children[0].children[COLUMN_TO_NUM_ARR.indexOf(sortby)].innerHTML) - parseFloat(b.children[0].children[COLUMN_TO_NUM_ARR.indexOf(sortby)].innerHTML);
+            return parseFloat(a.children[0].children[COLUMN_TO_NUM_ARR.indexOf(sortby)].innerText.match('[0-9]+\.[0-9]+')[0]) - parseFloat(b.children[0].children[COLUMN_TO_NUM_ARR.indexOf(sortby)].innerText.match('[0-9]+\.[0-9]+')[0]);
         }
     }
     else {
         fn = function (a, b) {
-            return parseFloat(b.children[0].children[COLUMN_TO_NUM_ARR.indexOf(sortby)].innerHTML) - parseFloat(a.children[0].children[COLUMN_TO_NUM_ARR.indexOf(sortby)].innerHTML);
+            return parseFloat(b.children[0].children[COLUMN_TO_NUM_ARR.indexOf(sortby)].innerText.match('[0-9]+\.[0-9]+')[0]) - parseFloat(a.children[0].children[COLUMN_TO_NUM_ARR.indexOf(sortby)].innerText.match('[0-9]+\.[0-9]+')[0]);
         }
     }
     table_div = $('#' +  container);

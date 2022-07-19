@@ -1,21 +1,25 @@
 {% extends "base.html" %}
 {% block title %}<title>REGISTERt</title>{% endblock %}
-{% block css %}{% endblock %}
+{% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">{% endblock %}
 {% block body %}
     {{ data_obj['message'] }}
-    <div>
-        <a href="{{ url_for('index') }}">INDEX</a><p></p>
-        <form id="register_form" method="post" name="register_form" >
-            your email:
-            <input autocomplete="off" autofocus id="r_f_email" minlength="8" name="r_f_email" placeholder="email..." required type="email"><p></p>
-            your username:
-            <input autocomplete="off" id="r_f_username" minlength="8" name="r_f_username" placeholder="username..." required type="text"><p></p>
-            your password:
-            <input autocomplete="off" id="r_f_password1" minlength="12" name="r_f_password1" placeholder="password..." required type="password"><p></p>
-            re-enter password:
-            <input autocomplete="off" id="r_f_password2" minlength="12" name="r_f_password2" placeholder="re-enter password..." required type="password"><p></p>
-            <p></p>
-            <button type="submit">submit</button>
-        </form>
+    <div id="container_header">
+        <div id="header_logo">
+        </div>
+    </div>
+    <div id="register_main">
+        <div id="div_register_form">
+            <form id="register_form" method="post" name="register_form">
+                <p>your email</p>
+                <p><input autocomplete="off" autofocus id="r_f_email" minlength="8" name="r_f_email" placeholder="email..." required type="email"></p>
+                <p>your username</p>
+                <p><input autocomplete="off" id="r_f_username" minlength="8" name="r_f_username" placeholder="username..." required type="text"></p>
+                <p>your password</p>
+                <p><input autocomplete="off" id="r_f_password1" minlength="12" name="r_f_password1" placeholder="password..." required type="password"></p>
+                <p>re-enter password</p>
+                <p><input autocomplete="off" id="r_f_password2" minlength="12" name="r_f_password2" placeholder="re-enter password..." required type="password"></p>
+                <button type="submit">submit</button></p>
+            </form>
+        </div>
     </div>
 {% endblock %}

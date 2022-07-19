@@ -4,7 +4,8 @@
 {% block scripts %}<script src="{{url_for('static', filename='scripts/contract.js')}}"></script>{% endblock %}
 {% block body %}
     {{ data_obj['message'] }}
-    <div>
+    <div id="container_header"></div>
+    <div id="container_contract_view">
         {# PHASE: CREATION #}
         {% if contract_obj['phase'] == "creation" %}
             <a href="{{ url_for('set_open', contract_id=contract_obj['_id']) }}">MOVE TO OPEN</a><p></p>

@@ -1,13 +1,18 @@
 {% extends "base.html" %}
 {% block title %}<title>answerBlasters: LOGIN BROTHERS AND SISTERS</title>{% endblock %}
-{% block css %}{% endblock %}
+{% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">{% endblock %}
 {% block body %}
+    <div id="container_header">
+        <div id="header_logo">
+        </div>
+    </div>
     <div id="login_main">
-        <p></p>
-        <form action="" method="post">
-            <input autofocus name="email" placeholder="email..."><!-- verify -->
-            <input name="password" pattern="^[^<>/?$]{12,32}$" placeholder="password..." type="password"><!-- verify -->
-            <button type="submit">submit</button>
+        <form method="post">
+            <p>your email</p>
+            <p><input autofocus name="email" placeholder="email..."></p><!-- verify -->
+            <p>your password</p>
+            <p><input name="password" pattern="^[^<>/?$]{12,32}$" placeholder="password..." type="password"></p><!-- verify -->
+            <p><button type="submit">submit</button></p>
         </form>
     </div>
 {% endblock %}

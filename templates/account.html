@@ -21,49 +21,64 @@
             deadline less than 24hrs: ...<p></p>
         </div>
     </div>
-    <div>
-        <a href="{{ url_for('create_contract') }}">CREATE CONtrACt</a>
-    </div>
     <div id="container_contracts_header">
         <div id="r_header">
-            <div class="c_contract" id="c_position"><b>position</b><p></p>
-                <button id="down" onclick="sort_alpha('container_contracts_table', 'down', 'position')">down</button><p></p>
-                <button id="up" onclick="sort_alpha('container_contracts_table', 'up', 'position')">up</button>
+            <div class="c_contract" id="c_position"><b>position</b>
+                <div class="c_inner_row">
+                    <text onclick="sort_alpha('container_contracts_table', 'down', 'position')">down</text>
+                    <text onclick="sort_alpha('container_contracts_table', 'up', 'position')">up</text>
+                </div>
             </div>
-            <div class="c_contract" id="c_phase"><b>phase</b><p></p>
-                <button id="down" onclick="sort_alpha('container_contracts_table', 'down', 'phase')">down</button><p></p>
-                <button id="up" onclick="sort_alpha('container_contracts_table', 'up', 'phase')">up</button>
+            <div class="c_contract" id="c_phase"><b>phase</b>
+                <div class="c_inner_row">
+                    <text onclick="sort_alpha('container_contracts_table', 'down', 'phase')">down</text>
+                    <text onclick="sort_alpha('container_contracts_table', 'up', 'phase')">up</text>
+                </div>
             </div>
-            <div class="c_contract" id="c_type"><b>type</b><p></p>
-                <button id="down" onclick="sort_alpha('container_contracts_table', 'down', 'type')">down</button><p></p>
-                <button id="up" onclick="sort_alpha('container_contracts_table', 'up', 'type')">up</button>
+            <div class="c_contract" id="c_type"><b>type</b>
+                <div class="c_inner_row">
+                    <text onclick="sort_alpha('container_contracts_table', 'down', 'type')">down</text>
+                    <text onclick="sort_alpha('container_contracts_table', 'up', 'type')">up</text>
+                </div>
             </div>
-            <div class="c_contract" id="c_lostudy"><b>level of study</b><p></p>
-                <button id="down" onclick="sort_alpha('container_contracts_table', 'down', 'lostudy')">down</button><p></p>
-                <button id="up" onclick="sort_alpha('container_contracts_table', 'up', 'lostudy')">up</button>
+            <div class="c_contract" id="c_lostudy"><b>level of study</b>
+                <div class="c_inner_row">
+                    <text onclick="sort_alpha('container_contracts_table', 'down', 'lostudy')">down</text>
+                    <text onclick="sort_alpha('container_contracts_table', 'up', 'lostudy')">up</text>
+                </div>
             </div>
-            <div class="c_contract" id="c_subject"><b>subject</b><p></p>
-                <button id="down" onclick="sort_alpha('container_contracts_table', 'down', 'subject')">down</button><p></p>
-                <button id="up" onclick="sort_alpha('container_contracts_table', 'up', 'subject')">up</button>
+            <div class="c_contract" id="c_subject"><b>subject</b>
+                <div class="c_inner_row">
+                    <text onclick="sort_alpha('container_contracts_table', 'down', 'subject')">down</text>
+                    <text onclick="sort_alpha('container_contracts_table', 'up', 'subject')">up</text>
+                </div>
             </div>
-            <div class="c_contract" id="c_specialization"><b>specialization</b><p></p>
-                <button id="down" onclick="sort_alpha('container_contracts_table', 'down', 'specialization')">down</button><p></p>
-                <button id="up" onclick="sort_alpha('container_contracts_table', 'up', 'specialization')">up</button>
+            <div class="c_contract" id="c_specialization"><b>specialization</b>
+                <div class="c_inner_row">
+                    <text onclick="sort_alpha('container_contracts_table', 'down', 'specialization')">down</text>
+                    <text onclick="sort_alpha('container_contracts_table', 'up', 'specialization')">up</text>
+                </div>
             </div>
-            <div class="c_contract" id="c_deadline1"><b>deadline 1</b><p></p>down - up</div>
-            <div class="c_contract" id="c_deadline2"><b>deadline 2</b><p></p>
-                <button id="down" onclick="sort_date('container_contracts_table', 'down', 'deadline2')">down</button><p></p>
-                <button id="up" onclick="sort_date('container_contracts_table', 'up', 'deadline2')">up</button>
+            <div class="c_contract" id="c_deadline2"><b>assignment/test deadline</b>
+                <div class="c_inner_row">
+                    <text onclick="sort_alpha('container_contracts_table', 'down', 'deadline1')">down</text>
+                    <text onclick="sort_alpha('container_contracts_table', 'up', 'deadline1')">up</text>
+                </div>
             </div>
-            <div class="c_contract" id="c_bounty"><b>bounty</b><p></p>
-                <button id="down" onclick="sort_num('container_contracts_table', 'down', 'bounty')">down</button><p></p>
-                <button id="up" onclick="sort_num('container_contracts_table', 'up', 'bounty')">up</button>
+            <div class="c_contract" id="c_deadline1"><b>efbonus deadline</b><p></p>down - up</div>
+            <div class="c_contract" id="c_bounty"><b>bounty</b>
+                <div class="c_inner_row">
+                    <text onclick="sort_alpha('container_contracts_table', 'down', 'bounty')">down</text>
+                    <text onclick="sort_alpha('container_contracts_table', 'up', 'bounty')">up</text>
+                </div>
             </div>
             <div class="c_contract" id="c_egbonus"><b>excellent grade bonus</b><p></p></div>
             <div class="c_contract" id="c_efbonus"><b>early finish bonus</b><p></p></div>
             <div class="c_contract" id="c_newmsg"><b>new chat msg</b><p></p></div>
         </div>
     </div>
+    <div class="spacer"></div>
+    <div id="create_contract"><a href="{{ url_for('create_contract') }}"><h3>create a new contract</h3></a></div>
     <div id="container_contracts_table">
         {% for doc in user_contracts|reverse %}
             <!-- can wrap row with a link -->
@@ -72,45 +87,35 @@
                     <!-- can wrap column with a link -->
                     <div class="c_contract">
                         {% if current_user.id_object == doc['owner'] %}
-                            owner
+                            <b>position:</b><p>owner</p>
                         {% elif current_user.id_object == doc['bhunter'] %}
-                            hunter
+                            <b>position:</b><p>hunter</p>
                         {% else %}
-                            interested party
+                            <b>position:</b><p>interested party</p>
                         {% endif %}
                     </div>
-                    <div class="c_contract">{{ doc['phase'] }}</div>
-                    <div class="c_contract">{{ doc['type_contract'] }}</div>
-                    <div class="c_contract">{{ doc['lostudy'] }}</div>
-                    <div class="c_contract">{{ doc['subject'] }}</div>
-                    <div class="c_contract" id="c_specialization">{{ doc['specialization'] }}</div>
+                    <div class="c_contract"><b>phase:</b><p>{{ doc['phase'] }}</p></div>
+                    <div class="c_contract"><b>type:</b><p>{{ doc['type_contract'] }}</p></div>
+                    <div class="c_contract"><b>lvl of study:</b><p>{{ doc['lostudy'] }}</p></div>
+                    <div class="c_contract"><b>subject:</b><p>{{ doc['subject'] }}</p></div>
+                    <div class="c_contract" id="c_specialization"><b>specialization:</b><p>{{ doc['specialization'] }}</p></div>
                     {% if doc['type_contract'] == "assignment" %}
+                        <div class="c_contract"><b>assignment deadline:</b><p>{{ doc['timeline'][3]['time'] }}</p></div>
                         {% if doc['timeline']|length > 5 %}
                             <div class="c_contract">{{ doc['timeline'][5]['time'] }}</div>
                         {% else %}
-                            <div class="c_contract">no efbonus deadline</div>
+                            <div class="c_contract"><b>efbonus deadline:</b><p>no efbonus deadline</p></div>
                         {% endif %}
-                        <div class="c_contract">{{ doc['timeline'][3]['time'] }}</div>
-                        <div class="c_contract">{{ doc['bounty'] }}</div>
-                        <div class="c_contract">{{ doc['egbonus'] }}</div>
-                        <div class="c_contract">
-                            {{ doc['efbonus'] }}
-                        </div>
+                        <div class="c_contract"><b>bounty:</b><p>{{ doc['bounty'] }}</p></div>
                     {% else %}
                         <div class="c_contract">
-                            {{ doc['timeline'][3]['time'] }}
+                            <b>test starts:</b><p>{{ doc['timeline'][2]['time'] }}</p>
                         </div>
                         <div class="c_contract">
                             {{ doc['timeline'][4]['time'] }}
                         </div>
                         <div class="c_contract">
-                            {{ doc['bounty'] }}
-                        </div>
-                        <div class="c_contract">
-                            {{ doc['egbonus'] }}
-                        </div>
-                        <div class="c_contract">
-                            0.0
+                            <b>bounty:</b><p>{{ doc['bounty'] }}</p>
                         </div>
                     {% endif %}
                     {% if doc['phase'] not in data_obj['no_chat_msg_arr'] and doc['_id']|string in msg_arr %}
@@ -120,6 +125,7 @@
                     {% endif %}
                 </div>
             </a>
+{#            <div class="spacer_row"></div>#}
         {% endfor %}
     </div>
 {% endblock %}

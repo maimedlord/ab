@@ -5,21 +5,17 @@
     {{ data_obj['message'] }}
     <div id="container_header">
         <div id="header_logo">
-            <a href="/">answerBlasters logo</a>
         </div>
     </div>
-    <div id="container_market">
-        <div id="c_m_top">
-            <h3>open contracts currently on the market:</h3>
-            <div>
-                login/register to create your own contracts or collect the bounty on others!<p></p>
-            </div>
+    <div class="container" id="container_market">
+        <div style="text-align: center">
+            <b>some open contracts on the market:</b><p></p>
         </div>
         {% for doc in c_top %}
             <!-- can wrap row with a link -->
             <div class="row_market">
                 <!-- can wrap column with a link -->
-                <div class="column_market">
+                <div class="column_market_leftmost">
                     <b>type</b>{{ doc['type_contract'] }}
                 </div>
                 <div class="column_market">
@@ -41,18 +37,9 @@
                     <div class="column_market">
                         <b>efbonus</b>{{ doc['efbonus'] }}
                     </div>
-                    <div class="column_market">
+                    <div class="column_market_rightmost">
                         <b>due deadline</b>{{ doc['timeline'][3]['time'] }}
                     </div>
-                    {% if doc['timeline']|length > 5 %}
-                        <div class="column_market">
-                            {{ doc['timeline'][5]['time'] }}
-                        </div>
-                    {% else %}
-                        <div class="column_market">
-                            no efbonus deadline
-                        </div>
-                    {% endif %}
                 {% else %}
                     <div class="column_market">
                         {{ doc['timeline'][3]['time'] }}
@@ -66,25 +53,29 @@
                     <div class="column_market">
                         <b>egbonus</b>{{ doc['egbonus'] }}
                     </div>
-                    <div class="column_market">
+                    <div class="column_market_rightmost">
                         filler...
                     </div>
                 {% endif %}
-                <div class="column_market">
-                    <b>contract owner</b>{{ doc['owner'] }}
-                </div>
             </div>
-            <div class="spacer">
+            <div class="spacer_row">
             </div>
         {% endfor %}
-        <div id="c_m_bottom">
-            AND STUFF<p></p>stuff
-        </div>
+{#        <div id="c_m_bottom">#}
+{#            AND STUFF<p></p>stuff#}
+{#        </div>#}
     </div>
+    <div class="spacer"></div>
     <div id="container_how">
         stuff here too container_how<p></p>
         asdfasdfasdf<p></p>
         stuff here too container_how<p></p>
         asdfasdfasdf<p></p>
+    </div>
+    <div id="container_next1">
+        container_next1
+    </div>
+    <div id="container_next2">
+        container_next2
     </div>
 {% endblock %}
