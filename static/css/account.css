@@ -6,8 +6,21 @@
     box-shadow: 2px 2px dimgray;
     flex-basis: 100px;
     flex-direction: column;
-    text-align: center;
     justify-content: space-between;
+    padding: 5px;
+    text-align: center;
+}
+.c_contract_header {
+    color: black;
+    display: flex;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 2px 2px dimgray;
+    flex-direction: column;
+    justify-content: space-between;
+    min-width: 60px;
+    padding: 5px;
+    text-align: center;
 }
 .c_inner_row {
     display: flex;
@@ -103,4 +116,6 @@
 }
 #c_specialization {
     flex-basis: 150px;
+}
+#c_specialization_header {
 }

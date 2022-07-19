@@ -28,20 +28,15 @@ def get_user_record_l(email, password):
         return user_record
 
 
-def prc_accept_offer(bhunter_id, contract_id, bhunter_offer):
+def prc_accept_offer(bhunter_id, bhunter_uname, contract_id, bhunter_offer):
     clog_obj = {
         'event': 'bounty hunter offer accepted and phase set to inprogress',
         'time': datetime.fromisoformat(datetime.now().isoformat())
     }
-    result = calls.c_accept_offer(ObjectId(contract_id), ObjectId(bhunter_id), float(bhunter_offer), clog_obj)
+    result = calls.c_accept_offer(ObjectId(contract_id), ObjectId(bhunter_id), bhunter_uname, float(bhunter_offer), clog_obj)
     if result.acknowledged:
         return True
     return None
-
-
-def prc_arrange_msg_arr():
-    pass
-
 
 def prc_get_contract_account(contract_id, user_id):
     result = calls.c_get_contract(ObjectId(contract_id))
@@ -55,9 +50,10 @@ def prc_get_contract_account(contract_id, user_id):
 
 
 
-def prc_create_ip(contract_id, bhunter_user_id, offer):
+def prc_create_ip(contract_id, bhunter_user_id, bhunter_uname, offer):
     ip_object = {
         'bhunter': bhunter_user_id,
+        'bhunter_uname': bhunter_uname,
         'offer': offer,
         'time': datetime.fromisoformat(datetime.now().isoformat())
     }
@@ -248,7 +244,7 @@ good return = array of validated form data
 '''
 
 
-def process_new_contract(form_dict, userid):
+def process_new_contract(form_dict, owner_id, owner_uname):
     # handle a malformed dictionary...
     user_obj = {}
     bounty = float(form_dict['c_f_bounty'])
@@ -302,7 +298,7 @@ def process_new_contract(form_dict, userid):
                                       {'time': g_deadline, 'event': "deadline: grading"},
                                       {'time': g_deadline, 'event': "deadline: rate the other person"}]})# MISSING CORRECT RATING DEADLINE
     # add in data not initiated by user:
-    user_obj.update({'owner': userid})
+    user_obj.update({'owner': owner_id})
     user_obj.update({'iparties': []})
     user_obj.update({"clog": [{'event': "created", 'time': start_iso}]})
     user_obj.update({'phase': "creation"})
@@ -315,6 +311,9 @@ def process_new_contract(form_dict, userid):
     user_obj.update({'gsubmission': None})
     user_obj.update({'chatnewmsgbhunter': False})
     user_obj.update({'chatnewmsgowner': False})
+    user_obj.update({'paymentid': None})
+    user_obj.update({'bhunter_uname': None})
+    user_obj.update({'owner_uname': owner_uname})
     return calls.create_contract(user_obj)
 
 
@@ -322,11 +321,12 @@ def process_new_user(email, password1, username):
     user_template = {
         'active': True,
         'email': email,
-        'pass': generate_password_hash(password1),
-        'uName': username,
         'joinDate': datetime.fromisoformat(datetime.now().isoformat()),
+        'pass': generate_password_hash(password1),
+        'paymentid': None,
+        'reviewHistory': [],
         'timezone': 'sometimezonezzz',
-        'reviewHistory': []
+        'uName': username,
     }
     return calls.create_user(user_template)
 

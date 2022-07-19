@@ -63,13 +63,17 @@ def index():
     return render_template('index.html', c_top=c_top, data_obj=data_obj)
 
 
-@app.route('/accept_ip_offer/<bhunter_id>/<contract_id>/<offer>')
+@app.route('/accept_ip_offer/<bhunter_id>/<bhunter_uname>/<contract_id>/<offer>')
 @login_required
-def accept_ip_offer(bhunter_id, contract_id, offer):
+def accept_ip_offer(bhunter_id, bhunter_uname, contract_id, offer):
     bhunter_id = remove_danger_chars(bhunter_id)
     contract_id = remove_danger_chars(contract_id)
     offer = remove_danger_chars(offer)
-    result = prc.prc_accept_offer(bhunter_id, contract_id, offer)
+    # authorization:
+    contract_obj = calls.c_get_contract(contract_id)
+    if contract_obj['owner'] != current_user.id_object:
+        return redirect(url_for('hmm', message='you are not authorized to view this contract...'))
+    result = prc.prc_accept_offer(bhunter_id, bhunter_uname, contract_id, offer)
     if result:
         return redirect(url_for('contract', contract_id=contract_id, message='none'))
     message = 'there was an error processing your offer acceptance...'
@@ -87,14 +91,14 @@ def account():
         user_obj = dict(user_obj)
         if len(user_obj['reviewHistory']) > 0:
             data_obj['review_avg'] = 0.0
-        counter = 0
-        for x in user_obj['reviewHistory']:
-            data_obj['review_avg'] += x['rating']
-            counter += 1
-        data_obj['review_avg'] = data_obj['review_avg'] / counter
+            counter = 0
+            for x in user_obj['reviewHistory']:
+                data_obj['review_avg'] += x['rating']
+                counter += 1
+            data_obj['review_avg'] = data_obj['review_avg'] / counter
     # total earned, msg_arr:
+    msg_arr = []
     if user_contracts_obj:
-        msg_arr = []
         total_earned = 0.0
         for obj in user_contracts_obj:
             # msg_arr:
@@ -160,7 +164,7 @@ def create_contract():
         the_file = request.files['sample_file']
         if the_file and the_file.filename != '' and allowed_file(the_file.filename):
             # process new contract first in db before saving:
-            prc_return = prc.process_new_contract(request.form, current_user.id_object)
+            prc_return = prc.process_new_contract(request.form, current_user.id_object, current_user.username)
             if prc_return.acknowledged:
                 filename = secure_filename(the_file.filename)
                 filename = str(prc_return.inserted_id) + '-sample-' + filename
@@ -208,7 +212,7 @@ def contract(contract_id, message):
             # form for making an offer:
             if request.method == 'POST':
                 offer = float(request.form['m_o_f_offer'])
-                result = prc.prc_create_ip(contract_obj['_id'], current_user.id_object, offer)
+                result = prc.prc_create_ip(contract_obj['_id'], current_user.id_object, current_user.username, offer)
                 if result:
                     return redirect(url_for('contract', contract_id=contract_id, message='offer success'))
                 return redirect(url_for('contract', contract_id=contract_id, message='error in process of updating interested parties...'))
@@ -325,6 +329,7 @@ def login():
             if not is_safe_url(next):
                 return abort(400)
             return redirect(url_for('account'))
+        data_obj['message'] = 'that account does not exist...'
     return render_template('login.html', data_obj=data_obj)
 
 
@@ -339,7 +344,7 @@ def logout():
     return render_template('logout.html', data_obj=data_obj)
 
 
-@app.route('/market', methods=['post', 'get'])
+@app.route('/market', methods=['get'])
 @login_required
 def market():
     data_obj = {"ip_address": request.remote_addr}

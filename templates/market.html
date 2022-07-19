@@ -40,16 +40,14 @@
                     </div>
                 </div>
                 <div class="column_market">
-                    <b>deadline 1</b>
+                    <b>assignment/test due/start</b>
                     <div class="c_inner_row">
                         <text onclick="sort_alpha('container_market_table', 'down', 'deadline1')">down</text>
                         <text onclick="sort_alpha('container_market_table', 'up', 'deadline1')">up</text>
                     </div>
                 </div>
                 <div class="column_market">
-                    <b>deadline 2</b><p></p>
-                <button id="down" onclick="sort_date('container_market_table', 'down', 'deadline2')">down</button><p></p>
-                <button id="up" onclick="sort_date('container_market_table', 'up', 'deadline2')">up</button>
+                    <b>deadline 2</b>
                 </div>
                 <div class="column_market">
                     <b>bounty</b>
@@ -130,7 +128,7 @@
                         </div>
                     {% endif %}
                     <div class="column_market">
-                        {{ doc['owner'] }}
+                        <b>contract owner:</b><p>{{ doc['owner'] }}</p>
                     </div>
                 </div>
             </a>

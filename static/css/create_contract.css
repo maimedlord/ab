@@ -8,29 +8,33 @@
     display: none;
 }
 #cc_main {
-    background-color: darksalmon;
     display: flex;
     flex-direction: column;
+    margin-top: 250px;
     width: 100%;
 }
 #c_f_s_l_graduate {
     background-color: plum;
     flex-basis: 33.33%;
+    width: 200px;
 }
 #c_f_s_l_h_school {
     background-color: aqua;
     flex-basis: 33.33%;
+    width: 200px;
 }
 #c_f_s_l_main {
     background-color: plum;
     border-style: dotted;
     display: flex;
     flex-direction: row;
+    flex-wrap: nowrap;
     height: 50px;
 }
 #c_f_s_l_undergraduate {
     background-color: coral;
     flex-basis: 33.33%;
+    width: 200px;
 }
 #c_f_s_t_assignment {
     background-color: blanchedalmond;
@@ -47,4 +51,11 @@
     flex-direction: row;
     height: 75px;
     width: 100%;
+}
+#container_form {
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
 }

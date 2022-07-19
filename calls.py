@@ -32,11 +32,14 @@ dict_template = {
             }
 
 
-def c_accept_offer(contractid_obj, bhunterid_obj, bhunter_offer, clog_obj):
+def c_accept_offer(contractid_obj, bhunterid_obj, bhunter_uname, bhunter_offer, clog_obj):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
     result = dbc.update_one({'_id': contractid_obj},
-                            {'$set': {'bhunter': bhunterid_obj, 'phase': 'inprogress', 'bounty': bhunter_offer},
+                            {'$set': {'bhunter': bhunterid_obj,
+                                      'phase': 'inprogress',
+                                      'bounty': bhunter_offer,
+                                      'bhunter_uname': bhunter_uname},
                              '$push': {'clog': clog_obj}})
     return result
 
