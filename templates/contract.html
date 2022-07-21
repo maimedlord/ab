@@ -3,18 +3,35 @@
 {% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/contract.css') }}">{% endblock %}
 {% block scripts %}<script src="{{url_for('static', filename='scripts/contract.js')}}"></script>{% endblock %}
 {% block body %}
-    {{ data_obj['message'] }}
-    <div id="container_header"></div>
+    <div id="container_header">{{ data_obj['message'] }}</div>
     <div id="container_contract_view">
-        {# PHASE: CREATION #}
-        {% if contract_obj['phase'] == "creation" %}
-            <a href="{{ url_for('set_open', contract_id=contract_obj['_id']) }}">MOVE TO OPEN</a><p></p>
-            <a href="{{ url_for('cancel_contract', contract_id=contract_obj['_id']) }}">CANCEL BOUNTY</a><p></p>
-        {% endif %}
-        {# PHASE: CREATION #}
+        <div id="div_phase">
+            <div id="div_phase_inner">
+                phase:<br>{{ contract_obj['phase'] }}
+            </div>
+            <div id="div_type_inner">
+                type:<br>{{ contract_obj['type_contract'] }}
+            </div>
+            {% if contract_obj['phase'] == 'open' and  contract_obj['owner'] == current_user.id_object %}
+                <div id="div_cancel_inner"><a href="{{ url_for('cancel_contract', contract_id=contract_obj['_id']) }}">CANCEL BOUNTY</a></div>
+            {% endif %}
+            {# PHASE: CREATION #}
+            {% if contract_obj['phase'] == "creation" %}
+                <a href="{{ url_for('set_open', contract_id=contract_obj['_id']) }}">MOVE TO OPEN</a>
+                <a href="{{ url_for('cancel_contract', contract_id=contract_obj['_id']) }}">CANCEL BOUNTY</a>
+            {% endif %}
+            {# PHASE: CREATION #}
+        </div>
+        <div class="c_row">
+            <div>bounty: {{ contract_obj['bounty'] }}</div>
+            {% if contract_obj['efbonus'] > 0 %}
+                <div>early finish bonus: {{ contract_obj['efbonus'] }}</div>
+            {% elif contract_obj['egbonus'] > 0 %}
+                <div>excellent grade bonus: {{ contract_obj['egbonus'] }}</div>
+            {% endif %}
+        </div>
         {# PHASE: OPEN #}
         {% if contract_obj['phase'] == "open" %}
-            contract is phase: "open"<p></p>
             {# show for anyone that's NOT the owner and has NOT offered on the contract yet #}
             {% if (current_user.id_object != contract_obj['owner']) and not data_obj['bhunter_offer'] %}
                 make an offer on this contract:<p></p>
@@ -29,11 +46,10 @@
                 time: {{ data_obj['bhunter_offer']['time'] }}
             {# show for the contract owner... maybe add another elif here? #}
             {% else %}
-                <a href="{{ url_for('cancel_contract', contract_id=contract_obj['_id']) }}">CANCEL BOUNTY</a><p></p>
                 {% for party in contract_obj['iparties'] %}
                     <div id="div_i_party">
                         interested party:<p></p>
-                        <a href="{{ url_for('view_user', userid=party['bhunter']) }}">bounty hunter: {{ party['bhunter'] }}</a><p></p>
+                        bounty hunter: <a href="{{ url_for('view_user', userid=party['bhunter']) }}">{{ party['bhunter_uname'] }}</a><p></p>
                         offer:    <b>$ {{ party['offer'] }}</b><p></p>
                         time:    {{ party['time'] }}<p></p>
                         <a href="{{ url_for('accept_ip_offer', bhunter_id=party['bhunter'], bhunter_uname=party['bhunter_uname'], contract_id=contract_obj['_id'], offer=party['offer']) }}">accept offer</a>
@@ -183,21 +199,24 @@
         {# PHASE: RATING #}
         {# other phases ...#}
         <p></p>
-        <b>phase: {{ contract_obj['phase'] }}</b><p></p>
-        {% if contract_obj['owner'] == current_user.id_object %}
-            owner: you<p></p>
-        {% else %}
-            owner: {{ contract_obj['owner'] }}<p></p>
-        {% endif %}
-        contractid: {{ contract_obj['_id'] }}<p></p>
-        bounty: {{ contract_obj['bounty'] }}<p></p>
-        type: {{ contract_obj['type_contract'] }}<p></p>
-        level of study: {{ contract_obj['lostudy'] }}<p></p>
-        subject: {{ contract_obj['subject'] }}<p></p>
-        specialization: {{ contract_obj['specialization'] }}<p></p>
-        sampleText: {{ contract_obj['sampleText'] }}<p></p>
+        <div class="c_row">
+            {% if contract_obj['owner'] == current_user.id_object %}
+                <div>contract owner: you</div>
+            {% else %}
+                <div>contract owner: {{ contract_obj['owner_uname'] }}</div>
+            {% endif %}
+            <div>type: {{ contract_obj['type_contract'] }}</div>
+        </div>
+        <div class="c_row">
+            <div>level of study: {{ contract_obj['lostudy'] }}</div>
+            <div>subject: {{ contract_obj['subject'] }}</div>
+            <div>specialization: {{ contract_obj['specialization'] }}</div>
+        </div>
+        <div class="c_row c_textcenter">
+            <div>sampleText:<p>{{ contract_obj['instructions'] }}</p></div>
+        </div>
         {% if contract_obj['sampleUp'] != None %}
-            sampleUp: <a href="{{ url_for('download_sample', filename=contract_obj['sampleUp']) }}" download>DOWNLOAD THE FILE MAN</a><p></p>
+            <div class="c_row c_textcenter">sampleUp:<a href="{{ url_for('download_sample', filename=contract_obj['sampleUp']) }}" download>DOWNLOAD THE FILE MAN</a></div>
         {% endif %}
         ----<p></p>
         {% if contract_obj['type_contract'] == 'assignment' %}
@@ -207,6 +226,7 @@
             deadline: test start: {{ contract_obj['timeline'][2] }}<p></p>
             deadline: test end: {{ contract_obj['timeline'][3] }}<p></p>
         {% endif %}
+        contractid: {{ contract_obj['_id'] }}<p></p>
         {# CHAT #}
         {% if contract_obj['phase'] == 'inprogress' or contract_obj['phase'] == 'disputed' or contract_obj['phase'] == 'validation' or contract_obj['phase'] == 'gradevalidation' or contract_obj['phase'] == 'successful' or contract_obj['phase'] == 'rating' %}
             {# CHAT: MAIN #}

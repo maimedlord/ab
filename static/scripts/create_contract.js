@@ -2,34 +2,54 @@
 Answer Bounty
 Alex Haas
 */
+$(document).ready(function () {
+   $('#c_form').click(function () {
+      if ($('#c_f_lostudy')[0].value == 'none') {
+         document.getElementById('popup_div_lostudy').style.display = 'flex';
+      }
+      if ($('#c_f_type')[0].value == 'none') {
+         document.getElementById('popup_div_type').style.display = 'flex';
+      }
+      if ($('#c_f_lostudy')[0].value != 'none' && $('#c_f_type')[0].value != 'none') {
+         document.getElementById('container_the_rest').style.display = 'flex';
+      }
+   });
+   $('#c_f_s_l_main').click(function () {
+      document.getElementById('popup_div_lostudy').style.display = 'none';
+   });
+   $('#c_f_s_t_main').click(function () {
+      document.getElementById('popup_div_type').style.display = 'none';
+   });
+});
+
 // lostudy
 function choose_lostudy_g() {
-   document.getElementById('c_f_s_l_graduate').style.borderStyle = "dotted";
-   document.getElementById('c_f_s_l_h_school').style.borderStyle = "none";
-   document.getElementById('c_f_s_l_undergraduate').style.borderStyle = "none";
-   document.getElementById('c_f_s_l_main').style.borderStyle = "none";
+   // document.getElementById('c_f_s_l_graduate').style.borderStyle = "dotted";
+   // document.getElementById('c_f_s_l_h_school').style.borderStyle = "none";
+   // document.getElementById('c_f_s_l_undergraduate').style.borderStyle = "none";
+   // document.getElementById('c_f_s_l_main').style.borderStyle = "none";
    document.forms['c_form']['c_f_lostudy'].value = "graduate";
 }
 function choose_lostudy_hs() {
-   document.getElementById('c_f_s_l_graduate').style.borderStyle = "none";
-   document.getElementById('c_f_s_l_h_school').style.borderStyle = "dotted";
-   document.getElementById('c_f_s_l_undergraduate').style.borderStyle = "none";
-   document.getElementById('c_f_s_l_main').style.borderStyle = "none";
+   // document.getElementById('c_f_s_l_graduate').style.borderStyle = "none";
+   // document.getElementById('c_f_s_l_h_school').style.borderStyle = "dotted";
+   // document.getElementById('c_f_s_l_undergraduate').style.borderStyle = "none";
+   // document.getElementById('c_f_s_l_main').style.borderStyle = "none";
    document.forms['c_form']['c_f_lostudy'].value = "high school";
 }
 function choose_lostudy_u() {
-   document.getElementById('c_f_s_l_graduate').style.borderStyle = "none";
-   document.getElementById('c_f_s_l_h_school').style.borderStyle = "none";
-   document.getElementById('c_f_s_l_undergraduate').style.borderStyle = "dotted";
-   document.getElementById('c_f_s_l_main').style.borderStyle = "none";
+   // document.getElementById('c_f_s_l_graduate').style.borderStyle = "none";
+   // document.getElementById('c_f_s_l_h_school').style.borderStyle = "none";
+   // document.getElementById('c_f_s_l_undergraduate').style.borderStyle = "dotted";
+   // document.getElementById('c_f_s_l_main').style.borderStyle = "none";
    document.forms['c_form']['c_f_lostudy'].value = "undergraduate";
 }
 // type
 function choose_type_a() {
-   document.getElementById('c_f_s_t_assignment').style.borderStyle = "dotted";
-   document.getElementById('c_f_s_t_test').style.borderStyle = "none";
-   document.getElementById('div_e_f_bonus').style.display = "flex";
-   document.getElementById('c_f_s_t_main').style.borderStyle = "none";
+   // document.getElementById('c_f_s_t_assignment').style.borderStyle = "dotted";
+   // document.getElementById('c_f_s_t_test').style.borderStyle = "none";
+   // document.getElementById('div_e_f_bonus').style.display = "flex";
+   // document.getElementById('c_f_s_t_main').style.borderStyle = "none";
    document.getElementById('c_f_type').value = "assignment";
    document.getElementById('c_f_t_a_deadline').required = true
    document.getElementById('c_f_t_a_d_time').required = true
@@ -53,10 +73,10 @@ function choose_type_a() {
    }
 }
 function choose_type_t() {
-   document.getElementById('c_f_s_t_assignment').style.borderStyle = "none";
-   document.getElementById('c_f_s_t_test').style.borderStyle = "dotted";
-   document.getElementById('div_e_f_bonus').style.display = "none";
-   document.getElementById('c_f_s_t_main').style.borderStyle = "none";
+   // document.getElementById('c_f_s_t_assignment').style.borderStyle = "none";
+   // document.getElementById('c_f_s_t_test').style.borderStyle = "dotted";
+   // document.getElementById('div_e_f_bonus').style.display = "none";
+   // document.getElementById('c_f_s_t_main').style.borderStyle = "none";
    document.getElementById('c_f_type').value = "test"
    document.getElementById('c_f_t_a_deadline').required = false
    document.getElementById('c_f_t_a_d_time').required = false

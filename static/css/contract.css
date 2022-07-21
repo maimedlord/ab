@@ -1,6 +1,40 @@
+body {
+    background-color: pink;
+}
+.c_row {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-top: 10px;
+    padding: 5px;
+}
+.c_textcenter {
+    text-align: center;
+}
 #container_contract_view {
     align-self: center;
+    background-color: white;
+    border-radius: 50px;
+    box-shadow: 10px 10px dimgray;
+    display: flex;
+    flex-direction: column;
     margin-top: 300px;
+    padding: 15px 10px 10px 10px;
+}
+#div_cancel_inner {
+    background-color: white;
+    border-color: red;
+    border-radius: 15px;
+    border-style: solid;
+    box-shadow: 3px 3px dimgray;
+    display: flex;
+    flex-direction: column;
+    height: 50px;
+    justify-content: center;
+    padding: 5px;
+    text-align: center;
+    width: 70px;
 }
 #div_i_party {
     background-color: lightblue;
@@ -8,4 +42,40 @@
 }
 #div_grade_proof {
     display: flex;
+}
+#div_phase {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    justify-content: space-between;
+    padding: 5px;
+}
+#div_phase_inner {
+    background-color: white;
+    border-color: red;
+    border-radius: 15px;
+    border-style: solid;
+    box-shadow: 3px 3px dimgray;
+    display: flex;
+    flex-direction: column;
+    height: 50px;
+    justify-content: center;
+    padding: 5px;
+    text-align: center;
+    width: 70px;
+}
+#div_type_inner {
+    background-color: white;
+    border-color: red;
+    border-radius: 15px;
+    border-style: solid;
+    box-shadow: 3px 3px dimgray;
+    display: flex;
+    flex-direction: column;
+    height: 50px;
+    justify-content: center;
+    padding: 5px;
+    text-align: center;
+    width: 70px;
 }

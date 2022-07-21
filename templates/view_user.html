@@ -2,7 +2,11 @@
 {% block title %}<title>answerBlasters: LOGIN BROTHERS AND SISTERS</title>{% endblock %}
 {% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/view_user.css') }}">{% endblock %}
 {% block body %}
-    <div>
+    <div id="container_header">
+        <div id="header_logo">
+        </div>
+    </div>
+    <div id="view_user_main">
         view_user.html<p></p>
         {{ data_obj['message'] }}<p></p>
         username: {{ user_obj['uName'] }}<p></p>

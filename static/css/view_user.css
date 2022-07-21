@@ -1,0 +1,6 @@
+#view_user_main {
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    margin-top: 250px;
+}

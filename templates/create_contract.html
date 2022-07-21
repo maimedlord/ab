@@ -25,8 +25,9 @@
                         undergraduate
                     </div>
                 </div>
-                <p>subject:</p><p><input id="c_f_subject" placeholder="subject..." name="c_f_subject" required type="text"></p>
-                specialization:<p><input id="c_f_specialization" placeholder="specialization..." name="c_f_specialization" required type="text"></p>
+                <div id="popup_div_lostudy">
+                    stuff here for popup div
+                </div>
                 <div id="c_f_s_t_main">
                     <div id="c_f_s_t_assignment" onclick="choose_type_a()">
                         assignment choice
@@ -35,52 +36,75 @@
                         test choice
                     </div>
                 </div>
+                <div id="popup_div_type">
+                    stuff here for popup div
+                </div>
                 THE REST<p></p>
-                <div class="all" id="div_bounty">
-                    bounty: <input d id="c_f_bounty" min="10.00" name="c_f_bounty" placeholder="$0.00" required step="0.01" type="number" value="0.0">
-                </div>
-                <div class="aonly" id="div_e_f_bonus">
-                    early finish bonus: <input id="c_f_efbonus" min="0" name="c_f_efbonus" placeholder="$0.00" step="0.01" type="number" value="0.0">
-                </div>
-                <div class="aonly" id="div_e_f_b_d_time">
-                    early finish bonus deadline: <input id="c_f_efb_deadline" name="c_f_efb_deadline" type="date">
-                    <input id="c_f_efb_d_time" name="c_f_efb_d_time" type="time">
-                </div>
-                <div class="all" id="div_e_g_bonus">
-                    excellent grade bonus: <input id="c_f_egbonus" placeholder="$0.00" name="c_f_egbonus" step="0.01" type="number" value="0.0">
-                </div>
-                <div class="all" id="div_instructions">
-                    instructions: <input id="c_f_instructions" placeholder="instructions..." name="c_f_instructions" required type="text">
-                </div>
-                <div class="all" id="div_sample_up">
-                    sample file upload: <input id="sample_file" name="sample_file" type="file">{# required ??? #}
-                </div>
-                <div class="therest" id="div_timezone">
-                    make sure to have a timezone setting for each user...
-                </div>
-                <div class="all" id="div_t_stall">
-                    timeline: stall: <input id="c_f_t_stall" name="c_f_t_stall" required title="stall date"  type="date">
-                    <input id="c_f_t_s_time" name="c_f_t_s_time" required type="time">
-                </div>
-                <div class="aonly" id="div_t_a_deadline">
-                    timeline: assignment deadline: <input id="c_f_t_a_deadline" name="c_f_t_a_deadline" type="date">
-                    <input id="c_f_t_a_d_time" name="c_f_t_a_d_time" type="time">
-                </div>
-                <div class="tonly" id="div_t_t_start">
-                    timeline: test start: <input id="c_f_t_t_start"  name="c_f_t_t_start" type="date">
-                    <input id="c_f_t_t_s_time" name="c_f_t_t_s_time" type="time">
-                </div>
-                <div class="tonly" id="div_t_t_end">
-                    timeline: test end: <input id="c_f_t_t_end"  name="c_f_t_t_end" type="date">
-                    <input id="c_f_t_t_e_time" name="c_f_t_t_e_time" type="time">
-                </div>
-                <div class="all" id="div_t_g_deadline">
-                    timeline: grade deadline <input id="c_f_t_g_deadline"  name="c_f_t_g_deadline" required type="date">
-                    <input id="c_f_t_g_d_time" name="c_f_t_g_d_time" required type="time">
-                </div>
-                PAYMENT STUFF HERE
-                <div class="therest" id="div_submit">
-                    <button type="submit">submit</button>
+                <div id="container_the_rest">
+                    <div class="cc_row">
+                        <div class="cc_inner_column">
+                            subject:<p><input id="c_f_subject" placeholder="subject..." name="c_f_subject" required type="text"></p>
+                        </div>
+                        <div class="cc_inner_column">
+                            specialization:<p><input id="c_f_specialization" placeholder="specialization..." name="c_f_specialization" required type="text"></p>
+                        </div>
+                        <div class="cc_inner_column">
+                            bounty:<p><input d id="c_f_bounty" min="10.00" name="c_f_bounty" placeholder="$0.00" required step="0.01" type="number" value="0.0"></p>
+                        </div>
+                    </div>
+                    <div class="cc_row">
+                        <div class="all">
+                            excellent grade bonus:<p><input id="c_f_egbonus" placeholder="$0.00" name="c_f_egbonus" step="0.01" type="number" value="0.0"></p>
+                        </div>
+                        <div class="aonly">
+                            early finish bonus:<p><input id="c_f_efbonus" min="0" name="c_f_efbonus" placeholder="$0.00" step="0.01" type="number" value="0.0"></p>
+                        </div>
+                    </div>
+                    <div class="all" id="div_instructions">
+                        instructions:<p><textarea cols="80" id="c_f_instructions" name="c_f_instructions" placeholder="your mum is a gadfly but that is alright" required rows="10"></textarea></p>
+                    </div>
+                    <div class="all" id="div_sample_up">
+                        sample file upload:<p><input id="sample_file" name="sample_file" type="file"></p>
+                    </div>
+                    <div class="cc_row">
+                        <div class="all" id="div_t_stall">
+                            timeline: stall:
+                            <input id="c_f_t_stall" name="c_f_t_stall" required title="stall date"  type="date"><br>
+                            <input id="c_f_t_s_time" name="c_f_t_s_time" required type="time">
+                        </div>
+                        <div class="aonly" id="div_e_f_b_d_time">
+                            early finish bonus deadline:
+                            <input id="c_f_efb_deadline" name="c_f_efb_deadline" type="date"><br>
+                            <input id="c_f_efb_d_time" name="c_f_efb_d_time" type="time">
+                        </div>
+                    </div>
+                    <div class="cc_row">
+                        <div class="aonly" id="div_t_a_deadline">
+                            timeline: assignment deadline: <input id="c_f_t_a_deadline" name="c_f_t_a_deadline" type="date">
+                            <input id="c_f_t_a_d_time" name="c_f_t_a_d_time" type="time">
+                        </div>
+                        <div class="tonly" id="div_t_t_start">
+                            timeline: test start: <input id="c_f_t_t_start"  name="c_f_t_t_start" type="date">
+                            <input id="c_f_t_t_s_time" name="c_f_t_t_s_time" type="time">
+                        </div>
+                        <div class="tonly" id="div_t_t_end">
+                            timeline: test end: <input id="c_f_t_t_end"  name="c_f_t_t_end" type="date">
+                            <input id="c_f_t_t_e_time" name="c_f_t_t_e_time" type="time">
+                        </div>
+                    </div>
+                    <div class="therest" id="div_timezone">
+                        make sure to have a timezone setting for each user...
+                    </div>
+                    <div class="cc_row">
+                        <div class="all" id="div_t_g_deadline">
+                            timeline: grade deadline <input id="c_f_t_g_deadline"  name="c_f_t_g_deadline" required type="date">
+                            <input id="c_f_t_g_d_time" name="c_f_t_g_d_time" required type="time">
+                        </div>
+                    </div>
+                    PAYMENT STUFF HERE
+                    <div class="therest" id="div_submit">
+                        <button type="submit">submit</button>
+                    </div>
                 </div>
             </form>
         </div>

@@ -1,17 +1,33 @@
 .all {
     display: none;
+    flex-direction: column;
 }
 .aonly {
     display: none;
+    flex-direction: column;
 }
 .tonly {
     display: none;
+    flex-direction: column;
+}
+.cc_inner_column {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+.cc_row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    text-align: center;
 }
 #cc_main {
+    align-self: center;
     display: flex;
     flex-direction: column;
     margin-top: 250px;
-    width: 100%;
+    max-width: 1200px;
 }
 #c_f_s_l_graduate {
     background-color: plum;
@@ -24,12 +40,11 @@
     width: 200px;
 }
 #c_f_s_l_main {
-    background-color: plum;
     border-style: dotted;
     display: flex;
     flex-direction: row;
-    flex-wrap: nowrap;
-    height: 50px;
+    flex-wrap: wrap;
+    height: 75px;
 }
 #c_f_s_l_undergraduate {
     background-color: coral;
@@ -45,17 +60,34 @@
     flex-basis: 50%;
 }
 #c_f_s_t_main {
-    background-color: plum;
     border-style: dotted;
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     height: 75px;
-    width: 100%;
+    margin-top: 15px;
 }
 #container_form {
-    align-self: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     text-align: center;
+}
+#container_the_rest {
+    display: none;
+    flex-direction: column;
+}
+#div_instructions {
+    min-width: 350px;
+}
+#popup_div_lostudy {
+    background-color: lightblue;
+    border-radius: 50px;
+    box-shadow: 10px 10px dimgray;
+    display: none;
+    padding: 15px;
+}
+#popup_div_type {
+    background-color: lightblue;
+    border-radius: 50px;
+    box-shadow: 10px 10px dimgray;
+    display: none;
+    padding: 15px;
 }

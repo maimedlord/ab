@@ -177,7 +177,7 @@ def create_contract():
                     data_obj.update({'message': 'processing for your contract failed...'})
                     return render_template('create_contract.html', data_obj=data_obj)
         else:
-            prc_return = prc.process_new_contract(request.form, current_user.id_object)
+            prc_return = prc.process_new_contract(request.form, current_user.id_object, current_user.username)
             if prc_return.acknowledged is False:
                 # write to error log
                 data_obj.update({'message': 'processing for your contract failed...'})
@@ -560,7 +560,10 @@ def view_user(userid):
         for x in user_obj['reviewHistory']:
             data_obj['review_avg'] += x['rating']
             counter += 1
-        data_obj['review_avg'] = data_obj['review_avg'] / counter
+        if data_obj['review_avg'] != None:
+            data_obj['review_avg'] = data_obj['review_avg'] / counter
+        else:
+            data_obj['review_avg'] = 'no reviews yet'
         return render_template('view_user.html', data_obj=data_obj, user_obj=user_obj)
     data_obj['message'] = "no user found..."
     return render_template('view_user.html', data_obj=data_obj)
