@@ -193,8 +193,9 @@ def create_contract():
 def contract(contract_id, message):
     contract_id = remove_danger_chars(contract_id)
     message = remove_danger_chars(message)
-    data_obj = {'ip_address': request.remote_addr}
-    data_obj.update({'message': message})
+    data_obj = {'ip_address': request.remote_addr, 'message': message, 'dispute_arr': [
+        'inprogress', 'validation', 'approved', 'gvalidation'
+    ]}
     contract_obj = prc.prc_get_contract_account(contract_id, current_user.id_object)
     if not contract_obj:
         return redirect(url_for('hmm', message='contract not found or you are not permitted to view it...'))

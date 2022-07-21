@@ -1,3 +1,4 @@
+{# incomplete 07-21-2022 #}
 {% extends "base.html" %}
 {% block title %}<title>contract {{ contract_obj['_id'] }}</title>{% endblock %}
 {% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/contract.css') }}">{% endblock %}
@@ -16,20 +17,52 @@
                 <div id="div_cancel_inner"><a href="{{ url_for('cancel_contract', contract_id=contract_obj['_id']) }}">CANCEL BOUNTY</a></div>
             {% endif %}
             {# PHASE: CREATION #}
-            {% if contract_obj['phase'] == "creation" %}
+            {% if contract_obj['phase'] == 'creation' %}
                 <a href="{{ url_for('set_open', contract_id=contract_obj['_id']) }}">MOVE TO OPEN</a>
                 <a href="{{ url_for('cancel_contract', contract_id=contract_obj['_id']) }}">CANCEL BOUNTY</a>
             {% endif %}
             {# PHASE: CREATION #}
-        </div>
-        <div class="c_row">
-            <div>bounty: {{ contract_obj['bounty'] }}</div>
-            {% if contract_obj['efbonus'] > 0 %}
-                <div>early finish bonus: {{ contract_obj['efbonus'] }}</div>
-            {% elif contract_obj['egbonus'] > 0 %}
-                <div>excellent grade bonus: {{ contract_obj['egbonus'] }}</div>
+            {% if contract_obj['phase'] in data_obj['disputed_arr'] %}
+                <a href="{{ url_for('set_disputed', contractid=contract_obj['_id']) }}">link: set contract as disputed</a>
             {% endif %}
         </div>
+        {# PHASE: INPROGRESS #}
+            {% if contract_obj['phase'] == "inprogress" %}
+                {# PHASE: INPROGRESS: ASSIGNMENT #}
+                {% if contract_obj['type_contract'] == 'assignment' %}
+                    {#            <a href="{{ url_for('set_disputed', contractid=contract_obj['_id']) }}">link: set contract as disputed</a><p></p>#}
+                    -----<p></p>
+                    {% if contract_obj['owner'] == current_user.id_object %}
+                        waiting on submission from bount hunter...<p></p>
+                    {% endif %}
+                    {% if contract_obj['bhunter'] == current_user.id_object %}
+                        submit assignment for validation:
+                        <form action="{{ url_for('submit_assignment', contract_id=contract_obj['_id']) }}" enctype="multipart/form-data" id="submission" method="post" name="submission">
+                            <input id="afile" name="assignment_file" required type="file"><p></p>
+                            submit file?    <button type="submit">submit submission</button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+                {# PHASE: INPROGRESS: TEST #}
+                {% if contract_obj['type_contract'] == 'test' %}
+                    SOMETHING HERE FOR TEST!{# incomplete #}
+                {% endif %}
+            {% endif %}
+        {# PHASE: INPROGRESS #}
+        <div class="c_row">
+            <div>bounty: <b>${{ contract_obj['bounty'] }}</b></div>
+            {% if contract_obj['efbonus'] > 0 %}
+                <div>early finish bonus: <b>${{ contract_obj['efbonus'] }}</b></div>
+            {% endif %}
+            {% if contract_obj['egbonus'] > 0 %}
+                <div>excellent grade bonus: <b>${{ contract_obj['egbonus'] }}</b></div>
+            {% endif %}
+        </div>
+            {% if contract_obj['bhunter_uname'] != None %}
+                <div class="c_row">
+                    bounty hunter: <a href="{{ url_for('view_user', userid=contract_obj['bhunter']) }}">{{ contract_obj['bhunter_uname'] }}</a>
+                </div>
+            {% endif %}
         {# PHASE: OPEN #}
         {% if contract_obj['phase'] == "open" %}
             {# show for anyone that's NOT the owner and has NOT offered on the contract yet #}
@@ -59,31 +92,6 @@
             {% endif %}
         {% endif %}
         {# PHASE: OPEN #}
-        {# PHASE: INPROGRESS #}
-        {% if contract_obj['phase'] == "inprogress" %}
-            {# PHASE: INPROGRESS: ASSIGNMENT #}
-            {% if contract_obj['type_contract'] == 'assignment' %}
-                {#            <a href="{{ url_for('set_disputed', contractid=contract_obj['_id']) }}">link: set contract as disputed</a><p></p>#}
-                <div class="c_row">
-                    bounty hunter: <a href="{{ url_for('view_user', userid=contract_obj['bhunter']) }}">{{ contract_obj['bhunter_uname'] }}</a>
-                </div>
-                -----<p></p>
-                {% if contract_obj['owner'] == current_user.id_object %}
-                    waiting on submission from bount hunter...<p></p>
-                {% endif %}
-                {% if contract_obj['bhunter'] == current_user.id_object %}
-                    submit assignment for validation:
-                    <form action="{{ url_for('submit_assignment', contract_id=contract_obj['_id']) }}" enctype="multipart/form-data" id="submission" method="post" name="submission">
-                        <input id="afile" name="assignment_file" required type="file"><p></p>
-                        submit file?    <button type="submit">submit submission</button>
-                    </form>
-                {% endif %}
-            {% endif %}
-            {# PHASE: INPROGRESS: TEST #}
-            {% if contract_obj['type_contract'] == 'test' %}
-            {% endif %}
-        {% endif %}
-        {# PHASE: INPROGRESS #}
         {# PHASE: STALLED #}
         {% if contract_obj['phase'] == "stalled" %}
         {% endif %}
@@ -214,12 +222,20 @@
             <div>subject: {{ contract_obj['subject'] }}</div>
             <div>specialization: {{ contract_obj['specialization'] }}</div>
         </div>
-        <div class="c_row c_textcenter">
-            <div>sampleText:<p>{{ contract_obj['instructions'] }}</p></div>
+        <div class="c_row" id="div_instructions">
+            <div id="div_instructions_column">
+                {{ contract_obj['type_contract'] }} instructions:
+                <p>{{ contract_obj['instructions'] }}</p>
+            </div>
         </div>
-        {% if contract_obj['sampleUp'] != None %}
-            <div class="c_row c_textcenter">sampleUp:<a href="{{ url_for('download_sample', filename=contract_obj['sampleUp']) }}" download>DOWNLOAD THE FILE MAN</a></div>
-        {% endif %}
+        <div class="c_row c_textcenter">
+            sample file:
+            {% if contract_obj['sampleUp'] != None %}
+                <a href="{{ url_for('download_sample', filename=contract_obj['sampleUp']) }}" download>DOWNLOAD THE FILE MAN</a>
+            {% else %}
+                no sample file uploaded
+            {% endif %}
+        </div>
         ----<p></p>
         {% if contract_obj['type_contract'] == 'assignment' %}
             deadline: due: {{ contract_obj['timeline'][2] }}<p></p>
