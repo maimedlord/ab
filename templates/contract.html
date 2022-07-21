@@ -64,7 +64,9 @@
             {# PHASE: INPROGRESS: ASSIGNMENT #}
             {% if contract_obj['type_contract'] == 'assignment' %}
                 {#            <a href="{{ url_for('set_disputed', contractid=contract_obj['_id']) }}">link: set contract as disputed</a><p></p>#}
-                bounty hunter: {{ contract_obj['bhunter'] }}<p></p>
+                <div class="c_row">
+                    bounty hunter: <a href="{{ url_for('view_user', userid=contract_obj['bhunter']) }}">{{ contract_obj['bhunter_uname'] }}</a>
+                </div>
                 -----<p></p>
                 {% if contract_obj['owner'] == current_user.id_object %}
                     waiting on submission from bount hunter...<p></p>
