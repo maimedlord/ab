@@ -4,8 +4,9 @@
 {% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/contract.css') }}">{% endblock %}
 {% block scripts %}<script src="{{url_for('static', filename='scripts/contract.js')}}"></script>{% endblock %}
 {% block body %}
-    <div id="container_header">{{ data_obj['message'] }}</div>
+    <div id="container_header"></div>
     <div id="container_contract_view">
+        {{ data_obj['message'] }}
         <div id="div_phase">
             <div id="div_phase_inner">
                 phase:<br>{{ contract_obj['phase'] }}
@@ -26,6 +27,37 @@
                 <a href="{{ url_for('set_disputed', contractid=contract_obj['_id']) }}">link: set contract as disputed</a>
             {% endif %}
         </div>
+        {# INTERESTED PARTIES #}
+        {% if contract_obj['phase'] == "open" %}
+            {# show for anyone that's NOT the owner and has NOT offered on the contract yet #}
+            {% if (current_user.id_object != contract_obj['owner']) and not data_obj['bhunter_offer'] %}
+                make an offer on this contract:<p></p>
+                <form id="make_offer_form" method="post" name="make_offer_form">
+                    For what amount will you take on this contract? <input id="m_o_f_offer" min="{{ contract_obj['bounty'] + 1.00 }}" name="m_o_f_offer" placeholder="$0.00" step="0.01" required type="number"><p></p>
+                    <button type="submit">submit</button>
+                </form>
+            {# show for bhunter that's already offered on contract #}
+            {% elif data_obj['bhunter_offer'] %}
+                <div id="div_existing_offer">
+                    Your existing offer on this contract:
+                    <span>offer: {{ data_obj['bhunter_offer']['offer'] }}</span>
+                    <span>time: {{ data_obj['bhunter_offer']['time'] }}</span>
+                </div>
+            {# show for the contract owner... maybe add another elif here? #}
+            {% else %}
+                <div id="div_iparty_row">
+                {% for party in contract_obj['iparties'] %}
+                    <div id="div_iparty_cell">
+                        <span>interested party: <a href="{{ url_for('view_user', user_id=party['bhunter']) }}">{{ party['bhunter_uname'] }}</a></span>
+                        <span>counter offer: <b>$ {{ party['offer'] }}</b></span>
+                        time:    {{ party['time'] }}
+                        <a href="{{ url_for('accept_ip_offer', bhunter_id=party['bhunter'], bhunter_uname=party['bhunter_uname'], contract_id=contract_obj['_id'], offer=party['offer']) }}">accept offer</a>
+                    </div>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endif %}
+        {# INTERESTED PARTIES #}
         {# PHASE: INPROGRESS #}
             {% if contract_obj['phase'] == "inprogress" %}
                 {# PHASE: INPROGRESS: ASSIGNMENT #}
@@ -60,38 +92,10 @@
         </div>
             {% if contract_obj['bhunter_uname'] != None %}
                 <div class="c_row">
-                    bounty hunter: <a href="{{ url_for('view_user', userid=contract_obj['bhunter']) }}">{{ contract_obj['bhunter_uname'] }}</a>
+                    bounty hunter: <a href="{{ url_for('view_user', user_id=contract_obj['bhunter']) }}">{{ contract_obj['bhunter_uname'] }}</a>
                 </div>
             {% endif %}
-        {# PHASE: OPEN #}
-        {% if contract_obj['phase'] == "open" %}
-            {# show for anyone that's NOT the owner and has NOT offered on the contract yet #}
-            {% if (current_user.id_object != contract_obj['owner']) and not data_obj['bhunter_offer'] %}
-                make an offer on this contract:<p></p>
-                <form id="make_offer_form" method="post" name="make_offer_form">
-                    For what amount will you take on this contract? <input id="m_o_f_offer" min="{{ contract_obj['bounty'] }}" name="m_o_f_offer" placeholder="$0.00" step="0.01" required type="number"><p></p>
-                    <button type="submit">submit</button>
-                </form>
-            {# show for bhunter that's already offered on contract #}
-            {% elif data_obj['bhunter_offer'] %}
-                Your existing offer on this contract:<p></p>
-                offer: {{ data_obj['bhunter_offer']['offer'] }}
-                time: {{ data_obj['bhunter_offer']['time'] }}
-            {# show for the contract owner... maybe add another elif here? #}
-            {% else %}
-                {% for party in contract_obj['iparties'] %}
-                    <div id="div_i_party">
-                        interested party:<p></p>
-                        bounty hunter: <a href="{{ url_for('view_user', userid=party['bhunter']) }}">{{ party['bhunter_uname'] }}</a><p></p>
-                        offer:    <b>$ {{ party['offer'] }}</b><p></p>
-                        time:    {{ party['time'] }}<p></p>
-                        <a href="{{ url_for('accept_ip_offer', bhunter_id=party['bhunter'], bhunter_uname=party['bhunter_uname'], contract_id=contract_obj['_id'], offer=party['offer']) }}">accept offer</a>
-                    </div>
-                    <p></p>
-                {% endfor %}
-            {% endif %}
-        {% endif %}
-        {# PHASE: OPEN #}
+
         {# PHASE: STALLED #}
         {% if contract_obj['phase'] == "stalled" %}
         {% endif %}
@@ -208,24 +212,22 @@
         {% endif %}
         {# PHASE: RATING #}
         {# other phases ...#}
-        <p></p>
         <div class="c_row">
             {% if contract_obj['owner'] == current_user.id_object %}
                 <div>contract owner: you</div>
             {% else %}
-                <div>contract owner: {{ contract_obj['owner_uname'] }}</div>
+                <div>contract owner: <a href="{{ url_for('view_user', user_id=contract_obj['owner']) }}">{{ contract_obj['owner_uname'] }}</a></div>
             {% endif %}
-            <div>type: {{ contract_obj['type_contract'] }}</div>
         </div>
         <div class="c_row">
             <div>level of study: {{ contract_obj['lostudy'] }}</div>
             <div>subject: {{ contract_obj['subject'] }}</div>
             <div>specialization: {{ contract_obj['specialization'] }}</div>
         </div>
-        <div class="c_row" id="div_instructions">
+        <div id="div_instructions">
             <div id="div_instructions_column">
                 {{ contract_obj['type_contract'] }} instructions:
-                <p>{{ contract_obj['instructions'] }}</p>
+                <div id="div_instructions_row">{{ contract_obj['instructions'] }}</div>
             </div>
         </div>
         <div class="c_row c_textcenter">

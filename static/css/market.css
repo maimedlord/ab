@@ -18,7 +18,8 @@
     box-shadow: 5px 5px dimgray;
     display: flex;
     flex-direction: row;
-    gap: 10px;
+    flex-wrap: wrap;
+    gap: 5px;
     margin-top: 10px;
     padding: 10px;
 }
@@ -41,6 +42,8 @@
     flex-direction: column;
     padding: 10px;
     margin-top: 20px;
+    max-width: 1200px;
+    width: 100%;
 }
 #c_m_h_row {
     display: flex;

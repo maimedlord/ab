@@ -546,12 +546,12 @@ def success():
 #     return redirect(url_for('contract', contract_id=contract_id, message='none'))  # need to fix this
 
 
-@app.route('/view_user/<userid>')
+@app.route('/view_user/<user_id>')
 @login_required
-def view_user(userid):
-    userid = remove_danger_chars(userid)
+def view_user(user_id):
+    user_id = remove_danger_chars(user_id)
     data_obj = {"ip_address": request.remote_addr, 'review_avg': None}
-    user_obj = calls.get_user(userid)
+    user_obj = calls.get_user(user_id)
     if user_obj:
         user_obj = dict(user_obj)
         # average rating:

@@ -12,6 +12,7 @@ body {
     justify-content: center;
 }
 #container_header {
+    align-self: stretch;
     background-image: url("../imgs/abheader1.png");
     background-position: center;
     background-repeat: no-repeat;
@@ -24,8 +25,10 @@ body {
 }
 /* z-index here is critical for static header image that hides behind scrolling divs */
 #container_main {
+    align-items: center;
     display: flex;
     flex-direction: column;
+    height: 100%;
     width: 100%;
     z-index: -10;
 }

@@ -8,7 +8,7 @@
             a_g_left<p></p>
             <b>total earned: ${{ data_obj['total_earned'] }}</b><p></p>
             avg rating: {{ data_obj['review_avg'] }}<p></p>
-            <i><a href="{{ url_for('view_user', userid=current_user.id_object) }}">view your public profile:</a></i><p></p>
+            <i><a href="{{ url_for('view_user', user_id=current_user.id_object) }}">view your public profile:</a></i><p></p>
         </div>
         <div id="a_g_right">
             a_g_right:<p></p>
@@ -25,51 +25,51 @@
         <div id="r_header">
             <div class="c_contract_header" id="c_position"><b>position</b>
                 <div class="c_inner_row">
-                    <text onclick="sort_alpha('container_contracts_table', 'down', 'position')">down</text>
-                    <text onclick="sort_alpha('container_contracts_table', 'up', 'position')">up</text>
+                    <span onclick="sort_alpha('container_contracts_table', 'down', 'position')">down</span>
+                    <span onclick="sort_alpha('container_contracts_table', 'up', 'position')">up</span>
                 </div>
             </div>
             <div class="c_contract_header" id="c_phase"><b>phase</b>
                 <div class="c_inner_row">
-                    <text onclick="sort_alpha('container_contracts_table', 'down', 'phase')">down</text>
-                    <text onclick="sort_alpha('container_contracts_table', 'up', 'phase')">up</text>
+                    <span onclick="sort_alpha('container_contracts_table', 'down', 'phase')">down</span>
+                    <span onclick="sort_alpha('container_contracts_table', 'up', 'phase')">up</span>
                 </div>
             </div>
             <div class="c_contract_header" id="c_type"><b>type</b>
                 <div class="c_inner_row">
-                    <text onclick="sort_alpha('container_contracts_table', 'down', 'type')">down</text>
-                    <text onclick="sort_alpha('container_contracts_table', 'up', 'type')">up</text>
+                    <span onclick="sort_alpha('container_contracts_table', 'down', 'type')">down</span>
+                    <span onclick="sort_alpha('container_contracts_table', 'up', 'type')">up</span>
                 </div>
             </div>
             <div class="c_contract_header" id="c_lostudy"><b>level of study</b>
                 <div class="c_inner_row">
-                    <text onclick="sort_alpha('container_contracts_table', 'down', 'lostudy')">down</text>
-                    <text onclick="sort_alpha('container_contracts_table', 'up', 'lostudy')">up</text>
+                    <span onclick="sort_alpha('container_contracts_table', 'down', 'lostudy')">down</span>
+                    <span onclick="sort_alpha('container_contracts_table', 'up', 'lostudy')">up</span>
                 </div>
             </div>
             <div class="c_contract_header" id="c_subject"><b>subject</b>
                 <div class="c_inner_row">
-                    <text onclick="sort_alpha('container_contracts_table', 'down', 'subject')">down</text>
-                    <text onclick="sort_alpha('container_contracts_table', 'up', 'subject')">up</text>
+                    <span onclick="sort_alpha('container_contracts_table', 'down', 'subject')">down</span>
+                    <span onclick="sort_alpha('container_contracts_table', 'up', 'subject')">up</span>
                 </div>
             </div>
             <div class="c_contract_header" id="c_specialization_header"><b>specialization</b>
                 <div class="c_inner_row">
-                    <text onclick="sort_alpha('container_contracts_table', 'down', 'specialization')">down</text>
-                    <text onclick="sort_alpha('container_contracts_table', 'up', 'specialization')">up</text>
+                    <span onclick="sort_alpha('container_contracts_table', 'down', 'specialization')">down</span>
+                    <span onclick="sort_alpha('container_contracts_table', 'up', 'specialization')">up</span>
                 </div>
             </div>
             <div class="c_contract_header" id="c_deadline2"><b>assignment/test deadline</b>
                 <div class="c_inner_row">
-                    <text onclick="sort_alpha('container_contracts_table', 'down', 'deadline1')">down</text>
-                    <text onclick="sort_alpha('container_contracts_table', 'up', 'deadline1')">up</text>
+                    <span onclick="sort_alpha('container_contracts_table', 'down', 'deadline1')">down</span>
+                    <span onclick="sort_alpha('container_contracts_table', 'up', 'deadline1')">up</span>
                 </div>
             </div>
             <div class="c_contract_header" id="c_deadline1"><b>efbonus deadline</b><p></p>down - up</div>
             <div class="c_contract_header" id="c_bounty"><b>bounty</b>
                 <div class="c_inner_row">
-                    <text onclick="sort_alpha('container_contracts_table', 'down', 'bounty')">down</text>
-                    <text onclick="sort_alpha('container_contracts_table', 'up', 'bounty')">up</text>
+                    <span onclick="sort_alpha('container_contracts_table', 'down', 'bounty')">down</span>
+                    <span onclick="sort_alpha('container_contracts_table', 'up', 'bounty')">up</span>
                 </div>
             </div>
             <div class="c_contract_header" id="c_egbonus"><b>excellent grade bonus</b><p></p></div>
