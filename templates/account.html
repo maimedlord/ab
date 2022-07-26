@@ -3,6 +3,28 @@
 {% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/account.css') }}">{% endblock %}
 {% block scripts %}<script src="{{url_for('static', filename='scripts/account.js')}}"></script>{% endblock %}
 {% block body %}
+    <div id="header_logo_behind"></div>
+    <div id="header_logo"></div>
+    <div id="nav_row_top">
+        <div id="nav_top_col1">
+{#            <a href="{{ url_for('user_settings', user_id=current_user.id_object) }}">settings</a>#}
+{#            <a href="{{ url_for('support', user_id=current_user.id_object) }}">support</a>#}
+{#            <a href="{{ url_for('tutorial', user_id=current_user.id_object) }}">tutorial</a>#}
+            settings
+            <p>support</p>
+            tutorial
+        </div>
+        <div id="nav_top_col2">
+            <h1>{{ current_user.username }}</h1>
+        </div>
+        <div id="nav_top_col3">
+            <a href="{{ url_for('logout') }}">
+                <div class="navigation_button">
+                    logout
+                </div>
+            </a>
+        </div>
+    </div>
     <div id="account_general">
         <div id="a_g_left">
             a_g_left<p></p>
@@ -20,6 +42,18 @@
             ####################################################<p></p>
             deadline less than 24hrs: ...<p></p>
         </div>
+    </div>
+    <div id="nav_row_mid">
+        <a href="{{ url_for('create_contract') }}">
+            <div class="navigation_button">
+                create contract
+            </div>
+        </a>
+        <a href="{{ url_for('market') }}">
+            <div class="navigation_button">
+                go to market
+            </div>
+        </a>
     </div>
     <div id="container_contracts_header">
         <div id="r_header">
@@ -72,13 +106,9 @@
                     <span onclick="sort_alpha('container_contracts_table', 'up', 'bounty')">up</span>
                 </div>
             </div>
-            <div class="c_contract_header" id="c_egbonus"><b>excellent grade bonus</b><p></p></div>
-            <div class="c_contract_header" id="c_efbonus"><b>early finish bonus</b><p></p></div>
             <div class="c_contract_header" id="c_newmsg"><b>new chat msg</b><p></p></div>
         </div>
     </div>
-    <div class="spacer"></div>
-    <div id="create_contract"><a href="{{ url_for('create_contract') }}"><h3>create a new contract</h3></a></div>
     <div id="container_contracts_table">
         {% for doc in user_contracts|reverse %}
             <!-- can wrap row with a link -->

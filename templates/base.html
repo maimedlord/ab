@@ -23,28 +23,8 @@
             <div id="notice_construction">
                 This website is under construction
             </div>
-            <div id="navbar">
-                {% if current_user.is_authenticated %}
-                    <div class="navbar_item">
-                        <a href="{{ url_for('account') }}">AcCoUnT</a> -
-                        <a href="{{ url_for('market') }}">MARKet</a> -
-                        <i>settings</i><p></p>
-                    </div>
-                    <div class="navbar_item">
-                        <a href="{{ url_for('logout') }}">LOGOUT</a><p></p>
-                    </div>
-                {% else %}
-                    <div class="navbar_item">
-                        <a href="{{ url_for('index') }}">HOme</a><p></p>
-                    </div>
-                    <div class="navbar_item">
-                        <a href="{{ url_for('login') }}">LOGin properr</a> ----
-                        <a href="{{ url_for('register') }}">REGisTER</a><p></p>
-                    </div>
-                {% endif %}
-            </div>
         </div>
-        <div id="navbar_spacer">asdfasdfasdf</div>
+        <div id="navbar_spacer"></div>
         <div id="container_main">{# CONTAINER MAIN #}
             {% block body %}{% endblock %}
             <div id="footer">

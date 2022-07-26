@@ -27,6 +27,17 @@
     flex-direction: row;
     justify-content: space-between;
 }
+.navigation_button {
+    background-color: indianred;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 5px 5px dimgray;
+    height: 110px;
+    justify-content: center;
+    text-align: center;
+    width: 180px;
+}
 .r_contract {
     background-color: plum;
     border-radius: 30px;
@@ -38,11 +49,6 @@
     margin-top: 10px;
     padding: 10px;
     gap: 10px;
-}
-.spacer {
-    background-color: transparent;
-    height: 20px;
-    width: 100%;
 }
 .spacer_row {
     background-color: transparent;
@@ -111,6 +117,7 @@
     min-width: 1000px;
     max-width: 1200px;
     padding: 20px 10px 20px 10px;
+    margin-top: 20px;
     width: 100%;
 }
 #create_contract {
@@ -120,4 +127,60 @@
     flex-basis: 150px;
 }
 #c_specialization_header {
+}
+#header_logo {
+    background-image: url("../imgs/abheader.png");
+    background-position: left;
+    background-repeat: no-repeat;
+    height: 52px;
+    max-width: 1200px;
+    width: 100%;
+}
+#header_logo_behind {
+    background-color: purple;
+    height: 5px;
+    margin-top: 38px;
+    position: absolute;
+    width: 100%;
+    z-index: -1;
+}
+#nav_row_mid {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: flex-end;
+    margin-right: 50px;
+    margin-top: 20px;
+    max-width: 1200px;
+    width: 100%;
+}
+#nav_row_top {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 1200px;
+    width: 100%;
+}
+#nav_top_col1 {
+    display: flex;
+    flex-basis: 30%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    font-size: x-large;
+    gap: 30px;
+    height: 70px;
+    justify-content: center;
+    min-width: 380px;
+    padding-top: 25px;
+    text-align: center;
+}
+#nav_top_col2 {
+    flex-basis: 50%;
+    min-width: 300px;
+    text-align: center;
+}
+#nav_top_col3 {
+    min-width: 200px;
 }

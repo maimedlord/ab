@@ -7,6 +7,36 @@
         <div id="header_logo">
         </div>
     </div>
+    <div id="container_navigation" onclick="window.location.href='{{ url_for('index') }}';">
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('logout') }}">
+                <div class="navigation_button">
+                    logout
+                </div>
+            </a>
+            <a href="{{ url_for('market') }}">
+                <div class="navigation_button">
+                    market
+                </div>
+            </a>
+            <a href="{{ url_for('account') }}">
+                <div class="navigation_button">
+                    account
+                </div>
+            </a>
+        {% else %}
+            <a href="{{ url_for('register') }}">
+                <div class="navigation_button">
+                    register
+                </div>
+            </a>
+            <a href="{{ url_for('login') }}">
+                <div class="navigation_button">
+                    login
+                </div>
+            </a>
+        {% endif %}
+    </div>
     <div class="container" id="container_market">
         <div style="text-align: center">
             <b>some open contracts on the market:</b><p></p>

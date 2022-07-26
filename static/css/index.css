@@ -99,6 +99,20 @@
     justify-content: center;
     width: 92%;
 }
+#container_header {
+    align-self: center;
+    background-image: url("../imgs/abheader.png");
+    background-position: left;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: row;
+    height: 300px;
+    margin-top: 10px;
+    max-width: 1000px;
+    position: fixed;
+    width: 100%;
+    z-index: -1;
+}
 #container_how {
     background-color: lightblue;
     box-shadow: 10px 10px dimgray;
@@ -109,10 +123,22 @@
 #container_market {
     align-self: center;
     background-color: lightgrey;
+    border-radius: 25px 25px 0px 25px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    margin-top: 210px;
+}
+#container_navigation {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 50px 20px;
+    height: 300px;
+    justify-content: flex-end;
+    margin-top: 5px;
+    max-width: 1250px;
+    padding-top: 10px;
+    width: 100%;
 }
 #container_next1 {
     background-color: transparent;
@@ -124,4 +150,19 @@
     box-shadow: 10px 10px dimgray;
     height: 400px;
     width: 100%;
+}
+#navigation_column {
+    display: flex;
+    flex-direction: column;
+}
+.navigation_button {
+    background-color: indianred;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 5px 5px dimgray;
+    height: 110px;
+    justify-content: center;
+    text-align: center;
+    width: 180px;
 }
