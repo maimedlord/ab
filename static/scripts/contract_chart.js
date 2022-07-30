@@ -5,8 +5,9 @@ const myChart = new Chart(ctx, {
     data: {
         labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
         datasets: [{
+            grouped: false,
             label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
+            data: [24, 19, 3, 18, 2, 3],
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
@@ -27,9 +28,14 @@ const myChart = new Chart(ctx, {
         }]
     },
     options: {
+        maxBarThickness : 4,
         scales: {
             y: {
-                beginAtZero: true
+                beginAtZero: true,
+                max: 24,
+                ticks: {
+                    stepSize: 2
+                }
             }
         }
     }

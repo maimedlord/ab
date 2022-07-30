@@ -1,4 +1,5 @@
 {# incomplete 07-21-2022 #}
+{# add in MIT license for chartjs #}
 {% extends "base.html" %}
 {% block title %}<title>contract {{ contract_obj['_id'] }}</title>{% endblock %}
 {% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/contract.css') }}">{% endblock %}
@@ -142,10 +143,6 @@
         {% endif %}
         {# PHASE: RATING #}
         {# other phases ...#}
-        {% if contract_obj['type_contract'] == 'test' %}
-            deadline: test start: {{ contract_obj['timeline'][2] }}<p></p>
-            deadline: test end: {{ contract_obj['timeline'][3] }}<p></p>
-        {% endif %}
         {# CHAT #}
 {#        {% if contract_obj['phase'] == 'inprogress' or contract_obj['phase'] == 'disputed' or contract_obj['phase'] == 'validation' or contract_obj['phase'] == 'gradevalidation' or contract_obj['phase'] == 'successful' or contract_obj['phase'] == 'rating' %}#}
             {# CHAT: MAIN #}
@@ -173,7 +170,7 @@
 {#        {% endif %}#}
     </div>
     <div id="container_graph">
-        <canvas id="myChart" width="400" height="400"></canvas>
+        <canvas id="myChart"></canvas>
         here will go the time graph... absolute fixed in background? could look cool when people scroll down to access chat... :D
     </div>
      <div id="info1_container">

@@ -103,7 +103,7 @@ body {
     gap: 10px;
     margin-top: 15px;
     padding: 5px;
-    width: 100%;
+    /*width: 100%;*/
 }
 #div_instructions_row {
     background-color: lightgrey;
@@ -237,5 +237,6 @@ body {
 #container_graph {
     margin-top: 40px;
     text-align: center;
+    max-width: 900px;
     width: 100%;
 }

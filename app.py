@@ -199,6 +199,9 @@ def contract(contract_id, message):
     contract_obj = prc.prc_get_contract_account(contract_id, current_user.id_object)
     if not contract_obj:
         return redirect(url_for('hmm', message='contract not found or you are not permitted to view it...'))
+    # xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:
+    capture = prc.prep_graph(contract_obj['timeline'], contract_obj['type_contract'])
+    print(capture)
     # creates potential earnings value:
     data_obj['earnable'] = contract_obj['bounty']
     if contract_obj['efbonusyon']:

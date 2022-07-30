@@ -249,6 +249,19 @@ def prc_submit_rating_c(comment, contract_id, rating, user_id):
 #     return False
 
 
+def prep_graph(timeline_arr, type_contract):
+    print(timeline_arr)
+    print(type_contract)
+
+    nowtime = datetime.fromisoformat(datetime.now().isoformat())
+
+    if type_contract == 'assignment':
+        print('assignment')
+    if type_contract == 'test':
+        print('test')
+    return True
+
+
 '''
 INCOMPLETE: 
 NEED TO VERIFY ALL INPUT HERE BEFORE SENDING TO CALLS
@@ -326,7 +339,7 @@ def process_new_contract(form_dict, owner_id, owner_uname):
     user_obj.update({'paymentid': None})
     user_obj.update({'bhunter_uname': None})
     user_obj.update({'owner_uname': owner_uname})
-    if e_f_bonus <= 0:
+    if float(e_f_bonus) <= 0:
         user_obj.update({'efbonusyon': False})
     user_obj.update({'efbonusyon': True})
     if e_g_bonus <= 0:
