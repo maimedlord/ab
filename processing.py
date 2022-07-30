@@ -117,26 +117,38 @@ def prc_set_open(contract_id):
     return None
 
 
+# needs to have option for bhunter to resubmit if owner finds work not to par
 # still needs checkboxes...
 def prc_yon_asubmission(form_dict, contract_id):
+    # was efbonus deadline satsified/
+
     # bhunter gets paid
     # once paid, update database:
     if len(form_dict) > 0:
         yon = form_dict['s_d_yon']
         if yon =='false':
             # accept checkboxes that map to reasons why user feels bhunter's submission was deficient...
-            result = prc_set_disputed(contract_id,
+            result = prc_set_disputed(ObjectId(contract_id),
                                       'disputed: adjust function to input reasons why bhunters submission was '
                                       'deficient to owner')
             if result.acknowledged:
                 # stuff to do...
                 return True
         if yon == 'true':
-            # submit approval:
-            result = calls.c_submit_approval(ObjectId(contract_id), {
-                'event': 'assignment approved',
-                'time': datetime.fromisoformat(datetime.now().isoformat())
-            })
+            nowtime = datetime.fromisoformat(datetime.now().isoformat())
+            # check if submitted before efbonus:
+            contract_obj = calls.c_get_contract(ObjectId(contract_id))
+            # submit approval after checking if efbonus deadline satisfied:
+            if contract_obj['efbonusyon'] and nowtime <= contract_obj['timeline'][5]['time']:
+                result = calls.c_submit_approval(ObjectId(contract_id), {
+                    'event': 'assignment approved and efbonus deadline satisfied',
+                    'time': nowtime
+                }, True)
+            else:
+                result = calls.c_submit_approval(ObjectId(contract_id), {
+                    'event': 'assignment approved and efbonus NOT satisfied',
+                    'time': nowtime
+                }, False)
             if result.acknowledged:
                 #  stuff to do...
                 return True
@@ -314,6 +326,12 @@ def process_new_contract(form_dict, owner_id, owner_uname):
     user_obj.update({'paymentid': None})
     user_obj.update({'bhunter_uname': None})
     user_obj.update({'owner_uname': owner_uname})
+    if e_f_bonus <= 0:
+        user_obj.update({'efbonusyon': False})
+    user_obj.update({'efbonusyon': True})
+    if e_g_bonus <= 0:
+        user_obj.update({'egbonusyon': False})
+    user_obj.update({'egbonusyon': True})
     return calls.create_contract(user_obj)
 
 

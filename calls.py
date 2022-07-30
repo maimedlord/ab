@@ -213,10 +213,10 @@ def c_set_sampleUp(contract_id, loc_string):
     return dbc.update_one({'_id': ObjectId(contract_id)}, {'$set': {'sampleUp': loc_string}})
 
 
-def c_submit_approval(contract_id, clog_obj):
+def c_submit_approval(contract_id, clog_obj, efbonusyon):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    return dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'approved'}, '$push': {'clog': clog_obj}})
+    return dbc.update_one({'_id': contract_id}, {'$set': {'phase': 'approved', 'efbonusyon': efbonusyon}, '$push': {'clog': clog_obj}})
 
 
 def c_submit_successful(contract_id, clog_obj):

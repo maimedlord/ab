@@ -1,5 +1,5 @@
 body {
-    background-color: pink;
+    background-color: white;
 }
 .c_row {
     align-items: center;
@@ -12,16 +12,33 @@ body {
 .c_textcenter {
     text-align: center;
 }
-#container_contract_view {
-    background-color: white;
-    border-radius: 50px;
-    box-shadow: 10px 10px dimgray;
+.nav_top_cell {
+    font-size: xx-large;
+    font-weight: bold;
+    color: rebeccapurple;
+}
+.navigation_button {
+    background-color: indianred;
+    border-radius: 15px;
     display: flex;
     flex-direction: column;
-    margin-top: 225px;
-    max-width: 1200px;
+    box-shadow: 5px 5px dimgray;
+    height: 110px;
+    justify-content: center;
+    text-align: center;
+    width: 180px;
+}
+#container_chat {
+    margin-top: 30px;
+}
+#container_input {
+    background-color: indianred;
+    border-radius: 50px;
+    box-shadow: 30px 30px 10px dimgray;
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
     padding: 15px 10px 15px 10px;
-    width: 100%;
 }
 #div_cancel_inner {
     background-color: white;
@@ -75,6 +92,7 @@ body {
     box-shadow: 5px 5px dimgray;
     display: flex;
     flex-direction: row;
+    margin: 0 10px 0 10px;
     padding: 10px 5px 15px 5px;
     text-align: center;
 }
@@ -83,11 +101,12 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    margin-top: 15px;
     padding: 5px;
     width: 100%;
 }
 #div_instructions_row {
-    background-color: white;
+    background-color: lightgrey;
     border-radius: 15px;
     box-shadow: 3px 3px dimgray;
     display: flex;
@@ -103,7 +122,7 @@ body {
     display: flex;
     flex-direction: row;
     gap: 15px;
-    justify-content: space-between;
+    justify-content: space-around;
     padding: 5px;
 }
 #div_phase_inner {
@@ -133,4 +152,90 @@ body {
     padding: 5px;
     text-align: center;
     width: 70px;
+}
+#header_logo {
+    background-image: url("../imgs/abheader.png");
+    background-position: left;
+    background-repeat: no-repeat;
+    height: 52px;
+    max-width: 1200px;
+    width: 100%;
+}
+#header_logo_behind {
+    background-color: purple;
+    height: 5px;
+    margin-top: 38px;
+    position: absolute;
+    width: 100%;
+    z-index: -1;
+}
+#nav_row_top {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    row-gap: 10px;
+    justify-content: space-evenly;
+    max-width: 1200px;
+    width: 100%;
+}
+#nav_top_col1 {
+    display: flex;
+    flex-basis: 30%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+    padding-top: 25px;
+    text-align: center;
+}
+#nav_top_col2 {
+    flex-basis: 50%;
+    min-width: 300px;
+    text-align: center;
+}
+#nav_top_col3 {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    min-width: 180px;
+}
+#info1_container {
+    background-color: lightgreen;
+    border-top: solid black;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 30px;
+    width: 100%;
+}
+#info1_main_col {
+    display: flex;
+    flex-direction: column;
+    max-width: 1000px;
+    padding: 10px;
+    width: 100%;
+}
+#info2_container {
+    background-color: white;
+    border-bottom: solid black;
+    box-shadow: -10px 10px dimgray;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    width: 100%;
+}
+#info3_container {
+    background-color: lightcyan;
+    box-shadow: 10px 10px dimgray;
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    padding: 10px;
+    width: 100%;
+}
+#container_graph {
+    margin-top: 40px;
+    text-align: center;
+    width: 100%;
 }

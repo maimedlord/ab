@@ -10,9 +10,9 @@
 {#            <a href="{{ url_for('user_settings', user_id=current_user.id_object) }}">settings</a>#}
 {#            <a href="{{ url_for('support', user_id=current_user.id_object) }}">support</a>#}
 {#            <a href="{{ url_for('tutorial', user_id=current_user.id_object) }}">tutorial</a>#}
-            settings
-            <p>support</p>
-            tutorial
+            <a href="{{ url_for('index') }}"><div class="nav_top_cell">settings</div></a>
+            <a href="{{ url_for('index') }}"><div class="nav_top_cell">support</div></a>
+            <a href="{{ url_for('index') }}"><div class="nav_top_cell">tutorial</div></a>
         </div>
         <div id="nav_top_col2">
             <h1>{{ current_user.username }}</h1>
@@ -27,20 +27,19 @@
     </div>
     <div id="account_general">
         <div id="a_g_left">
-            a_g_left<p></p>
             <b>total earned: ${{ data_obj['total_earned'] }}</b><p></p>
             avg rating: {{ data_obj['review_avg'] }}<p></p>
             <i><a href="{{ url_for('view_user', user_id=current_user.id_object) }}">view your public profile:</a></i><p></p>
         </div>
         <div id="a_g_right">
-            a_g_right:<p></p>
             {% if msg_arr|length > 0 %}
                 {% for each in msg_arr %}
                     <a href="{{ url_for('contract', contract_id=each, message='check new message') }}">{{ each }} has a new message</a><p></p>
                 {% endfor %}
             {% endif %}
-            ####################################################<p></p>
-            deadline less than 24hrs: ...<p></p>
+            upcoming deadlines...<p></p>
+            contract XXX needs you to rate the other user.<p></p>
+            contract XXX
         </div>
     </div>
     <div id="nav_row_mid">
@@ -55,7 +54,7 @@
             </div>
         </a>
     </div>
-    <div id="container_contracts_header">
+    <div id="container_contracts">
         <div id="r_header">
             <div class="c_contract_header" id="c_position"><b>position</b>
                 <div class="c_inner_row">
@@ -93,13 +92,13 @@
                     <span onclick="sort_alpha('container_contracts_table', 'up', 'specialization')">up</span>
                 </div>
             </div>
-            <div class="c_contract_header" id="c_deadline2"><b>assignment/test deadline</b>
+            <div class="c_contract_header" id="c_deadline2"><b>assignment/test<br>deadline</b>
                 <div class="c_inner_row">
                     <span onclick="sort_alpha('container_contracts_table', 'down', 'deadline1')">down</span>
                     <span onclick="sort_alpha('container_contracts_table', 'up', 'deadline1')">up</span>
                 </div>
             </div>
-            <div class="c_contract_header" id="c_deadline1"><b>efbonus deadline</b><p></p>down - up</div>
+            <div class="c_contract_header" id="c_deadline1"><b>efbonus<br>deadline</b><p></p>down - up</div>
             <div class="c_contract_header" id="c_bounty"><b>bounty</b>
                 <div class="c_inner_row">
                     <span onclick="sort_alpha('container_contracts_table', 'down', 'bounty')">down</span>
@@ -108,54 +107,103 @@
             </div>
             <div class="c_contract_header" id="c_newmsg"><b>new chat msg</b><p></p></div>
         </div>
-    </div>
-    <div id="container_contracts_table">
-        {% for doc in user_contracts|reverse %}
-            <!-- can wrap row with a link -->
-            <a href="{{ url_for('contract', contract_id=doc['_id'], message='none') }}">
-                <div class="r_contract">
-                    <!-- can wrap column with a link -->
-                    <div class="c_contract">
-                        {% if current_user.id_object == doc['owner'] %}
-                            <b>position:</b><p>owner</p>
-                        {% elif current_user.id_object == doc['bhunter'] %}
-                            <b>position:</b><p>hunter</p>
+        <div id="container_contracts_table">
+            {% for doc in user_contracts|reverse %}
+                <!-- can wrap row with a link -->
+                <a href="{{ url_for('contract', contract_id=doc['_id'], message='none') }}">
+                    <div class="r_contract">
+                        <!-- can wrap column with a link -->
+                        <div class="c_contract">
+                            {% if current_user.id_object == doc['owner'] %}
+                                <b>position:</b><p>owner</p>
+                            {% elif current_user.id_object == doc['bhunter'] %}
+                                <b>position:</b><p>hunter</p>
+                            {% else %}
+                                <b>position:</b><p>interested party</p>
+                            {% endif %}
+                        </div>
+                        <div class="c_contract"><b>phase:</b><p>{{ doc['phase'] }}</p></div>
+                        <div class="c_contract"><b>type:</b><p>{{ doc['type_contract'] }}</p></div>
+                        <div class="c_contract"><b>lvl of study:</b><p>{{ doc['lostudy'] }}</p></div>
+                        <div class="c_contract"><b>subject:</b><p>{{ doc['subject'] }}</p></div>
+                        <div class="c_contract" id="c_specialization"><b>specialization:</b><p>{{ doc['specialization'] }}</p></div>
+                        {% if doc['type_contract'] == "assignment" %}
+                            <div class="c_contract"><b>assignment deadline:</b><p>{{ doc['timeline'][3]['time'] }}</p></div>
+                            {% if doc['timeline']|length > 5 %}
+                                <div class="c_contract">{{ doc['timeline'][5]['time'] }}</div>
+                            {% else %}
+                                <div class="c_contract"><b>efbonus deadline:</b><p>no efbonus deadline</p></div>
+                            {% endif %}
+                            <div class="c_contract"><b>bounty:</b><p>{{ doc['bounty'] }}</p></div>
                         {% else %}
-                            <b>position:</b><p>interested party</p>
+                            <div class="c_contract">
+                                <b>test starts:</b><p>{{ doc['timeline'][2]['time'] }}</p>
+                            </div>
+                            <div class="c_contract">
+                                {{ doc['timeline'][4]['time'] }}
+                            </div>
+                            <div class="c_contract">
+                                <b>bounty:</b><p>{{ doc['bounty'] }}</p>
+                            </div>
+                        {% endif %}
+                        {% if doc['phase'] not in data_obj['no_chat_msg_arr'] and doc['_id']|string in msg_arr %}
+                            NEW msg!
+                        {% elif doc['phase'] not in data_obj['no_chat_msg_arr'] %}
+                            no new msg
                         {% endif %}
                     </div>
-                    <div class="c_contract"><b>phase:</b><p>{{ doc['phase'] }}</p></div>
-                    <div class="c_contract"><b>type:</b><p>{{ doc['type_contract'] }}</p></div>
-                    <div class="c_contract"><b>lvl of study:</b><p>{{ doc['lostudy'] }}</p></div>
-                    <div class="c_contract"><b>subject:</b><p>{{ doc['subject'] }}</p></div>
-                    <div class="c_contract" id="c_specialization"><b>specialization:</b><p>{{ doc['specialization'] }}</p></div>
-                    {% if doc['type_contract'] == "assignment" %}
-                        <div class="c_contract"><b>assignment deadline:</b><p>{{ doc['timeline'][3]['time'] }}</p></div>
-                        {% if doc['timeline']|length > 5 %}
-                            <div class="c_contract">{{ doc['timeline'][5]['time'] }}</div>
-                        {% else %}
-                            <div class="c_contract"><b>efbonus deadline:</b><p>no efbonus deadline</p></div>
-                        {% endif %}
-                        <div class="c_contract"><b>bounty:</b><p>{{ doc['bounty'] }}</p></div>
-                    {% else %}
-                        <div class="c_contract">
-                            <b>test starts:</b><p>{{ doc['timeline'][2]['time'] }}</p>
-                        </div>
-                        <div class="c_contract">
-                            {{ doc['timeline'][4]['time'] }}
-                        </div>
-                        <div class="c_contract">
-                            <b>bounty:</b><p>{{ doc['bounty'] }}</p>
-                        </div>
-                    {% endif %}
-                    {% if doc['phase'] not in data_obj['no_chat_msg_arr'] and doc['_id']|string in msg_arr %}
-                        NEW msg!
-                    {% elif doc['phase'] not in data_obj['no_chat_msg_arr'] %}
-                        no new msg
-                    {% endif %}
-                </div>
-            </a>
-{#            <div class="spacer_row"></div>#}
-        {% endfor %}
+                </a>
+    {#            <div class="spacer_row"></div>#}
+            {% endfor %}
+        </div>
     </div>
+{#    <div id="container_contracts_table">#}
+{#        {% for doc in user_contracts|reverse %}#}
+{#            <!-- can wrap row with a link -->#}
+{#            <a href="{{ url_for('contract', contract_id=doc['_id'], message='none') }}">#}
+{#                <div class="r_contract">#}
+{#                    <!-- can wrap column with a link -->#}
+{#                    <div class="c_contract">#}
+{#                        {% if current_user.id_object == doc['owner'] %}#}
+{#                            <b>position:</b><p>owner</p>#}
+{#                        {% elif current_user.id_object == doc['bhunter'] %}#}
+{#                            <b>position:</b><p>hunter</p>#}
+{#                        {% else %}#}
+{#                            <b>position:</b><p>interested party</p>#}
+{#                        {% endif %}#}
+{#                    </div>#}
+{#                    <div class="c_contract"><b>phase:</b><p>{{ doc['phase'] }}</p></div>#}
+{#                    <div class="c_contract"><b>type:</b><p>{{ doc['type_contract'] }}</p></div>#}
+{#                    <div class="c_contract"><b>lvl of study:</b><p>{{ doc['lostudy'] }}</p></div>#}
+{#                    <div class="c_contract"><b>subject:</b><p>{{ doc['subject'] }}</p></div>#}
+{#                    <div class="c_contract" id="c_specialization"><b>specialization:</b><p>{{ doc['specialization'] }}</p></div>#}
+{#                    {% if doc['type_contract'] == "assignment" %}#}
+{#                        <div class="c_contract"><b>assignment deadline:</b><p>{{ doc['timeline'][3]['time'] }}</p></div>#}
+{#                        {% if doc['timeline']|length > 5 %}#}
+{#                            <div class="c_contract">{{ doc['timeline'][5]['time'] }}</div>#}
+{#                        {% else %}#}
+{#                            <div class="c_contract"><b>efbonus deadline:</b><p>no efbonus deadline</p></div>#}
+{#                        {% endif %}#}
+{#                        <div class="c_contract"><b>bounty:</b><p>{{ doc['bounty'] }}</p></div>#}
+{#                    {% else %}#}
+{#                        <div class="c_contract">#}
+{#                            <b>test starts:</b><p>{{ doc['timeline'][2]['time'] }}</p>#}
+{#                        </div>#}
+{#                        <div class="c_contract">#}
+{#                            {{ doc['timeline'][4]['time'] }}#}
+{#                        </div>#}
+{#                        <div class="c_contract">#}
+{#                            <b>bounty:</b><p>{{ doc['bounty'] }}</p>#}
+{#                        </div>#}
+{#                    {% endif %}#}
+{#                    {% if doc['phase'] not in data_obj['no_chat_msg_arr'] and doc['_id']|string in msg_arr %}#}
+{#                        NEW msg!#}
+{#                    {% elif doc['phase'] not in data_obj['no_chat_msg_arr'] %}#}
+{#                        no new msg#}
+{#                    {% endif %}#}
+{#                </div>#}
+{#            </a>#}
+{#            <div class="spacer_row"></div>#}
+{#        {% endfor %}#}
+{#    </div>#}
 {% endblock %}

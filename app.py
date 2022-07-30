@@ -199,6 +199,12 @@ def contract(contract_id, message):
     contract_obj = prc.prc_get_contract_account(contract_id, current_user.id_object)
     if not contract_obj:
         return redirect(url_for('hmm', message='contract not found or you are not permitted to view it...'))
+    # creates potential earnings value:
+    data_obj['earnable'] = contract_obj['bounty']
+    if contract_obj['efbonusyon']:
+        data_obj['earnable'] += contract_obj['efbonus']
+    if contract_obj['egbonusyon']:
+        data_obj['earnable'] += contract_obj['egbonus']
     # PHASE: CREATION
     if contract_obj and contract_obj['phase'] == 'creation' and contract_obj['owner'] == current_user.id_object:
         return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
