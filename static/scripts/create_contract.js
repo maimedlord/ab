@@ -20,6 +20,12 @@ $(document).ready(function () {
    $('#c_f_s_t_main').click(function () {
       document.getElementById('popup_div_type').style.display = 'none';
    });
+   $('#c_f_egbonus').change(function () {
+      if (document.getElementById('c_f_egbonus').value > 0) {
+         document.getElementById('grade_wait_no').checked = false;
+         document.getElementById('grade_wait_yes').checked = true;
+      }
+   });
 });
 
 // lostudy

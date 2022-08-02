@@ -54,10 +54,10 @@
                     </div>
                     <div class="cc_row">
                         <div class="all">
-                            excellent grade bonus:<p><input id="c_f_egbonus" placeholder="$0.00" name="c_f_egbonus" step="0.01" type="number" value="0.0"></p>
+                            excellent grade bonus:<p><input id="c_f_egbonus" name="c_f_egbonus" step="0.01" type="number" value="0.0"></p>
                         </div>
                         <div class="aonly">
-                            early finish bonus:<p><input id="c_f_efbonus" min="0" name="c_f_efbonus" placeholder="$0.00" step="0.01" type="number" value="0.0"></p>
+                            early finish bonus:<p><input id="c_f_efbonus" min="0" name="c_f_efbonus" step="0.01" type="number" value="0.0"></p>
                         </div>
                     </div>
                     <div class="all" id="div_instructions">
@@ -96,9 +96,12 @@
                         make sure to have a timezone setting for each user...
                     </div>
                     <div class="cc_row">
-                        <div class="all" id="div_t_g_deadline">
-                            timeline: grade deadline <input id="c_f_t_g_deadline"  name="c_f_t_g_deadline" required type="date">
-                            <input id="c_f_t_g_d_time" name="c_f_t_g_d_time" required type="time">
+                        <div id="gdeadline_choice">
+                            Do you want to wait up to two weeks for your grade to be returned to you? <i>if you selected an excellent grade bonus this has been set to 'yes' for you...</i>
+                            <input id="grade_wait_no" name="grade_wait_yon" required type="radio" value="false">
+                            <label for="grade_wait_no">no</label>
+                            <input id="grade_wait_yes" name="grade_wait_yon" type="radio" value="true">
+                            <label for="grade_wait_yes">yes</label>
                         </div>
                     </div>
                     PAYMENT STUFF HERE

@@ -279,9 +279,6 @@ def process_new_contract(form_dict, owner_id, owner_uname):
     user_obj.update({"efbonus": float(e_f_bonus)})
     e_g_bonus = float(form_dict['c_f_egbonus'])
     user_obj.update({"egbonus": float(e_g_bonus)})
-    g_deadline = form_dict['c_f_t_g_deadline']
-    if g_deadline != "":
-        g_deadline = datetime.fromisoformat(form_dict['c_f_t_g_deadline'] + 'T' + form_dict['c_f_t_g_d_time'] + ':00.000000')
     lostudy = form_dict['c_f_lostudy']
     user_obj.update({"lostudy": lostudy})
     specialization = form_dict['c_f_specialization']
@@ -298,30 +295,42 @@ def process_new_contract(form_dict, owner_id, owner_uname):
     # set up assignment contract:
     if type_contract == 'assignment':
         a_deadline_iso = datetime.fromisoformat(form_dict['c_f_t_a_deadline'] + 'T' + form_dict['c_f_t_a_d_time'] + ':00')
-        if e_f_bonus != 0.0:
+        efbonus_deadline = form_dict['c_f_efb_deadline']
+        if e_f_bonus > 0 and efbonus_deadline != '':
             efbonus_deadline = datetime.fromisoformat(form_dict['c_f_efb_deadline'] + 'T' + form_dict['c_f_efb_d_time'] + ':00')
-            user_obj.update({'timeline': [{'time': start_iso, 'event': "created"},
-                                          {'time': stall_iso, 'event': "deadline: stall"},
-                                          {'time': a_deadline_iso, 'event': "deadline: submission"},
-                                          {'time': g_deadline, 'event': "deadline: grading"},
-                                          {'time': g_deadline, 'event': "deadline: rate the other person"},
-                                          {'time': efbonus_deadline, 'event': "deadline: early finish bonus!"}]})  # MISSING CORRECT RATING DEADLINE
         else:
-            user_obj.update({'timeline': [{'time': start_iso, 'event': "created"},
+            efbonus_deadline = None
+        rating_deadline = None
+        g_deadline = None
+        if e_g_bonus > 0 or form_dict['grade_wait_yon'] == 'true':
+            g_deadline = a_deadline_iso + timedelta(days=7)
+            rating_deadline = g_deadline = timedelta(days=7)
+        else:
+            rating_deadline = a_deadline_iso + timedelta(days=7)
+        user_obj.update({'timeline': [{'time': start_iso, 'event': "created"},
                                       {'time': stall_iso, 'event': "deadline: stall"},
+                                      {'time': efbonus_deadline, 'event': "deadline: early finish bonus!"},
                                       {'time': a_deadline_iso, 'event': "deadline: submission"},
                                       {'time': g_deadline, 'event': "deadline: grading"},
-                                      {'time': g_deadline, 'event': "deadline: rate the other person"}]})# MISSING CORRECT RATING DEADLINE
-    # set up assignment contract:
+                                      {'time': rating_deadline, 'event': "deadline: rate the other person"}]})# MISSING CORRECT RATING DEADLINE
+    # set up test contract:
     if type_contract == 'test':
         t_start_iso = datetime.fromisoformat(form_dict['c_f_t_t_start'] + 'T' + form_dict['c_f_t_t_s_time'] + ':00')
         t_end_iso = datetime.fromisoformat(form_dict['c_f_t_t_end'] + 'T' + form_dict['c_f_t_t_e_time'] + ':00')
+        g_deadline = None
+        rating_deadline = None
+        if e_g_bonus > 0 or form_dict['grade_wait_yon'] == 'true':
+            g_deadline = t_end_iso + timedelta(days=7)
+            rating_deadline = g_deadline + timedelta(days=7)
+            print(type(rating_deadline))
+        else:
+            rating_deadline = t_end_iso + timedelta(days=7)
         user_obj.update({'timeline': [{'time': start_iso, 'event': "created"},
                                       {'time': stall_iso, 'event': "deadline: stall"},
                                       {'time': t_start_iso, 'event': "deadline: test start"},
                                       {'time': t_end_iso, 'event': "deadline: test end"},
                                       {'time': g_deadline, 'event': "deadline: grading"},
-                                      {'time': g_deadline, 'event': "deadline: rate the other person"}]})# MISSING CORRECT RATING DEADLINE
+                                      {'time': rating_deadline, 'event': "deadline: rate the other person"}]})# MISSING CORRECT RATING DEADLINE
     # add in data not initiated by user:
     user_obj.update({'owner': owner_id})
     user_obj.update({'iparties': []})
@@ -339,12 +348,14 @@ def process_new_contract(form_dict, owner_id, owner_uname):
     user_obj.update({'paymentid': None})
     user_obj.update({'bhunter_uname': None})
     user_obj.update({'owner_uname': owner_uname})
-    if float(e_f_bonus) <= 0:
+    if float(e_f_bonus) <= 0.0:
         user_obj.update({'efbonusyon': False})
-    user_obj.update({'efbonusyon': True})
-    if e_g_bonus <= 0:
+    else:
+        user_obj.update({'efbonusyon': True})
+    if e_g_bonus <= 0.0:
         user_obj.update({'egbonusyon': False})
-    user_obj.update({'egbonusyon': True})
+    else:
+        user_obj.update({'egbonusyon': True})
     return calls.create_contract(user_obj)
 
 

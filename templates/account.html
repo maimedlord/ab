@@ -130,7 +130,7 @@
                         {% if doc['type_contract'] == "assignment" %}
                             <div class="c_contract"><b>assignment deadline:</b><p>{{ doc['timeline'][3]['time'] }}</p></div>
                             {% if doc['timeline']|length > 5 %}
-                                <div class="c_contract">{{ doc['timeline'][5]['time'] }}</div>
+                                <div class="c_contract"><b>efbonus deadline</b><p>{{ doc['timeline'][5]['time'] }}</p></div>
                             {% else %}
                                 <div class="c_contract"><b>efbonus deadline:</b><p>no efbonus deadline</p></div>
                             {% endif %}

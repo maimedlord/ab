@@ -77,6 +77,13 @@
 #div_instructions {
     min-width: 350px;
 }
+#gdeadline_choice {
+    background-color: silver;
+    border-color: mediumaquamarine;
+    border-style: solid;
+    display: flex;
+    flex-direction: column;
+}
 #popup_div_lostudy {
     background-color: lightblue;
     border-radius: 50px;
