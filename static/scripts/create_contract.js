@@ -26,6 +26,9 @@ $(document).ready(function () {
          document.getElementById('grade_wait_yes').checked = true;
       }
    });
+   $('#grade_wait_no').click(function () {
+      document.getElementById('c_f_egbonus').value = '0.0';
+   });
 });
 
 // lostudy

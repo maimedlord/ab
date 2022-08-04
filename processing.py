@@ -2,6 +2,7 @@ import calls
 from datetime import datetime, timedelta
 from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash
+
 from werkzeug.utils import secure_filename
 from user import User
 
@@ -249,16 +250,24 @@ def prc_submit_rating_c(comment, contract_id, rating, user_id):
 #     return False
 
 
-def prep_graph(timeline_arr, type_contract):
+def prep_graph(phase, timeline_arr, type_contract):
+    print(phase)
     print(timeline_arr)
     print(type_contract)
-
+    months_arr = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
     nowtime = datetime.fromisoformat(datetime.now().isoformat())
+    xaxis_arr = []
+    xaxis_label_arr = []
+    yaxis_arr = []
+    if phase == 'creation':
+        for obj in timeline_arr:
+            if obj['time'] != None:
+                print(str(obj['time'].date()))
+                xaxis_arr.append(obj['time'].date())
+                print(str(obj['time'].time()))
+                print(obj['time'].tzinfo)
 
-    if type_contract == 'assignment':
-        print('assignment')
-    if type_contract == 'test':
-        print('test')
+
     return True
 
 
@@ -304,7 +313,7 @@ def process_new_contract(form_dict, owner_id, owner_uname):
         g_deadline = None
         if e_g_bonus > 0 or form_dict['grade_wait_yon'] == 'true':
             g_deadline = a_deadline_iso + timedelta(days=7)
-            rating_deadline = g_deadline = timedelta(days=7)
+            rating_deadline = g_deadline + timedelta(days=7)
         else:
             rating_deadline = a_deadline_iso + timedelta(days=7)
         user_obj.update({'timeline': [{'time': start_iso, 'event': "created"},
