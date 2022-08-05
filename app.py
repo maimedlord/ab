@@ -331,7 +331,8 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        user_arr = calls.get_auth_user(email, password)
+        tz_offset = request.form['tz_offset']
+        user_arr = calls.get_auth_user(email, password, tz_offset)
         if user_arr:
             login_user(User(user_arr[0], user_arr[1], user_arr[2], user_arr[3]))
             calls.log_userlogin(current_user.id_object)
@@ -373,11 +374,12 @@ def register():
         email = request.form['r_f_email']
         password1 = request.form['r_f_password1']
         password2 = request.form['r_f_password2']
+        tz_offset = request.form['r_f_timezone']
         username = request.form['r_f_username']
         # where login to test if passwords match?
-        result = prc.process_new_user(email, password1, username)
+        result = prc.process_new_user(email, password1, tz_offset, username)
         if result:
-            user_arr = calls.get_auth_user(email, password1)
+            user_arr = calls.get_auth_user(email, password1, tz_offset)
             login_user(User(user_arr[0], user_arr[1], user_arr[2], user_arr[3]))
             # next = flask.request.args.get('next')
             # if not is_safe_url(next):

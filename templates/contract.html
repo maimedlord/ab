@@ -4,8 +4,10 @@
 {% block title %}<title>contract {{ contract_obj['_id'] }}</title>{% endblock %}
 {% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/contract.css') }}">{% endblock %}
 {% block scripts %}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.2/dist/chart.min.js" integrity="sha256-srZ7wC4CLlY0F9UFji68dTwYJQ5o93Quq2+iyQ4gH/I=" crossorigin="anonymous"></script>
     <script src="{{url_for('static', filename='scripts/contract.js')}}"></script>
+{#    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.2/dist/chart.min.js" integrity="sha256-srZ7wC4CLlY0F9UFji68dTwYJQ5o93Quq2+iyQ4gH/I=" crossorigin="anonymous"></script>#}
+{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js" integrity="sha512-42PE0rd+wZ2hNXftlM78BSehIGzezNeQuzihiBCvUEB3CVxHvsShF86wBWwQORNxNINlBPuq7rG4WWhNiTVHFg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>#}
+{#    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment"></script>#}
 {% endblock %}
 {% block body %}
     <div id="header_logo_behind"></div>
@@ -170,7 +172,7 @@
 {#        {% endif %}#}
     </div>
     <div id="container_graph">
-        <canvas id="myChart"></canvas>
+{#        <canvas id="myChart"></canvas>#}
         here will go the time graph... absolute fixed in background? could look cool when people scroll down to access chat... :D
     </div>
      <div id="info1_container">
@@ -320,5 +322,5 @@
         phase:<br>{{ contract_obj['phase'] }}
     </div>
     <p></p><p></p>approved contract for assignment only atm...<- is this true?<p></p>
-    <script src="{{url_for('static', filename='scripts/contract_chart.js')}}"></script>
+{#    <script src="{{url_for('static', filename='scripts/contract_chart.js')}}"></script>#}
 {% endblock %}

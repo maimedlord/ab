@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}<title>answerBlasters: LOGIN BROTHERS AND SISTERS</title>{% endblock %}
 {% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">{% endblock %}
+{% block scripts %}<script src="{{url_for('static', filename='scripts/login.js')}}"></script>{% endblock %}
 {% block body %}
     <div id="container_header">
         <div id="header_logo">
@@ -9,6 +10,7 @@
     <div id="login_main">
         <h2>{{ data_obj['message'] }}</h2>
         <form method="post">
+            <input id="tz_offset" name="tz_offset" type="hidden" value="none">
             <p>your email</p>
             <p><input autofocus name="email" placeholder="email..."></p><!-- verify -->
             <p>your password</p>

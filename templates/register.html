@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}<title>REGISTERt</title>{% endblock %}
 {% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">{% endblock %}
+{% block scripts %}<script src="{{url_for('static', filename='scripts/register.js')}}"></script>{% endblock %}
 {% block body %}
     {{ data_obj['message'] }}
     <div id="container_header">
@@ -10,6 +11,7 @@
     <div id="register_main">
         <div id="div_register_form">
             <form id="register_form" method="post" name="register_form">
+                <input id="r_f_timezone" name="r_f_timezone" type="hidden" value="none">
                 <p>your email</p>
                 <p><input autocomplete="off" autofocus id="r_f_email" minlength="8" name="r_f_email" placeholder="email..." required type="email"></p>
                 <p>your username</p>

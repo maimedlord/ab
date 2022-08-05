@@ -103,10 +103,10 @@ returns object if True, None if False
 '''
 
 
-def get_auth_user(email, password):
+def get_auth_user(email, password, tz_offset):
     db = db_mc[dbUsers]
     dbc = db[cusers]
-    user_record = dbc.find_one({"email": email}, {
+    user_record = dbc.find_one({'email': email}, {
         '_id': 1,
         'email': 1,
         'uName': 1,
@@ -115,7 +115,9 @@ def get_auth_user(email, password):
     if user_record and check_password_hash(user_record['pass'], password):
         # remove password from the object before returning:
         user_record.pop('pass')
-        return [str(user_record['_id']), email, user_record['uName'], user_record['_id']]
+        result = dbc.update_one({'email': email}, {'$set': {'tz_offset': tz_offset}})
+        if result.acknowledged:
+            return [str(user_record['_id']), email, user_record['uName'], user_record['_id']]
     else:
         return None
 
@@ -163,7 +165,7 @@ def get_rating_obj(contract_id):
 def get_sesh(userid):
     db = db_mc[dbUsers]
     dbc = db[cusers]
-    user_record = dbc.find_one({"_id": ObjectId(userid)}, {
+    user_record = dbc.find_one({'_id': ObjectId(userid)}, {
         '_id': 1,
         'email': 1,
         'uName': 1

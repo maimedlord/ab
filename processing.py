@@ -2,7 +2,7 @@ import calls
 from datetime import datetime, timedelta
 from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash
-
+import pytz
 from werkzeug.utils import secure_filename
 from user import User
 
@@ -292,8 +292,8 @@ def process_new_contract(form_dict, owner_id, owner_uname):
     user_obj.update({"lostudy": lostudy})
     specialization = form_dict['c_f_specialization']
     user_obj.update({"specialization": specialization})
-    stall_iso = datetime.fromisoformat(form_dict['c_f_t_stall'] + 'T' + form_dict['c_f_t_s_time'] + ':00')
-    start_iso = datetime.fromisoformat(datetime.now().isoformat())
+    stall_iso = datetime.fromisoformat(form_dict['c_f_t_stall'] + 'T' + form_dict['c_f_t_s_time'] + ':00+00:00')
+    start_iso = pytz.utc.localize(datetime.fromisoformat(datetime.now().isoformat()))
     user_obj.update({"clog": []})
     subject = form_dict['c_f_subject']
     user_obj.update({"subject": subject})
@@ -303,10 +303,10 @@ def process_new_contract(form_dict, owner_id, owner_uname):
     user_obj.update({'instructions': instructions})
     # set up assignment contract:
     if type_contract == 'assignment':
-        a_deadline_iso = datetime.fromisoformat(form_dict['c_f_t_a_deadline'] + 'T' + form_dict['c_f_t_a_d_time'] + ':00')
+        a_deadline_iso = datetime.fromisoformat(form_dict['c_f_t_a_deadline'] + 'T' + form_dict['c_f_t_a_d_time'] + ':00+00:00')
         efbonus_deadline = form_dict['c_f_efb_deadline']
         if e_f_bonus > 0 and efbonus_deadline != '':
-            efbonus_deadline = datetime.fromisoformat(form_dict['c_f_efb_deadline'] + 'T' + form_dict['c_f_efb_d_time'] + ':00')
+            efbonus_deadline = datetime.fromisoformat(form_dict['c_f_efb_deadline'] + 'T' + form_dict['c_f_efb_d_time'] + ':00+00:00')
         else:
             efbonus_deadline = None
         rating_deadline = None
@@ -324,8 +324,8 @@ def process_new_contract(form_dict, owner_id, owner_uname):
                                       {'time': rating_deadline, 'event': "deadline: rate the other person"}]})# MISSING CORRECT RATING DEADLINE
     # set up test contract:
     if type_contract == 'test':
-        t_start_iso = datetime.fromisoformat(form_dict['c_f_t_t_start'] + 'T' + form_dict['c_f_t_t_s_time'] + ':00')
-        t_end_iso = datetime.fromisoformat(form_dict['c_f_t_t_end'] + 'T' + form_dict['c_f_t_t_e_time'] + ':00')
+        t_start_iso = datetime.fromisoformat(form_dict['c_f_t_t_start'] + 'T' + form_dict['c_f_t_t_s_time'] + ':00+00:00')
+        t_end_iso = datetime.fromisoformat(form_dict['c_f_t_t_end'] + 'T' + form_dict['c_f_t_t_e_time'] + ':00+00:00')
         g_deadline = None
         rating_deadline = None
         if e_g_bonus > 0 or form_dict['grade_wait_yon'] == 'true':
@@ -368,7 +368,7 @@ def process_new_contract(form_dict, owner_id, owner_uname):
     return calls.create_contract(user_obj)
 
 
-def process_new_user(email, password1, username):
+def process_new_user(email, password1, tz_offset, username):
     user_template = {
         'active': True,
         'email': email,
@@ -376,7 +376,7 @@ def process_new_user(email, password1, username):
         'pass': generate_password_hash(password1),
         'paymentid': None,
         'reviewHistory': [],
-        'timezone': 'sometimezonezzz',
+        'tz_offset': tz_offset,
         'uName': username,
     }
     return calls.create_user(user_template)
