@@ -200,8 +200,8 @@ def contract(contract_id, message):
     if not contract_obj:
         return redirect(url_for('hmm', message='contract not found or you are not permitted to view it...'))
     # xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:
-    capture = prc.prep_graph(contract_obj['phase'], contract_obj['timeline'], contract_obj['type_contract'])
-    print(capture)
+    timeline_graph = prc.prep_graph(contract_obj['phase'], contract_obj['timeline'], contract_obj['type_contract'])
+    print(timeline_graph)
     # creates potential earnings value:
     data_obj['earnable'] = contract_obj['bounty']
     if contract_obj['efbonusyon']:
@@ -210,7 +210,7 @@ def contract(contract_id, message):
         data_obj['earnable'] += contract_obj['egbonus']
     # PHASE: CREATION
     if contract_obj and contract_obj['phase'] == 'creation' and contract_obj['owner'] == current_user.id_object:
-        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
+        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj, tg=timeline_graph)
     # looks for existing offer in iparties and if exists, passes to data_obj
     iparty_arr = contract_obj['iparties']
     for doc in iparty_arr:
@@ -224,12 +224,12 @@ def contract(contract_id, message):
                 offer = float(request.form['m_o_f_offer'])
                 result = prc.prc_create_ip(contract_obj['_id'], current_user.id_object, current_user.username, offer)
                 if result:
-                    return redirect(url_for('contract', contract_id=contract_id, message='offer success'))
-                return redirect(url_for('contract', contract_id=contract_id, message='error in process of updating interested parties...'))
+                    return redirect(url_for('contract', contract_id=contract_id, message='offer success', tg=timeline_graph))
+                return redirect(url_for('contract', contract_id=contract_id, message='error in process of updating interested parties...'), tg=timeline_graph)
             # default view for non-owner:
-            return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
+            return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj, tg=timeline_graph)
         # owner view:
-        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
+        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj, tg=timeline_graph)
     # PHASE: INPROGRESS
     if contract_obj and contract_obj['phase'] == 'inprogress' and contract_obj['owner'] == current_user.id_object or contract_obj['bhunter'] == current_user.id_object:
         # form for submitting chat

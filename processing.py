@@ -32,7 +32,7 @@ def get_user_record_l(email, password):
 def prc_accept_offer(bhunter_id, bhunter_uname, contract_id, bhunter_offer):
     clog_obj = {
         'event': 'bounty hunter offer accepted and phase set to inprogress',
-        'time': datetime.fromisoformat(datetime.now().isoformat())
+        'time': datetime.now()
     }
     result = calls.c_accept_offer(ObjectId(contract_id), ObjectId(bhunter_id), bhunter_uname, float(bhunter_offer), clog_obj)
     if result.acknowledged:
@@ -44,9 +44,9 @@ def prc_get_contract_account(contract_id, user_id):
     # also updates chat:
     if result:
         if result['bhunter'] == ObjectId(user_id):
-            return calls.c_getset_lvbhunter(ObjectId(contract_id), datetime.fromisoformat(datetime.now().isoformat()))
+            return calls.c_getset_lvbhunter(ObjectId(contract_id), datetime.now())
         if result['owner'] == ObjectId(user_id):
-            return calls.c_getset_lvowner(ObjectId(contract_id), datetime.fromisoformat(datetime.now().isoformat()))
+            return calls.c_getset_lvowner(ObjectId(contract_id), datetime.now())
     return result
 
 
@@ -56,14 +56,14 @@ def prc_create_ip(contract_id, bhunter_user_id, bhunter_uname, offer):
         'bhunter': bhunter_user_id,
         'bhunter_uname': bhunter_uname,
         'offer': offer,
-        'time': datetime.fromisoformat(datetime.now().isoformat())
+        'time': datetime.now()
     }
     return calls.c_create_ip(contract_id, ip_object)
 
 
 # need mechanism to alert other use of chat...
 def prc_send_chat(contract_id, userid, chatnewmsguser, message, mood):
-    nowtime = datetime.fromisoformat(datetime.now().isoformat())
+    nowtime = datetime.now()
     result = calls.c_send_chat(ObjectId(contract_id), chatnewmsguser, {'message': message, 'mood': mood, 'time': nowtime, 'user': ObjectId(userid)})
     if result:
         if result.acknowledged:
@@ -78,7 +78,7 @@ def prc_set_disputed(contract_id, reason):
     # return calls.c_set_disputed(ObjectId(contract_id))
     result = calls.c_set_disputed(ObjectId(contract_id), {
         'event': reason,
-        'time': datetime.fromisoformat(datetime.now().isoformat())
+        'time': datetime.now()
     })
     if result.acknowledged:
         #  stuff to do...???
@@ -89,7 +89,7 @@ def prc_set_disputed(contract_id, reason):
 def prc_set_rating(contract_id):
     result = calls.c_set_rating(ObjectId(contract_id), {
         'event': 'rating: bhunter approved grade proof',
-        'time': datetime.fromisoformat(datetime.now().isoformat())
+        'time': datetime.now()
     })
     if result.acknowledged:
         return True
@@ -99,7 +99,7 @@ def prc_set_rating(contract_id):
 def prc_set_successful(contract_id):
     result = calls.c_submit_successful(ObjectId(contract_id), {
         'event': 'successful: both users have submitted their ratings',
-        'time': datetime.fromisoformat(datetime.now().isoformat())
+        'time': datetime.now()
     })
     if result.acknowledged:
         #  stuff to do...???
@@ -110,7 +110,7 @@ def prc_set_successful(contract_id):
 def prc_set_open(contract_id):
     result = calls.c_set_open(ObjectId(contract_id), {
         'event': 'contract set to \'open\'',
-        'time': datetime.fromisoformat(datetime.now().isoformat())
+        'time': datetime.now()
     })
     if result.acknowledged:
         #  stuff to do...???
@@ -136,7 +136,7 @@ def prc_yon_asubmission(form_dict, contract_id):
                 # stuff to do...
                 return True
         if yon == 'true':
-            nowtime = datetime.fromisoformat(datetime.now().isoformat())
+            nowtime = datetime.now()
             # check if submitted before efbonus:
             contract_obj = calls.c_get_contract(ObjectId(contract_id))
             # submit approval after checking if efbonus deadline satisfied:
@@ -160,7 +160,7 @@ def prc_submit_gvalidation(contract_id, filename):
     if filename is not None:
         result = calls.c_submit_gvalidation(ObjectId(contract_id), {
             'event': 'owner has submitted grade proof',
-            'time': datetime.fromisoformat(datetime.now().isoformat())
+            'time': datetime.now()
         }, filename)
         # other stuff like alerts, etc. ...
         if result.acknowledged:
@@ -168,7 +168,7 @@ def prc_submit_gvalidation(contract_id, filename):
         return None
     result = calls.c_set_rating(ObjectId(contract_id), {
         'event': 'gvalidation-skipto-rating: owner has claimed the grade was sufficient!',
-        'time': datetime.fromisoformat(datetime.now().isoformat())
+        'time': datetime.now()
     })
     # other stuff here like releasing egbonus...
     if result.acknowledged:
@@ -179,7 +179,7 @@ def prc_submit_gvalidation(contract_id, filename):
 def prc_submit_assignment(contract_id, filename):
     result = calls.c_submit_assignment(ObjectId(contract_id), {
         'event': 'assignment submitted and waiting validation',
-        'time': datetime.fromisoformat(datetime.now().isoformat())
+        'time': datetime.now()
     }, filename)
     if result.acknowledged:
         return True
@@ -187,7 +187,7 @@ def prc_submit_assignment(contract_id, filename):
 
 
 def prc_submit_rating_c(comment, contract_id, rating, user_id):
-    now_time = datetime.fromisoformat(datetime.now().isoformat())
+    now_time = datetime.now()
     review_obj = {
         'comment': comment,
         'rating': float(rating),
@@ -230,7 +230,7 @@ def prc_submit_rating_c(comment, contract_id, rating, user_id):
                 result2b = calls.c_submit_rating_u(other_user, user_review_obj2)
                 result3 = calls.c_submit_successful(rating_obj['_id'], {
                     'event': 'successful: ratings submitted by both users',
-                    'time': datetime.fromisoformat(datetime.now().isoformat())
+                    'time': now_time
                 })
                 if result1a.acknowledged and result1b.acknowledged and result2a.acknowledged and result2b.acknowledged and result3.acknowledged:
                     return True
@@ -255,20 +255,27 @@ def prep_graph(phase, timeline_arr, type_contract):
     print(timeline_arr)
     print(type_contract)
     months_arr = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
-    nowtime = datetime.fromisoformat(datetime.now().isoformat())
-    xaxis_arr = []
-    xaxis_label_arr = []
-    yaxis_arr = []
-    if phase == 'creation':
-        for obj in timeline_arr:
-            if obj['time'] != None:
-                print(str(obj['time'].date()))
-                xaxis_arr.append(obj['time'].date())
-                print(str(obj['time'].time()))
-                print(obj['time'].tzinfo)
-
-
-    return True
+    nowtime = datetime.utcnow()
+    teh_graph = {}
+    now_written = False
+    last_date = timeline_arr[0]['time']
+    for obj in timeline_arr:
+        if obj['time']:
+            if not now_written and obj['time'] > last_date and nowtime < obj['time']:
+                if str(nowtime.date()) in teh_graph:
+                    teh_graph[str(nowtime.date())].append({str(nowtime.time()): 'as of this page\'s load'})
+                    now_written = True
+                else:
+                    teh_graph[str(nowtime.date())] = [{str(nowtime.time()): 'as of this page\'s load'}]
+                    now_written = True
+            if str(obj['time'].date()) in teh_graph:
+                teh_graph[str(obj['time'].date())].append({str(obj['time'].time()): obj['event']})
+            else:
+                teh_graph[str(obj['time'].date())] = [{str(obj['time'].time()): obj['event']}]
+            last_date = obj['time']
+    if not now_written:
+        teh_graph[str(nowtime.date())] = [{str(nowtime.time()): 'as of this page\'s load'}]
+    return teh_graph
 
 
 '''
@@ -282,23 +289,23 @@ def process_new_contract(form_dict, owner_id, owner_uname):
     # handle a malformed dictionary...
     user_obj = {}
     bounty = float(form_dict['c_f_bounty'])
-    user_obj.update({"bounty": bounty})
-    user_obj.update({"bhunter": None})
+    user_obj.update({'bounty': bounty})
+    user_obj.update({'bhunter': None})
     e_f_bonus = float(form_dict['c_f_efbonus'])
-    user_obj.update({"efbonus": float(e_f_bonus)})
+    user_obj.update({'efbonus': float(e_f_bonus)})
     e_g_bonus = float(form_dict['c_f_egbonus'])
-    user_obj.update({"egbonus": float(e_g_bonus)})
+    user_obj.update({'egbonus': float(e_g_bonus)})
     lostudy = form_dict['c_f_lostudy']
-    user_obj.update({"lostudy": lostudy})
+    user_obj.update({'lostudy': lostudy})
     specialization = form_dict['c_f_specialization']
-    user_obj.update({"specialization": specialization})
+    user_obj.update({'specialization': specialization})
     stall_iso = datetime.fromisoformat(form_dict['c_f_t_stall'] + 'T' + form_dict['c_f_t_s_time'] + ':00+00:00')
-    start_iso = pytz.utc.localize(datetime.fromisoformat(datetime.now().isoformat()))
-    user_obj.update({"clog": []})
+    start_iso = pytz.utc.localize(datetime.now())
+    user_obj.update({'clog': []})
     subject = form_dict['c_f_subject']
-    user_obj.update({"subject": subject})
+    user_obj.update({'subject': subject})
     type_contract = form_dict['c_f_type']
-    user_obj.update({"type_contract": type_contract})
+    user_obj.update({'type_contract': type_contract})
     instructions = form_dict['c_f_instructions']
     user_obj.update({'instructions': instructions})
     # set up assignment contract:
@@ -316,12 +323,13 @@ def process_new_contract(form_dict, owner_id, owner_uname):
             rating_deadline = g_deadline + timedelta(days=7)
         else:
             rating_deadline = a_deadline_iso + timedelta(days=7)
-        user_obj.update({'timeline': [{'time': start_iso, 'event': "created"},
-                                      {'time': stall_iso, 'event': "deadline: stall"},
-                                      {'time': efbonus_deadline, 'event': "deadline: early finish bonus!"},
-                                      {'time': a_deadline_iso, 'event': "deadline: submission"},
-                                      {'time': g_deadline, 'event': "deadline: grading"},
-                                      {'time': rating_deadline, 'event': "deadline: rate the other person"}]})# MISSING CORRECT RATING DEADLINE
+        user_obj.update({'timeline': [{'time': start_iso, 'event': 'created'},
+                                      {'time': None, 'event': 'contract set inprogress'},
+                                      {'time': stall_iso, 'event': 'deadline: stall'},
+                                      {'time': efbonus_deadline, 'event': 'deadline: early finish bonus!'},
+                                      {'time': a_deadline_iso, 'event': 'deadline: submission'},
+                                      {'time': g_deadline, 'event': 'deadline: grading'},
+                                      {'time': rating_deadline, 'event': 'deadline: rate the other person'}]})# MISSING CORRECT RATING DEADLINE
     # set up test contract:
     if type_contract == 'test':
         t_start_iso = datetime.fromisoformat(form_dict['c_f_t_t_start'] + 'T' + form_dict['c_f_t_t_s_time'] + ':00+00:00')
@@ -334,17 +342,18 @@ def process_new_contract(form_dict, owner_id, owner_uname):
             print(type(rating_deadline))
         else:
             rating_deadline = t_end_iso + timedelta(days=7)
-        user_obj.update({'timeline': [{'time': start_iso, 'event': "created"},
-                                      {'time': stall_iso, 'event': "deadline: stall"},
+        user_obj.update({'timeline': [{'time': start_iso, 'event': 'created'},
+                                      {'time': None, 'event': 'contract set inprogress'},
+                                      {'time': stall_iso, 'event': 'deadline: stall'},
                                       {'time': t_start_iso, 'event': "deadline: test start"},
-                                      {'time': t_end_iso, 'event': "deadline: test end"},
-                                      {'time': g_deadline, 'event': "deadline: grading"},
-                                      {'time': rating_deadline, 'event': "deadline: rate the other person"}]})# MISSING CORRECT RATING DEADLINE
+                                      {'time': t_end_iso, 'event': 'deadline: test end'},
+                                      {'time': g_deadline, 'event': 'deadline: grading'},
+                                      {'time': rating_deadline, 'event': 'deadline: rate the other person'}]})# MISSING CORRECT RATING DEADLINE
     # add in data not initiated by user:
     user_obj.update({'owner': owner_id})
     user_obj.update({'iparties': []})
-    user_obj.update({"clog": [{'event': "created", 'time': start_iso}]})
-    user_obj.update({'phase': "creation"})
+    user_obj.update({'clog': [{'event': 'created', 'time': start_iso}]})
+    user_obj.update({'phase': 'creation'})
     user_obj.update({'reviews': []})
     user_obj.update({'chat': []})
     user_obj.update({'lvbhunter': None})
@@ -372,7 +381,7 @@ def process_new_user(email, password1, tz_offset, username):
     user_template = {
         'active': True,
         'email': email,
-        'joinDate': datetime.fromisoformat(datetime.now().isoformat()),
+        'joinDate': datetime.now(),
         'pass': generate_password_hash(password1),
         'paymentid': None,
         'reviewHistory': [],

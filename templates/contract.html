@@ -172,9 +172,24 @@
 {#        {% endif %}#}
     </div>
     <div id="container_graph">
-{#        <canvas id="myChart"></canvas>#}
-        here will go the time graph... absolute fixed in background? could look cool when people scroll down to access chat... :D
+        {% for key in tg.keys() %}
+            <div class="graph_day" id="{{ key }}">
+            {% for value in tg[key]|reverse %}
+                {% for key2, value2 in value.items() %}
+                    <div class="graph_cell" id="{{ key2[0:8] }}">
+                    {{ key2[0:8] }}:<br>
+                    {{ value2 }}<br><br>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+                <div>
+                    <b>{{ key }}</b>
+                </div>
+            </div>
+        {% endfor %}
     </div>
+    <i>use JavaScript to change background color of past/present dates and times</i><br>
+    <i>timezone calculations are not finalized</i>
      <div id="info1_container">
         <div id="info1_main_col">
             {# INTERESTED PARTIES #}

@@ -12,6 +12,14 @@ body {
 .c_textcenter {
     text-align: center;
 }
+.graph_day {
+    background-color: lightcyan;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    max-width: 200px;
+    padding: 5px;
+}
 .nav_top_cell {
     font-size: xx-large;
     font-weight: bold;
@@ -30,6 +38,17 @@ body {
 }
 #container_chat {
     margin-top: 30px;
+}
+#container_graph {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;
+    margin-top: 40px;
+    max-width: 1200px;
+    text-align: center;
+    width: 100%;
 }
 #container_input {
     background-color: indianred;
@@ -232,11 +251,5 @@ body {
     flex-direction: column;
     margin-top: 30px;
     padding: 10px;
-    width: 100%;
-}
-#container_graph {
-    margin-top: 40px;
-    text-align: center;
-    max-width: 900px;
     width: 100%;
 }
