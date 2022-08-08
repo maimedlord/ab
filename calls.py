@@ -32,14 +32,15 @@ dict_template = {
             }
 
 
-def c_accept_offer(contractid_obj, bhunterid_obj, bhunter_uname, bhunter_offer, clog_obj):
+def c_accept_offer(contractid_obj, bhunterid_obj, bhunter_uname, bhunter_offer, clog_obj, now_time):
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
     result = dbc.update_one({'_id': contractid_obj},
                             {'$set': {'bhunter': bhunterid_obj,
                                       'phase': 'inprogress',
                                       'bounty': bhunter_offer,
-                                      'bhunter_uname': bhunter_uname},
+                                      'bhunter_uname': bhunter_uname,
+                                      'timeline.1.time': now_time},
                              '$push': {'clog': clog_obj}})
     return result
 
@@ -107,17 +108,15 @@ def get_auth_user(email, password, tz_offset):
     db = db_mc[dbUsers]
     dbc = db[cusers]
     user_record = dbc.find_one({'email': email}, {
-        '_id': 1,
+        # '_id': 1,
         'email': 1,
-        'uName': 1,
+        # 'uName': 1,
         'pass': 1
     })
     if user_record and check_password_hash(user_record['pass'], password):
-        # remove password from the object before returning:
-        user_record.pop('pass')
-        result = dbc.update_one({'email': email}, {'$set': {'tz_offset': tz_offset}})
-        if result.acknowledged:
-            return [str(user_record['_id']), email, user_record['uName'], user_record['_id']]
+        user_record = dbc.find_one_and_update({'email': email}, {'$set': {'tz_offset': tz_offset}}, return_document=ReturnDocument.AFTER)
+        if user_record:
+            return [str(user_record['_id']), email, user_record['uName'], user_record['_id'], user_record['tz_offset']]
     else:
         return None
 
@@ -168,10 +167,11 @@ def get_sesh(userid):
     user_record = dbc.find_one({'_id': ObjectId(userid)}, {
         '_id': 1,
         'email': 1,
+        'tz_offset': 1,
         'uName': 1
     })
     if user_record:
-        temp_array = [userid, user_record['email'], user_record['uName'], user_record['_id']]
+        temp_array = [userid, user_record['email'], user_record['uName'], user_record['_id'], user_record['tz_offset']]
         return temp_array
     else:
         return []
@@ -292,7 +292,7 @@ def log_userlogin(user_id):
     db = db_mc[dbLogs]
     dbc = db[login_log]
     result = dbc.insert_one({
-        'time': datetime.fromisoformat(datetime.now().isoformat()),
+        'time': datetime.fromisoformat(datetime.utcnow().isoformat()),
         'userid': user_id
     })
     if result.acknowledged:

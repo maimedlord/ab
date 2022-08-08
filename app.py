@@ -48,7 +48,7 @@ def remove_danger_chars(passed_string):
 def user_loader(user_id):
     user_arr = calls.get_sesh(user_id)
     if len(user_arr) > 0:
-        return User(user_arr[0], user_arr[1], user_arr[2], user_arr[3])
+        return User(user_arr[0], user_arr[1], user_arr[2], user_arr[3], user_arr[4])
     else:
         return None
 
@@ -164,7 +164,7 @@ def create_contract():
         the_file = request.files['sample_file']
         if the_file and the_file.filename != '' and allowed_file(the_file.filename):
             # process new contract first in db before saving:
-            prc_return = prc.process_new_contract(request.form, current_user.id_object, current_user.username)
+            prc_return = prc.process_new_contract(request.form, current_user.id_object, current_user.username, current_user.tz_offset)
             if prc_return.acknowledged:
                 filename = secure_filename(the_file.filename)
                 filename = str(prc_return.inserted_id) + '-sample-' + filename
@@ -177,7 +177,7 @@ def create_contract():
                     data_obj.update({'message': 'processing for your contract failed...'})
                     return render_template('create_contract.html', data_obj=data_obj)
         else:
-            prc_return = prc.process_new_contract(request.form, current_user.id_object, current_user.username)
+            prc_return = prc.process_new_contract(request.form, current_user.id_object, current_user.username, current_user.tz_offset)
             if prc_return.acknowledged is False:
                 # write to error log
                 data_obj.update({'message': 'processing for your contract failed...'})
@@ -200,7 +200,7 @@ def contract(contract_id, message):
     if not contract_obj:
         return redirect(url_for('hmm', message='contract not found or you are not permitted to view it...'))
     # xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:
-    timeline_graph = prc.prep_graph(contract_obj['phase'], contract_obj['timeline'], contract_obj['type_contract'])
+    timeline_graph = prc.prep_graph(contract_obj['phase'], contract_obj['timeline'], contract_obj['type_contract'], current_user.tz_offset)
     print(timeline_graph)
     # creates potential earnings value:
     data_obj['earnable'] = contract_obj['bounty']
@@ -244,19 +244,19 @@ def contract(contract_id, message):
             if result:
                 return redirect(url_for('contract', contract_id=contract_id, message='none'))
             data_obj['message'] = 'chat send failed!'
-        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
+        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj, tg=timeline_graph)
     # PHASE: STALLED
     if contract_obj and contract_obj['phase'] == 'stalled':
-        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
+        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj, tg=timeline_graph)
     # phase: validation
     if contract_obj and contract_obj['phase'] == 'validation' and contract_obj['owner'] == current_user.id_object or contract_obj['bhunter'] == current_user.id_object:
-        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
+        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj, tg=timeline_graph)
     # phase: approved
     if contract_obj and contract_obj['phase'] == 'approved' and contract_obj['owner'] == current_user.id_object or contract_obj['bhunter'] == current_user.id_object:
-        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
+        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj, tg=timeline_graph)
     # phase: gradevalidation
     if contract_obj and contract_obj['phase'] == 'gradevalidation' and contract_obj['owner'] == current_user.id_object or contract_obj['bhunter'] == current_user.id_object:
-        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
+        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj, tg=timeline_graph)
     # phase: rating
     if contract_obj and contract_obj['phase'] == 'rating' and contract_obj[
         'owner'] == current_user.id_object or contract_obj['bhunter'] == current_user.id_object:
@@ -282,15 +282,15 @@ def contract(contract_id, message):
             if result:
                 return redirect(url_for('contract', contract_id=contract_id, message='none'))
             data_obj['message'] = 'chat send failed!'
-        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
+        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj, tg=timeline_graph)
         # return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
     # phase: successful
     if contract_obj and contract_obj['phase'] == 'successful' and contract_obj[
         'owner'] == current_user.id_object or contract_obj['bhunter'] == current_user.id_object:
-        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
+        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj, tg=timeline_graph)
     # phase: disputed
     if contract_obj and contract_obj['phase'] == 'disputed':
-        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
+        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj, tg=timeline_graph)
     # rejected
     return redirect(url_for('hmm', message='contract not found or you are not permitted to view it...'))
 
@@ -334,7 +334,8 @@ def login():
         tz_offset = request.form['tz_offset']
         user_arr = calls.get_auth_user(email, password, tz_offset)
         if user_arr:
-            login_user(User(user_arr[0], user_arr[1], user_arr[2], user_arr[3]))
+            login_user(User(user_arr[0], user_arr[1], user_arr[2], user_arr[3], user_arr[4]))
+            # tracking:
             calls.log_userlogin(current_user.id_object)
             next = request.args.get('next')
             if not is_safe_url(next):
@@ -380,7 +381,7 @@ def register():
         result = prc.process_new_user(email, password1, tz_offset, username)
         if result:
             user_arr = calls.get_auth_user(email, password1, tz_offset)
-            login_user(User(user_arr[0], user_arr[1], user_arr[2], user_arr[3]))
+            login_user(User(user_arr[0], user_arr[1], user_arr[2], user_arr[3], user_arr[4]))
             # next = flask.request.args.get('next')
             # if not is_safe_url(next):
             #     return flask.abort(400)

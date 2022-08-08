@@ -3,18 +3,28 @@ window.onload = function () {
    nowDateTime = new Date().toISOString().split('T');
    datePart = nowDateTime[0];
    timePart = nowDateTime[1];
-   console.log(datePart);
-   console.log(timePart);
+   // console.log(datePart);
+   // console.log(timePart);
    var graph_children = document.getElementById('container_graph').children;
-   console.log(graph_children);
+   // console.log(graph_children);
    for (var i = 0; i < graph_children.length; i++) {
       // console.log(graph_children[i].id);
+      if (graph_children[i].id < datePart) {
+         // console.log(graph_children[i].children);
+         for (var ii = 0; ii < graph_children[i].children.length - 1; ii++) {
+            // graph_children[i].children[ii].style.backgroundColor = 'lightgray';
+            graph_children[i].children[ii].style.borderColor = 'gray';
+            graph_children[i].children[ii].style.boxShadow = 'inset 3px 3px dimgray';
+         }
+      }
       if (graph_children[i].id <= datePart) {
          // console.log(graph_children[i]);
          for (var ii = 0; ii < graph_children[i].children.length - 1; ii++) {
             // console.log(graph_children[i].children[ii].id);
             if (graph_children[i].children[ii].id <= timePart) {
-               graph_children[i].children[ii].style.backgroundColor = 'lightgray';
+               // graph_children[i].children[ii].style.backgroundColor = 'lightgray';
+               graph_children[i].children[ii].style.borderColor = 'gray';
+               graph_children[i].children[ii].style.boxShadow = 'inset 3px 3px dimgray';
             }
          }
       }

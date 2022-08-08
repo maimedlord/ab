@@ -12,13 +12,20 @@ body {
 .c_textcenter {
     text-align: center;
 }
+.graph_cell {
+    border-color: limegreen;
+    border-style: solid;
+    border-radius: 5px;
+    box-shadow: 3px 3px limegreen;
+    padding: 5px;
+}
 .graph_day {
-    background-color: lightcyan;
     display: flex;
     flex-direction: column;
+    gap: 10px;
     justify-content: flex-end;
-    max-width: 200px;
     padding: 5px;
+    width: 200px;
 }
 .nav_top_cell {
     font-size: xx-large;
@@ -46,14 +53,15 @@ body {
     gap: 5px;
     justify-content: center;
     margin-top: 40px;
-    max-width: 1200px;
+    max-width: 1400px;
     text-align: center;
     width: 100%;
+    z-index: -1;
 }
 #container_input {
     background-color: indianred;
     border-radius: 50px;
-    box-shadow: 30px 30px 10px dimgray;
+    box-shadow: 15px 15px 10px dimgray;
     display: flex;
     flex-direction: column;
     margin-top: 30px;
@@ -131,9 +139,10 @@ body {
     display: flex;
     flex-direction: row;
     max-width: 1150px;/* SLAVE */
+    min-width: 350px;
     padding: 10px;
     text-align: left;
-    width: 100%;
+    /*width: 100%;*/
 }
 
 #div_phase {

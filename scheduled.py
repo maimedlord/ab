@@ -15,7 +15,7 @@ cusers = 'cusers'
 def failed_a_submit():
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    nowtime = datetime.fromisoformat(datetime.now().isoformat()[:-7])
+    nowtime = datetime.utcnow()
     contracts = list(dbc.find({'$and': [{'phase': 'inprogress'},
                                         {'type_contract': 'assignment'},
                                         {'timeline': {'$elemMatch': {'event': 'deadline: submission', 'time': {'$lte': nowtime}}}}]}))
@@ -38,7 +38,7 @@ def failed_a_submit():
 def failed_g_submit():
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    nowtime = datetime.fromisoformat(datetime.now().isoformat()[:-7])
+    nowtime = datetime.utcnow()
     contracts = list(dbc.find({'$and': [{'phase': 'approved'},
                                         {'type_contract': 'assignment'},
                                         {'timeline': {'$elemMatch': {'event': 'deadline: grading', 'time': {'$lte': nowtime}}}}]}))
@@ -59,8 +59,8 @@ def failed_g_submit():
 def failed_a_validation():
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    nowtime = datetime.fromisoformat(datetime.now().isoformat()[:-7])
-    nowtimeplus24 = datetime.fromisoformat((datetime.now() + timedelta(hours=24)).isoformat()[:-7])
+    nowtime = datetime.utcnow()
+    nowtimeplus24 = nowtime + timedelta(hours=24)
     contracts = list(dbc.find({'$and': [{'phase': 'validation'},
                                         {'type_contract': 'assignment'},
                                         {'timeline': {'$elemMatch': {'event': 'deadline: submission', 'time': {'$lte': nowtimeplus24}}}}]}))
@@ -81,7 +81,7 @@ def failed_a_validation():
 def failed_t_validation():
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    nowtime = datetime.fromisoformat(datetime.now().isoformat()[:-7])
+    nowtime = datetime.utcnow()
     contracts = list(dbc.find({'$and': [{'phase': 'validation'},
                                         {'type_contract': 'test'},
                                         {'timeline': {'$elemMatch': {'event': 'deadline: test start', 'time': {'$lte': nowtime}}}}]}))
@@ -102,7 +102,7 @@ def failed_t_validation():
 def failed_rating():
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    nowtime = datetime.fromisoformat(datetime.now().isoformat()[:-7])
+    nowtime = datetime.utcnow()
     contracts = list(dbc.find({'$and': [{'phase': 'rating'},
                                         {'type_contract': 'assignment'},
                                         {'timeline': {'$elemMatch': {'event': 'deadline: rate the other person', 'time': {'$lte': nowtime}}}}]}))
@@ -123,7 +123,7 @@ def failed_rating():
 def move_stalled():
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    nowtime = datetime.fromisoformat(datetime.now().isoformat()[:-7])
+    nowtime = datetime.utcnow()
     contracts = list(dbc.find({'$and': [{'phase': 'open'}, {'timeline': {'$elemMatch': {'event': 'deadline: stall', 'time': {'$lte': nowtime}}}}]}))
     if len(contracts) > 0:
         # holds list of all users that will be changed:
@@ -144,7 +144,7 @@ def move_stalled():
 def move_t_validation():
     db = db_mc[dbContracts]
     dbc = db[ccontracts]
-    nowtime = datetime.fromisoformat(datetime.now().isoformat()[:-7])
+    nowtime = datetime.utcnow()
     contracts = list(dbc.find({'$and': [{'phase': 'inprogress'},
                                         {'type_contract': 'test'},
                                         {'timeline': {'$elemMatch': {'event': 'deadline: test start', 'time': {'$lte': nowtime}}}}]}))
