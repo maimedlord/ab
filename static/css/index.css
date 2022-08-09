@@ -92,6 +92,21 @@
     height: 10px;
 }
 /* ID'S */
+#button_account {
+    background-image: url("../imgs/account.png");
+    height: 132px;
+    width: 180px;
+}
+#button_logout {
+    background-image: url("../imgs/logout.png");
+    height: 132px;
+    width: 132px;
+}
+#button_market {
+    background-image: url("../imgs/market.png");
+    height: 132px;
+    width: 180px;
+}
 #c_m_bottom {
     background-color: orange;
     display: flex;
@@ -106,18 +121,21 @@
     background-repeat: no-repeat;
     display: flex;
     flex-direction: row;
-    height: 300px;
-    margin-top: 10px;
-    max-width: 1000px;
+    height: 320px;
+    margin-top: 20px;
+    max-width: 800px;
     position: fixed;
     width: 100%;
     z-index: -1;
 }
 #container_how {
-    background-color: lightblue;
+    background-color: white;
+    border-color: deepskyblue;
+    border-style: solid;
     box-shadow: 10px 10px dimgray;
     display: flex;
     flex-direction: column;
+    text-align: center;
     width: 100%;
 }
 #container_market {
@@ -137,18 +155,20 @@
     justify-content: flex-end;
     margin-top: 5px;
     max-width: 1250px;
-    padding-top: 10px;
+    padding: 10px 30px 0px 0px;
     width: 100%;
 }
 #container_next1 {
     background-color: transparent;
-    height: 400px;
+    height: 300px;
+    margin-top: 20px;
+    text-align: center;
     width: 100%;
 }
 #container_next2 {
     background-color: lightgreen;
     box-shadow: 10px 10px dimgray;
-    height: 400px;
+    height: 300px;
     width: 100%;
 }
 #navigation_column {

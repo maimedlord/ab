@@ -15,8 +15,11 @@ from forms import CContract, LoginForm, RegistrationForm
 
 app = Flask(__name__)
 
+# NEED to verify safe next as used in login
 login_manager = LoginManager()
 login_manager.init_app(app)
+login_manager.login_message = 'you need to be logged in and authorized to view this page...'
+login_manager.login_view = 'login'
 
 app.config['SECRET_KEY'] = 'secret!'  # put in config file?
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -338,6 +341,8 @@ def login():
             # tracking:
             calls.log_userlogin(current_user.id_object)
             next = request.args.get('next')
+            print('YOU NEED TO MAKE SURE THAT THIS LOGIN PROCEDURE IS SAFE: NEXT IS_SAFE_URL(NEXT)')
+            print(next)
             if not is_safe_url(next):
                 return abort(400)
             return redirect(url_for('account'))

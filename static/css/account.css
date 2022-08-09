@@ -1,3 +1,6 @@
+body {
+    /*background-color: lightgrey;*/
+}
 .c_contract {
     color: black;
     display: flex;
@@ -72,9 +75,12 @@
     width: 100%;
 }
 #a_g_left {
-    background-color: yellow;
+    background-color: white;
     /*border-bottom-left-radius: 50px;*/
     /*border-top-left-radius: 40px;*/
+    border-radius: 30px;
+    border-color: black;
+    border-style: solid;
     box-shadow: 10px 10px dimgray;
     display: flex;
     flex-direction: column;
@@ -101,9 +107,24 @@
     justify-content: center;
     width: 100%;
 }
+#button_cc {
+    background-image: url("../imgs/create_contract.png");
+    height: 132px;
+    width: 180px;
+}
+#button_logout {
+    background-image: url("../imgs/logout.png");
+    height: 132px;
+    width: 132px;
+}
+#button_market {
+    background-image: url("../imgs/market.png");
+    height: 132px;
+    width: 180px;
+}
 #container_contracts {
     align-self: center;
-    background-color: lightgreen;
+    /*background-color: lightgreen;*/
     display: flex;
     flex-direction: column;
     font-size: smaller;
