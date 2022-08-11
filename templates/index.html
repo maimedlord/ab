@@ -38,59 +38,51 @@
         <div style="text-align: center">
             <b>some open contracts on the market:</b><p></p>
         </div>
+        {# market header #}
+        <div class="row_market">
+            <div class="column_market"><b>type</b></div>
+            <div class="column_market"><b>level of study</b></div>
+            <div class="column_market"><b>subject</b></div>
+            <div class="column_market"><b>specialization</b></div>
+            <div class="column_market cell_money"><b>bounty</b></div>
+            <div class="column_market cell_money"><b>bonuses</b></div>
+            <div class="column_market"><b>due /<br>test starts</b></div>
+        </div>
         {% for doc in c_top %}
             <!-- can wrap row with a link -->
             <div class="row_market">
                 <!-- can wrap column with a link -->
-                <div class="column_market_leftmost">
-                    <b>type</b>{{ doc['type_contract'] }}
+                <div class="column_market">
+                    {{ doc['type_contract'] }}
                 </div>
                 <div class="column_market">
-                    <b>level of study</b>{{ doc['lostudy'] }}
+                    {{ doc['lostudy'] }}
                 </div>
-                <div class="column_market_subject">
-                    <b>subject</b>{{ doc['subject'] }}
+                <div class="column_market">
+                    {{ doc['subject'] }}
                 </div>
-                <div class="column_market_specialization">
-                    <b>specialization</b>{{ doc['specialization'] }}
+                <div class="column_market">
+                    {{ doc['specialization'] }}
                 </div>
                 {% if doc['type_contract'] == "assignment" %}
-                    <div class="column_market">
-                        <b>bounty</b>{{ doc['bounty'] }}
+                    <div class="column_market cell_money">
+                        <b>${{ doc['bounty'] }}</b>
+                    </div>
+                    <div class="column_market cell_money">
+                        <b>${{ doc['efbonus'] + doc['egbonus'] }}</b>
                     </div>
                     <div class="column_market">
-                        <b>egbonus</b>{{ doc['egbonus'] }}
-                    </div>
-                    <div class="column_market">
-                        <b>efbonus</b>{{ doc['efbonus'] }}
-                    </div>
-                    <div class="column_market_rightmost">
-                        <b>due deadline</b>{{ doc['timeline'][3]['time'] }}
+                        {{ doc['timeline'][4]['time'].strftime('%Y-%m-%d') }}<br>{{ doc['timeline'][4]['time'].strftime('%H:%M') }}
                     </div>
                 {% else %}
+                    <div class="column_market cell_money"><b>${{ doc['bounty'] }}</b></div>
+                    <div class="column_market cell_money"><b>${{ doc['egbonus'] }}</b></div>
                     <div class="column_market">
-                        {{ doc['timeline'][3]['time'] }}
-                    </div>
-                    <div class="column_market">
-                        {{ doc['timeline'][4]['time'] }}
-                    </div>
-                    <div class="column_market">
-                        <b>bounty</b>{{ doc['bounty'] }}
-                    </div>
-                    <div class="column_market">
-                        <b>egbonus</b>{{ doc['egbonus'] }}
-                    </div>
-                    <div class="column_market_rightmost">
-                        filler...
+                        {{ doc['timeline'][3]['time'].strftime('%Y-%m-%d') }}<br>{{ doc['timeline'][3]['time'].strftime('%H:%M') }}
                     </div>
                 {% endif %}
             </div>
-            <div class="spacer_row">
-            </div>
         {% endfor %}
-{#        <div id="c_m_bottom">#}
-{#            AND STUFF<p></p>stuff#}
-{#        </div>#}
     </div>
     <div class="spacer"></div>
     <div id="container_how">

@@ -1,67 +1,38 @@
 /* CLASSES */
 .column_market {
     align-items: center;
-    background-color: silver;
-    border-radius: 5px;
-    box-shadow: 3px 3px darkorange;
+    background-color: white;
+    border-bottom: solid black 1px;
+    border-top: solid black 1px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    min-height: 60px;
-    min-width: 100px;
-    padding: 5px;
-    text-align: center;
-}
-.column_market_leftmost {
-    align-items: center;
-    background-color: silver;
-    border-bottom-left-radius: 15px;
-    border-top-left-radius: 15px;
-    box-shadow: 3px 3px darkorange;
-    display: flex;
-    flex-direction: column;
+    flex-grow: 1;
     justify-content: space-around;
     min-height: 60px;
-    min-width: 100px;
     padding: 5px;
     text-align: center;
+    min-width: 120px;
 }
-.column_market_rightmost {
-    align-items: center;
-    background-color: silver;
-    border-bottom-right-radius: 15px;
-    border-top-right-radius: 15px;
-    box-shadow: 3px 3px darkorange;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    min-height: 60px;
-    min-width: 100px;
-    padding: 5px;
-    text-align: center;
-}
-.column_market_specialization {
-    align-items: center;
-    background-color: silver;
-    border-radius: 5px;
-    box-shadow: 3px 3px darkorange;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    width: 120px;
-    text-align: center;
-}
-.column_market_subject {
-    align-items: center;
-    background-color: silver;
-    border-radius: 5px;
-    box-shadow: 3px 3px darkorange;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    width: 120px;
-    text-align: center;
-}
+/*.column_market_specialization {*/
+/*    align-items: center;*/
+/*    background-color: white;*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    flex-grow: 1;*/
+/*    justify-content: space-around;*/
+/*    width: 100px;*/
+/*    text-align: center;*/
+/*}*/
+/*.column_market_subject {*/
+/*    align-items: center;*/
+/*    background-color: white;*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    flex-grow: 1;*/
+/*    justify-content: space-around;*/
+/*    width: 100px;*/
+/*    text-align: center;*/
+/*}*/
 .container {
     border-radius: 30px;
     box-shadow: 10px 10px dimgray;
@@ -71,17 +42,17 @@
     margin-top: 15px;
     padding: 30px 10px 25px 5px;
 }
+.cell_money {
+    background-color: lightgreen;
+    flex-grow: 0;
+}
 .row_market {
-    background-color: orange;
-    border-radius: 25px;
-    box-shadow: 5px 5px dimgray;
     display: flex;
     flex-basis: max-content;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 10px;
     justify-content: space-between;
-    padding: 5px 10px 10px 10px;
+    padding: 2px 0px 0px 0px;
 }
 .spacer {
     background-color: transparent;
@@ -121,7 +92,7 @@
     background-repeat: no-repeat;
     display: flex;
     flex-direction: row;
-    height: 320px;
+    height: 300px;
     margin-top: 20px;
     max-width: 800px;
     position: fixed;
@@ -140,11 +111,12 @@
 }
 #container_market {
     align-self: center;
-    background-color: lightgrey;
-    border-radius: 25px 25px 0px 25px;
+    background-color: lightblue;
+    border-radius: 25px 25px 0px 0px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    padding: 0px;
 }
 #container_navigation {
     display: flex;
@@ -157,6 +129,10 @@
     max-width: 1250px;
     padding: 10px 30px 0px 0px;
     width: 100%;
+}
+#container_navigation a {
+    display: inline-block;
+    height: 132px;
 }
 #container_next1 {
     background-color: transparent;

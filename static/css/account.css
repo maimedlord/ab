@@ -89,9 +89,12 @@ body {
     padding: 20px 30px 20px 30px;
 }
 #a_g_right {
-    background-color: darkcyan;
+    background-color: white;
     /*border-bottom-right-radius: 50px;*/
     /*border-top-right-radius: 50px;*/
+    border-radius: 30px;
+    border-color: black;
+    border-style: solid;
     box-shadow: 10px 10px dimgray;
     display: flex;
     flex-direction: column;
