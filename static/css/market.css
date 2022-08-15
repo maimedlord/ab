@@ -1,24 +1,43 @@
 /* CLASSES */
+.bonuses {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
 .c_inner_row {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     margin-top: 15px;
 }
+.cell_money {
+    background-color: lightgreen;
+    flex-grow: 0;
+}
+.cell_type {
+    background-color: lightgrey;
+}
 .column_market {
     display: flex;
-    flex-basis: 90px;
     flex-direction: column;
+    flex-grow: 1;
     justify-content: space-between;
+    padding: 3px;
     text-align: center;
+    width: 100px;
+}
+.owner {
+    background-color: lightgrey;
 }
 .row_market {
     background-color: white;
+    border-bottom: solid black 1px;
+    border-top: solid black 1px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    margin-top: 10px;
-    padding: 10px;
+    justify-content: space-between;
+    padding: 5px;
 }
 /* ID's */
 #container_market_header {
@@ -40,7 +59,6 @@
     padding: 30px 0px 20px 0px;
     margin-top: 20px;
     max-width: 1200px;
-    width: 100%;
 }
 #c_m_h_row {
     display: flex;
