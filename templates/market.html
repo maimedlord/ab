@@ -3,87 +3,61 @@
 {% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/market.css') }}">{% endblock %}
 {% block scripts %}<script src="{{url_for('static', filename='scripts/market.js')}}"></script>{% endblock %}
 {% block body %}
-    <div id="container_header">
-        <div id="header_logo">
-        </div>
+    <div id="header_logo_behind"></div>
+    <div id="header_logo"></div>
+    <div id="nav">
+        <a href="{{ url_for('logout') }}"><div id="button_logout"></div></a>
     </div>
     <div id="market_main">
         {{ data_obj['message'] }}
-{#        <div id="container_market_header">#}
-{#            <div id="c_m_h_row">#}
-{#                <div class="column_market">#}
-{#                    <b>type</b>#}
-{#                    <div class="c_inner_row">#}
-{#                        <span onclick="sort_alpha('container_market_table', 'down', 'type')">down</span>#}
-{#                        <span onclick="sort_alpha('container_market_table', 'up', 'type')">up</span>#}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="column_market">#}
-{#                    <b>level of study</b>#}
-{#                    <div class="c_inner_row">#}
-{#                        <span onclick="sort_alpha('container_market_table', 'down', 'lostudy')">down</span>#}
-{#                        <span onclick="sort_alpha('container_market_table', 'up', 'lostudy')">up</span>#}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="column_market">#}
-{#                    <b>subject</b>#}
-{#                    <div class="c_inner_row">#}
-{#                        <span onclick="sort_alpha('container_market_table', 'down', 'subject')">down</span>#}
-{#                        <span onclick="sort_alpha('container_market_table', 'up', 'subject')">up</span>#}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="column_market" id="col_specialization">#}
-{#                    <b>specialization</b>#}
-{#                    <div class="c_inner_row">#}
-{#                        <span onclick="sort_alpha('container_market_table', 'down', 'specialization')">down</span>#}
-{#                        <span onclick="sort_alpha('container_market_table', 'up', 'specialization')">up</span>#}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="column_market">#}
-{#                    <b>assignment/test due/start</b>#}
-{#                    <div class="c_inner_row">#}
-{#                        <span onclick="sort_alpha('container_market_table', 'down', 'deadline1')">down</span>#}
-{#                        <span onclick="sort_alpha('container_market_table', 'up', 'deadline1')">up</span>#}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="column_market">#}
-{#                    <b>deadline 2</b>#}
-{#                </div>#}
-{#                <div class="column_market">#}
-{#                    <b>bounty</b>#}
-{#                    <div class="c_inner_row">#}
-{#                        <span onclick="sort_alpha('container_market_table', 'down', 'bounty')">down</span>#}
-{#                        <span onclick="sort_alpha('container_market_table', 'up', 'bounty')">up</span>#}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="column_market">#}
-{#                    <b>excellent grade bonus</b>#}
-{#                </div>#}
-{#                <div class="column_market">#}
-{#                    <b>early finish bonus</b>#}
-{#                </div>#}
-{#                <div class="column_market">#}
-{#                    <b>owner</b>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-        <div id="create_contract">
-            <a href="{{ url_for('create_contract') }}"><h3>create a new contract</h3></a>
+        <a href="{{ url_for('create_contract') }}" style="align-self: center">
+            <div id="button_cc"></div>
+        </a>
+        <div id="sort_search">
+            <div id="sort_by_column">
+                <div id="sort_by_row">
+                    sort by:&nbsp;
+                    <select id="select_sort" name="select_sort" title="select_sort">
+                        <option value=""> select to sort </option>
+                        <option value="1">bounty asc.</option>
+                        <option value="2">bounty desc.</option>
+                        <option value="3">due / starts asc.</option>
+                        <option value="4">due / starts desc.</option>
+                        <option value="5">level of study asc.</option>
+                        <option value="6">level of study desc.</option>
+                        <option value="7">owner asc.</option>
+                        <option value="8">owner desc.</option>
+                        <option value="9">specialization asc.</option>
+                        <option value="10">specialization desc.</option>
+                        <option value="11">subject asc.</option>
+                        <option value="12">subject desc.</option>
+                        <option value="13">total potential value asc.</option>
+                        <option value="14">total potential value desc.</option>
+                        <option value="15">type asc.</option>
+                        <option value="16">type desc.</option>
+                    </select>
+                </div>
+            </div>
+            <div id="search_row">
+                <form>
+                    <label for="search">search: </label><input id="search" name="search" type="text"><button type="submit">search</button>
+                </form>
+            </div>
         </div>
         <div id="container_market_table">
             <div class="row_market">
                 <div class="cell_type column_market"><b>type</b></div>
                 <div class="column_market"><b>level</b></div>
                 <div class="column_market"><b>subject</b></div>
-                <div class="column_market" id="col_specialization"><b>specialization</b></div>
-                <div class="column_market"><b>due /<br>test starts</b></div>
+                <div class="col_specialization column_market"><b>specialization</b></div>
+                <div class="cell_due column_market"><b>due /<br>test starts</b></div>
                 <div class="cell_money column_market"><b>bounty</b></div>
-                <div class="cell_money column_market"><b>bonus</b><br>finish, grade</div>
-                <div class="column_market owner"><b>bounty owner</b></div>
+                <div class="cell_money column_market"><b>bonuses:</b><br>finish, grade</div>
+                <div class="column_market cell_owner"><b>bounty owner</b></div>
             </div>
             {% for doc in all_open_arr %}
             <!-- can wrap row with a link -->
-            <a href="{{ url_for('contract', contract_id=doc['_id'], message='none') }}">
+            <a href="{{ url_for('contract', contract_id=doc['_id'], message='none') }}" style="color: black;text-decoration: none">
                 <div class="row_market">
                     <!-- can wrap column with a link -->
                     <div class="cell_type column_market">
@@ -95,29 +69,29 @@
                     <div class="column_market">
                         {{ doc['subject'] }}
                     </div>
-                    <div class="column_market" id="col_specialization">
+                    <div class="col_specialization column_market">
                         {{ doc['specialization'] }}
                     </div>
                     {% if doc['type_contract'] == 'assignment' %}
-                        <div class="column_market">
-                            {{ doc['timeline'][4]['time'].strftime('%Y-%m-%d') }}:<br>
+                        <div class="cell_due column_market" data-time="{{ doc['timeline'][4]['time'] }}">
+                            {{ doc['timeline'][4]['time'].strftime('%m-%d-%Y') }}:<br>
                             {{ doc['timeline'][4]['time'].strftime('%H:%M') }}
                         </div>
                     {% else %}
-                        <div class="column_market">
-                            {{ doc['timeline'][3]['time'].strftime('%Y-%m-%d') }}:<br>
+                        <div class="cell_due column_market" data-time="{{ doc['timeline'][4]['time'] }}">
+                            {{ doc['timeline'][3]['time'].strftime('%m-%d-%Y') }}:<br>
                             {{ doc['timeline'][3]['time'].strftime('%H:%M') }} - {{ doc['timeline'][4]['time'].strftime('%H:%M') }}
                         </div>
                     {% endif %}
                     <div class="cell_money column_market">
-                        {{ doc['bounty'] }}
+                        <b>${{ doc['bounty'] }}</b>
                     </div>
                     <div class="cell_money column_market">
                         <div class="bonuses">
-                            <span style="color: blue">{{ doc['efbonus'] }}</span>,<span style="color: red">{{ doc['egbonus'] }}</span>
+                            <span style="color: blue">${{ doc['efbonus'] }}</span>,&nbsp;<span style="color: red">${{ doc['egbonus'] }}</span>
                         </div>
                     </div>
-                    <div class="column_market owner">
+                    <div class="column_market cell_owner">
                         {{ doc['owner_uname'] }}
                     </div>
                 </div>

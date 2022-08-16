@@ -43,8 +43,34 @@ body {
     text-align: center;
     width: 180px;
 }
+#button_logout {
+    background-image: url("../imgs/logout.png");
+    height: 132px;
+    width: 132px;
+}
+#c_s_f_message {
+    height: 40px;
+    width: 100%;
+}
+#c_s_f_mood {
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+#chat_send {
+    /*align-self: flex-end;*/
+}
 #container_chat {
+    /*align-items: flex-end;*/
+    align-self: center;
+    /*border-bottom: solid black 1px;*/
+    /*border-right: solid black 1px;*/
+    /*box-shadow: inset 10px 10px 5px dimgray;*/
+    display: flex;
+    flex-direction: column;
     margin-top: 30px;
+    max-width: 800px;
+    padding: 10px;
+    width: 100%;
 }
 #container_graph {
     display: flex;

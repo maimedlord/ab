@@ -52,106 +52,66 @@
         </a>
     </div>
     <div id="container_contracts">
-        <div id="r_header">
-            <div>sort by:</div>
-            <div class="c_contract_header" id="c_position"><b>position</b>
-                <div class="c_inner_row">
-                    <span onclick="sort_alpha('container_contracts_table', 'down', 'position')">down</span>
-                    <span onclick="sort_alpha('container_contracts_table', 'up', 'position')">up</span>
-                </div>
-            </div>
-            <div class="c_contract_header" id="c_phase"><b>phase</b>
-                <div class="c_inner_row">
-                    <span onclick="sort_alpha('container_contracts_table', 'down', 'phase')">down</span>
-                    <span onclick="sort_alpha('container_contracts_table', 'up', 'phase')">up</span>
-                </div>
-            </div>
-            <div class="c_contract_header" id="c_type"><b>type</b>
-                <div class="c_inner_row">
-                    <span onclick="sort_alpha('container_contracts_table', 'down', 'type')">down</span>
-                    <span onclick="sort_alpha('container_contracts_table', 'up', 'type')">up</span>
-                </div>
-            </div>
-            <div class="c_contract_header" id="c_lostudy"><b>level of study</b>
-                <div class="c_inner_row">
-                    <span onclick="sort_alpha('container_contracts_table', 'down', 'lostudy')">down</span>
-                    <span onclick="sort_alpha('container_contracts_table', 'up', 'lostudy')">up</span>
-                </div>
-            </div>
-            <div class="c_contract_header" id="c_subject"><b>subject</b>
-                <div class="c_inner_row">
-                    <span onclick="sort_alpha('container_contracts_table', 'down', 'subject')">down</span>
-                    <span onclick="sort_alpha('container_contracts_table', 'up', 'subject')">up</span>
-                </div>
-            </div>
-            <div class="c_contract_header" id="c_specialization_header"><b>specialization</b>
-                <div class="c_inner_row">
-                    <span onclick="sort_alpha('container_contracts_table', 'down', 'specialization')">down</span>
-                    <span onclick="sort_alpha('container_contracts_table', 'up', 'specialization')">up</span>
-                </div>
-            </div>
-            <div class="c_contract_header" id="c_deadline2"><b>assignment/test<br>deadline</b>
-                <div class="c_inner_row">
-                    <span onclick="sort_alpha('container_contracts_table', 'down', 'deadline1')">down</span>
-                    <span onclick="sort_alpha('container_contracts_table', 'up', 'deadline1')">up</span>
-                </div>
-            </div>
-            <div class="c_contract_header" id="c_deadline1"><b>efbonus<br>deadline</b><p></p>down - up</div>
-            <div class="c_contract_header" id="c_bounty"><b>bounty</b>
-                <div class="c_inner_row">
-                    <span onclick="sort_alpha('container_contracts_table', 'down', 'bounty')">down</span>
-                    <span onclick="sort_alpha('container_contracts_table', 'up', 'bounty')">up</span>
-                </div>
-            </div>
-            <div class="c_contract_header" id="c_newmsg"><b>new chat msg</b><p></p></div>
-        </div>
         <div id="container_contracts_table">
+            <div class="r_contract">
+                <div class="c_contract cell_position"><b>position</b></div>
+                <div class="c_contract cell_type"><b>type</b></div>
+                <div class="c_contract"><b>phase</b></div>
+                <div class="c_contract"><b>level</b></div>
+                <div class="c_contract"><b>subject</b></div>
+                <div class="c_contract c_specialization"><b>specialization</b></div>
+                <div class="cell_due c_contract"><b>due /<br>test starts</b></div>
+                <div class="cell_money_header c_contract"><b>bounty</b><br>bonuses</div>
+                <div class="c_contract cell_message"><b>messages?</b></div>
+            </div>
             {% for doc in user_contracts|reverse %}
                 <!-- can wrap row with a link -->
-                <a href="{{ url_for('contract', contract_id=doc['_id'], message='none') }}">
+                <a href="{{ url_for('contract', contract_id=doc['_id'], message='none') }}" style="color: black;text-decoration: none">
                     <div class="r_contract">
                         <!-- can wrap column with a link -->
-                        <div class="c_contract">
+                        <div class="c_contract cell_position">
                             {% if current_user.id_object == doc['owner'] %}
-                                <b>position:</b><p>owner</p>
+                                owner
                             {% elif current_user.id_object == doc['bhunter'] %}
-                                <b>position:</b><p>hunter</p>
+                                hunter
                             {% else %}
-                                <b>position:</b><p>interested party</p>
+                                interested party
                             {% endif %}
                         </div>
-                        <div class="c_contract"><b>phase:</b><p>{{ doc['phase'] }}</p></div>
-                        <div class="c_contract"><b>type:</b><p>{{ doc['type_contract'] }}</p></div>
-                        <div class="c_contract"><b>lvl of study:</b><p>{{ doc['lostudy'] }}</p></div>
-                        <div class="c_contract"><b>subject:</b><p>{{ doc['subject'] }}</p></div>
-                        <div class="c_contract" id="c_specialization"><b>specialization:</b><p>{{ doc['specialization'] }}</p></div>
-                        {% if doc['type_contract'] == "assignment" %}
-                            <div class="c_contract"><b>assignment deadline:</b><p>{{ doc['timeline'][3]['time'] }}</p></div>
-                            {% if doc['timeline']|length > 5 %}
-                                <div class="c_contract"><b>efbonus deadline</b><p>{{ doc['timeline'][5]['time'] }}</p></div>
-                            {% else %}
-                                <div class="c_contract"><b>efbonus deadline:</b><p>no efbonus deadline</p></div>
-                            {% endif %}
-                            <div class="c_contract"><b>bounty:</b><p>{{ doc['bounty'] }}</p></div>
+                        <div class="c_contract cell_type">{{ doc['type_contract'] }}</div>
+                        <div class="c_contract">{{ doc['phase'] }}</div>
+                        <div class="c_contract">{{ doc['lostudy'] }}</div>
+                        <div class="c_contract">{{ doc['subject'] }}</div>
+                        <div class="c_contract c_specialization">{{ doc['specialization'] }}</div>
+                        {% if doc['type_contract'] == 'assignment' %}
+                            <div class="cell_due c_contract" data-time="{{ doc['timeline'][4]['time'] }}">
+                                {{ doc['timeline'][4]['time'].strftime('%m-%d-%Y') }}:<br>
+                                {{ doc['timeline'][4]['time'].strftime('%H:%M') }}
+                            </div>
                         {% else %}
-                            <div class="c_contract">
-                                <b>test starts:</b><p>{{ doc['timeline'][2]['time'] }}</p>
-                            </div>
-                            <div class="c_contract">
-                                {{ doc['timeline'][4]['time'] }}
-                            </div>
-                            <div class="c_contract">
-                                <b>bounty:</b><p>{{ doc['bounty'] }}</p>
+                            <div class="cell_due c_contract" data-time="{{ doc['timeline'][3]['time'] }}">
+                                {{ doc['timeline'][3]['time'].strftime('%m-%d-%Y') }}:<br>
+                                {{ doc['timeline'][3]['time'].strftime('%H:%M') }} - {{ doc['timeline'][4]['time'].strftime('%H:%M') }}
                             </div>
                         {% endif %}
+                        <div class="cell_money c_contract">
+                            <b>${{ doc['bounty'] }}</b>
+                            <div class="bonuses">
+                                <span style="color: purple">${{ doc['efbonus'] }}</span>,&nbsp;<span style="color: blue">${{ doc['egbonus'] }}</span>
+                            </div>
+                        </div>
                         {% if doc['phase'] not in data_obj['no_chat_msg_arr'] and doc['_id']|string in msg_arr %}
-                            NEW msg!
-                        {% elif doc['phase'] not in data_obj['no_chat_msg_arr'] %}
-                            no new msg
+                            <div class="c_contract cell_message">
+                                NEW msg!
+                            </div>
+{#                        {% elif doc['phase'] not in data_obj['no_chat_msg_arr'] %}#}
+                        {% else %}
+                            <div class="c_contract cell_message">
+                                ---
+                            </div>
                         {% endif %}
                     </div>
                 </a>
-    {#            <div class="spacer_row"></div>#}
             {% endfor %}
         </div>
     </div>

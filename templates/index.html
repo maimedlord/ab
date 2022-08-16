@@ -40,19 +40,19 @@
         </div>
         {# market header #}
         <div class="row_market">
-            <div class="column_market"><b>type</b></div>
+            <div class="cell_type column_market"><b>type</b></div>
             <div class="column_market"><b>level of study</b></div>
             <div class="column_market"><b>subject</b></div>
-            <div class="column_market"><b>specialization</b></div>
+            <div class="column_market column_specialization"><b>specialization</b></div>
             <div class="column_market cell_money"><b>bounty</b></div>
             <div class="column_market cell_money"><b>bonuses</b></div>
-            <div class="column_market"><b>due /<br>test starts</b></div>
+            <div class="cell_due column_market"><b>due /<br>test starts</b></div>
         </div>
         {% for doc in c_top %}
             <!-- can wrap row with a link -->
             <div class="row_market">
                 <!-- can wrap column with a link -->
-                <div class="column_market">
+                <div class="cell_type column_market">
                     {{ doc['type_contract'] }}
                 </div>
                 <div class="column_market">
@@ -61,7 +61,7 @@
                 <div class="column_market">
                     {{ doc['subject'] }}
                 </div>
-                <div class="column_market">
+                <div class="column_market column_specialization">
                     {{ doc['specialization'] }}
                 </div>
                 {% if doc['type_contract'] == "assignment" %}
@@ -71,13 +71,13 @@
                     <div class="column_market cell_money">
                         <b>${{ doc['efbonus'] + doc['egbonus'] }}</b>
                     </div>
-                    <div class="column_market">
+                    <div class="cell_due column_market">
                         {{ doc['timeline'][4]['time'].strftime('%Y-%m-%d') }}<br>{{ doc['timeline'][4]['time'].strftime('%H:%M') }}
                     </div>
                 {% else %}
                     <div class="column_market cell_money"><b>${{ doc['bounty'] }}</b></div>
                     <div class="column_market cell_money"><b>${{ doc['egbonus'] }}</b></div>
-                    <div class="column_market">
+                    <div class="cell_due column_market">
                         {{ doc['timeline'][3]['time'].strftime('%Y-%m-%d') }}<br>{{ doc['timeline'][3]['time'].strftime('%H:%M') }}
                     </div>
                 {% endif %}

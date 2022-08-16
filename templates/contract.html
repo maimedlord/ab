@@ -23,8 +23,7 @@
         </div>
         <div id="nav_top_col3">
             <a href="{{ url_for('logout') }}">
-                <div class="navigation_button">
-                    logout
+                <div id="button_logout">
                 </div>
             </a>
         </div>
@@ -124,14 +123,25 @@
         {% if contract_obj['phase'] == 'validation' %}
             <b><i>there should be a test AND assignment version...</i></b><p></p>
             {% if current_user.id_object == contract_obj['owner'] %}
-                <a href="{{ url_for('download_submission', filename=contract_obj['asubmission']) }}" download>DOWNLOAD bhunter's submission</a><p></p>
-                Does the submission meet the standard as defined in: <i>stuff here...</i> ???
-                <form action="{{ url_for('yon_asubmission', contract_id=contract_obj['_id']) }}" id="submission_decision" method="post" name="submission_decision">
-                    no: <input id="s_d_no" name="s_d_yon" required type="radio" value="false">
-                    yes: <input id="s_d_yes" name="s_d_yon" required type="radio" value="true"><p></p>
-                    <b><i>here will go a series of checkboxes that represent the many different reasons why a submission might be deficient</i></b><p></p>
-                    Submit to accept submission or set contract into dispute    <button type="submit">submit grade</button>
-                </form>
+                {% if contract_obj['type_contract'] == 'assignment' %}
+                    <a href="{{ url_for('download_submission', filename=contract_obj['asubmission']) }}" download>DOWNLOAD bhunter's submission</a><p></p>
+                    Does the submission meet the standard as defined in: <i>stuff here...</i> ???
+                    <form action="{{ url_for('yon_asubmission', contract_id=contract_obj['_id']) }}" id="submission_decision" method="post" name="submission_decision">
+                        no: <input id="s_d_no" name="s_d_yon" required type="radio" value="false">
+                        yes: <input id="s_d_yes" name="s_d_yon" required type="radio" value="true"><p></p>
+                        <b><i>here will go a series of checkboxes that represent the many different reasons why a submission might be deficient</i></b><p></p>
+                        Submit to accept submission or set contract into dispute    <button type="submit">submit grade</button>
+                    </form>
+                {% else %}
+                    Did your bounty hunter participate in your test as required in: <i>stuff here...</i> ???
+                    <form action="{{ url_for('yon_asubmission', contract_id=contract_obj['_id']) }}" id="submission_decision" method="post" name="submission_decision">
+                        no: <input id="s_d_no" name="s_d_yon" required type="radio" value="false">
+                        yes: <input id="s_d_yes" name="s_d_yon" required type="radio" value="true"><p></p>
+                        <b><i>here will go a series of checkboxes that represent the many different reasons why a submission might be deficient</i></b><p></p>
+                        Submit to accept submission or set contract into dispute    <button type="submit">submit grade</button>
+                    </form>
+                {% endif %}
+
             {% endif %}
             {% if current_user.id_object == contract_obj['bhunter'] %}
                 waiting for owner to validation your submission...<p></p>
@@ -362,26 +372,23 @@
         {# CHAT #}
         {% if contract_obj['phase'] == 'inprogress' or contract_obj['phase'] == 'disputed' or contract_obj['phase'] == 'validation' or contract_obj['phase'] == 'gradevalidation' or contract_obj['phase'] == 'successful' or contract_obj['phase'] == 'rating' %}
             {# CHAT: MAIN #}
-            <div id="chat_main">
-                {% if contract_obj['phase'] != 'successful' %}
-                    <div id="chat_send">
-                        chat send input and button...
-                        <form id="chat_send" method="post" name="chat_send">
-                            <input id="c_s_f_message" name="c_s_f_message" placeholder="your message here..." required type="text">
-                            <input id="c_s_f_mood" name="c_s_f_mood" placeholder="your mood here..." type="text"><p></p>
-                            send this chat?    <button type="submit">submit chat</button>
-                        </form>
+            {% if contract_obj['phase'] != 'successful' %}
+                <div id="chat_send">
+                    <form id="chat_send" method="post" name="chat_send">
+                        <input id="c_s_f_message" name="c_s_f_message" placeholder="your message here..." required type="text"><br>
+                        <input id="c_s_f_mood" maxlength="24" name="c_s_f_mood" placeholder="your mood here..." type="text"><br>
+                        send this chat?    <button type="submit">send</button>
+                    </form>
+                </div>
+            {% endif %}
+            {% if contract_obj['chat']|length > 0 %}
+                {% for chat in contract_obj['chat']|reverse %}
+                    <div class="chat_row">
+                        user: {{ chat['user'] }}  //  mood: {{ chat['mood'] }}  // time: {{ chat['time'] }}<p></p>
+                        message: {{ chat['message'] }}<p></p>
                     </div>
-                {% endif %}
-                {% if contract_obj['chat']|length > 0 %}
-                    {% for chat in contract_obj['chat']|reverse %}
-                        <div class="chat_row">
-                            user: {{ chat['user'] }}  //  mood: {{ chat['mood'] }}  // time: {{ chat['time'] }}<p></p>
-                            message: {{ chat['message'] }}<p></p>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            </div>
+                {% endfor %}
+            {% endif %}
             {# CHAT: MAIN #}
         {% endif %}
     </div>

@@ -10,24 +10,31 @@
     justify-content: space-between;
     margin-top: 15px;
 }
+.cell_due {
+    background-color: #F5B7B1;
+}
 .cell_money {
     background-color: lightgreen;
     flex-grow: 0;
 }
 .cell_type {
-    background-color: lightgrey;
+    background-color: lightskyblue;
 }
 .column_market {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    justify-content: space-between;
+    justify-content: center;
     padding: 3px;
     text-align: center;
     width: 100px;
 }
-.owner {
+.cell_owner {
     background-color: lightgrey;
+}
+.row {
+    display: flex;
+    flex-direction: row;
 }
 .row_market {
     background-color: white;
@@ -37,9 +44,19 @@
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-between;
-    padding: 5px;
+    /*padding: 2px;*/
 }
 /* ID's */
+#button_cc {
+    background-image: url("../imgs/create_contract.png");
+    height: 132px;
+    width: 180px;
+}
+#button_logout {
+    background-image: url("../imgs/logout.png");
+    height: 132px;
+    width: 132px;
+}
 #container_market_header {
     align-self: center;
     background-color: limegreen;
@@ -56,23 +73,78 @@
     box-shadow: 10px 10px dimgray;
     display: flex;
     flex-direction: column;
-    padding: 30px 0px 20px 0px;
+    padding: 30px 0px 30px 0px;
     margin-top: 20px;
     max-width: 1200px;
+    width: 100%;
 }
 #c_m_h_row {
     display: flex;
     flex-direction: row;
     gap: 15px;
 }
-#create_contract {
-    align-self: center;
+.col_specialization {
+    width: 150px;
 }
-#col_specialization {
-    flex-basis: 150px;
+#header_logo {
+    background-image: url("../imgs/abheader.png");
+    background-position: left;
+    background-repeat: no-repeat;
+    height: 52px;
+    max-width: 1200px;
+    width: 100%;
+}
+#header_logo_behind {
+    background-color: purple;
+    height: 5px;
+    margin-top: 38px;
+    position: absolute;
+    width: 100%;
+    z-index: -1;
 }
 #market_main {
     display: flex;
     flex-direction: column;
-    margin-top: 220px;
+    /*margin-top: 220px;*/
+    width: 100%;
+}
+#nav {
+    align-self: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    max-width: 1000px;
+    width: 100%;
+}
+#search {
+    width: 200px;
+}
+#search_row {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+}
+#select_sort {
+    width: 220px;
+}
+#sort_by_column {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+#sort_by_row {
+    display: flex;
+    flex-direction: row;
+}
+#sort_search {
+    align-self: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    font-size: x-large;
+    justify-content: space-around;
+    margin: 30px 0px 0px 0px;
+    max-width: 1200px;
+    row-gap: 15px;
+    width: 100%;
 }
