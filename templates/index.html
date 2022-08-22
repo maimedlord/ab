@@ -9,16 +9,17 @@
     </div>
     <div id="container_navigation" onclick="window.location.href='{{ url_for('index') }}';">
         {% if current_user.is_authenticated %}
-            <a href="{{ url_for('logout') }}">
-                <div id="button_logout">
-                </div>
-            </a>
             <a href="{{ url_for('account') }}">
                 <div id="button_account">
                 </div>
             </a>
             <a href="{{ url_for('market') }}">
                 <div id="button_market">
+                    market
+                </div>
+            </a>
+            <a href="{{ url_for('logout') }}">
+                <div id="button_logout">
                 </div>
             </a>
         {% else %}
@@ -41,7 +42,7 @@
         {# market header #}
         <div class="row_market">
             <div class="cell_type column_market"><b>type</b></div>
-            <div class="column_market"><b>level of study</b></div>
+            <div class="column_market"><b>level</b></div>
             <div class="column_market"><b>subject</b></div>
             <div class="column_market column_specialization"><b>specialization</b></div>
             <div class="column_market cell_money"><b>bounty</b></div>

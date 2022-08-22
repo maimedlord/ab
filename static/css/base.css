@@ -1,5 +1,6 @@
 body {
-    background-color: #F4F6F7;
+    /*background-color: #F4F6F7;*/
+    background-color: white;
     font-family: Arial;
     margin: 0;
     padding: 0;
@@ -12,6 +13,12 @@ body {
     display: flex;
     flex-grow: 1;
     justify-content: center;
+}
+.u_f_b {
+    color: black;
+}
+.u_t_c {
+    text-align: center;
 }
 #container_header {
     align-self: stretch;

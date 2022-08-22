@@ -1,6 +1,18 @@
 body {
     /*background-color: lightgrey;*/
 }
+.blink_bg {
+    animation: newMessage 2s infinite;
+}
+@keyframes newMessage {
+    50% {
+        background-color: transparent;
+    }
+    50% {
+        background-color: purple;
+        color: white;
+    }
+}
 .bonuses {
     display: flex;
     flex-direction: row;
@@ -52,6 +64,10 @@ body {
 }
 .cell_type {
     background-color: lightskyblue;
+}
+.column {
+    display: flex;
+    flex-direction: column;
 }
 .nav_top_cell {
     font-size: xx-large;
@@ -123,7 +139,7 @@ body {
 }
 #button_cc {
     background-image: url("../imgs/create_contract.png");
-    height: 132px;
+    height: 180px;
     width: 180px;
 }
 #button_logout {
@@ -133,7 +149,7 @@ body {
 }
 #button_market {
     background-image: url("../imgs/market.png");
-    height: 132px;
+    height: 180px;
     width: 180px;
 }
 #container_contracts {
@@ -227,3 +243,4 @@ body {
     flex-direction: row;
     margin: 20px 0px 20px 20px;
 }
+/*                 */

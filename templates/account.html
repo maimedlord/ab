@@ -43,12 +43,16 @@
     </div>
     <div id="nav_row_mid">
         <a href="{{ url_for('create_contract') }}">
-            <div id="button_cc">
+            <div class="column">
+                <div id="button_cc"></div>
             </div>
+            <div class="u_f_b u_t_c">create bounty</div>
         </a>
         <a href="{{ url_for('market') }}">
-            <div id="button_market">
+            <div class="column">
+                <div id="button_market"></div>
             </div>
+            <div class="u_f_b u_t_c">go to market</div>
         </a>
     </div>
     <div id="container_contracts">
@@ -85,13 +89,13 @@
                         <div class="c_contract c_specialization">{{ doc['specialization'] }}</div>
                         {% if doc['type_contract'] == 'assignment' %}
                             <div class="cell_due c_contract" data-time="{{ doc['timeline'][4]['time'] }}">
-                                {{ doc['timeline'][4]['time'].strftime('%m-%d-%Y') }}:<br>
-                                {{ doc['timeline'][4]['time'].strftime('%H:%M') }}
+                                <span><b>{{ doc['timeline'][4]['time'].strftime('%h %d') }}</b></span>
+                                <b>{{ doc['timeline'][4]['time'].strftime('%H:%M') }}</b>
                             </div>
                         {% else %}
                             <div class="cell_due c_contract" data-time="{{ doc['timeline'][3]['time'] }}">
-                                {{ doc['timeline'][3]['time'].strftime('%m-%d-%Y') }}:<br>
-                                {{ doc['timeline'][3]['time'].strftime('%H:%M') }} - {{ doc['timeline'][4]['time'].strftime('%H:%M') }}
+                                <span><b>{{ doc['timeline'][3]['time'].strftime('%h %d') }}</b></span>
+                                <span><b>{{ doc['timeline'][3]['time'].strftime('%H:%M') }}</b> - <b>{{ doc['timeline'][4]['time'].strftime('%H:%M') }}</b></span>
                             </div>
                         {% endif %}
                         <div class="cell_money c_contract">
@@ -101,7 +105,7 @@
                             </div>
                         </div>
                         {% if doc['phase'] not in data_obj['no_chat_msg_arr'] and doc['_id']|string in msg_arr %}
-                            <div class="c_contract cell_message">
+                            <div class="blink_bg c_contract cell_message">
                                 NEW msg!
                             </div>
 {#                        {% elif doc['phase'] not in data_obj['no_chat_msg_arr'] %}#}

@@ -11,11 +11,16 @@
     <div id="market_main">
         {{ data_obj['message'] }}
         <a href="{{ url_for('create_contract') }}" style="align-self: center">
-            <div id="button_cc"></div>
+            <div class="column">
+                <div id="button_cc"></div>
+            </div>
+            <div class="u_f_b u_t_c">
+                create bounty
+            </div>
         </a>
         <div id="sort_search">
-            <div id="sort_by_column">
-                <div id="sort_by_row">
+            <div class="sort_by_column">
+                <div class="sort_by_row">
                     sort by:&nbsp;
                     <select id="select_sort" name="select_sort" title="select_sort">
                         <option value=""> select to sort </option>
@@ -38,10 +43,13 @@
                     </select>
                 </div>
             </div>
-            <div id="search_row">
-                <form>
-                    <label for="search">search: </label><input id="search" name="search" type="text"><button type="submit">search</button>
-                </form>
+            <div class="sort_by_column">
+                <i style="color: red; font-size: medium">search is not functional at the moment...</i>
+                <div id="search_row">
+                    <form>
+                        <label for="search">search: </label><input id="search" name="search" type="text"><button type="submit">search</button>
+                    </form>
+                </div>
             </div>
         </div>
         <div id="container_market_table">
@@ -74,12 +82,12 @@
                     </div>
                     {% if doc['type_contract'] == 'assignment' %}
                         <div class="cell_due column_market" data-time="{{ doc['timeline'][4]['time'] }}">
-                            {{ doc['timeline'][4]['time'].strftime('%m-%d-%Y') }}:<br>
+                            {{ doc['timeline'][4]['time'].strftime('%h %d') }}<br>
                             {{ doc['timeline'][4]['time'].strftime('%H:%M') }}
                         </div>
                     {% else %}
                         <div class="cell_due column_market" data-time="{{ doc['timeline'][4]['time'] }}">
-                            {{ doc['timeline'][3]['time'].strftime('%m-%d-%Y') }}:<br>
+                            {{ doc['timeline'][3]['time'].strftime('%h %d') }}<br>
                             {{ doc['timeline'][3]['time'].strftime('%H:%M') }} - {{ doc['timeline'][4]['time'].strftime('%H:%M') }}
                         </div>
                     {% endif %}

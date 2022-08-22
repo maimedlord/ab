@@ -8,7 +8,7 @@ window.onload = function () {
    var graph_children = document.getElementById('container_graph').children;
    // console.log(graph_children);
    for (var i = 0; i < graph_children.length; i++) {
-      // console.log(graph_children[i].id);
+      console.log(graph_children[i].id);
       if (graph_children[i].id < datePart) {
          // console.log(graph_children[i].children);
          for (var ii = 0; ii < graph_children[i].children.length - 1; ii++) {

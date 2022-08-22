@@ -33,17 +33,17 @@
     {% endif %}
     <div id="container_graph">
         {% for key in tg.keys() %}
-            <div class="graph_day" id="{{ key }}">
+            <div class="graph_day" id="{{ key.strftime('%Y-%m-%d') }}">
             {% for value in tg[key]|reverse %}
                 {% for key2, value2 in value.items() %}
-                    <div class="graph_cell" id="{{ key2[0:8] }}">
-                    {{ key2[0:8] }}:<br>
-                    {{ value2 }}<br><br>
+                    <div class="graph_cell" id="{{ key2 }}">{# [0:8] #}
+                    {{ key2.strftime('%H:%M') }}<br>
+                    {{ value2 }}<br>
                     </div>
                 {% endfor %}
             {% endfor %}
                 <div>
-                    <b>{{ key }}</b>
+                    <b>{{ key.strftime('%h %d, %Y') }} &#8594;</b>
                 </div>
             </div>
         {% endfor %}
@@ -67,7 +67,9 @@
             {% if (current_user.id_object != contract_obj['owner']) and not data_obj['bhunter_offer'] %}
                 make an offer on this contract:<p></p>
                 <form id="make_offer_form" method="post" name="make_offer_form">
-                    For what amount will you take on this contract? <input id="m_o_f_offer" min="{{ contract_obj['bounty'] + 1.00 }}" name="m_o_f_offer" placeholder="$0.00" step="0.01" required type="number"><p></p>
+                    For what amount will you take on this contract?<br>
+                    <i>once an offer is submitted it cannot be canceled or changed</i><br>
+                    <input id="m_o_f_offer" min="{{ contract_obj['bounty'] }}" name="m_o_f_offer" placeholder="$0.00" step="0.01" required type="number"><p></p>
                     <button type="submit">submit</button>
                 </form>
             {# show for bhunter that's already offered on contract #}
@@ -82,9 +84,13 @@
                 <div id="div_iparty_row">
                 {% for party in contract_obj['iparties'] %}
                     <div id="div_iparty_cell">
-                        <span>interested party: <a href="{{ url_for('view_user', user_id=party['bhunter']) }}">{{ party['bhunter_uname'] }}</a></span>
-                        <span>counter offer: <b>$ {{ party['offer'] }}</b></span>
-                        time:    {{ party['time'] }}
+                        <span><a href="{{ url_for('view_user', user_id=party['bhunter']) }}">{{ party['bhunter_uname'] }}</a></span>
+                        {% if contract_obj['bounty'] == party['offer'] %}
+                            <span style="color: green"><i>agreed to your original offer</i></span>
+                        {% else %}
+                            <span style="color: red">counter offer: <b>$ {{ party['offer'] }}</b></span>
+                        {% endif %}
+                        <span style="font-size: small">{{ party['time'].strftime('%h %d') }} @ {{ party['time'].strftime('%H:%M') }}</span>
                         <a href="{{ url_for('accept_ip_offer', bhunter_id=party['bhunter'], bhunter_uname=party['bhunter_uname'], contract_id=contract_obj['_id'], offer=party['offer']) }}">accept offer</a>
                     </div>
                 {% endfor %}
@@ -368,36 +374,50 @@
             {% endif %}
         </div>
     </div>
+    {# CHAT #}
     <div id="container_chat">
-        {# CHAT #}
         {% if contract_obj['phase'] == 'inprogress' or contract_obj['phase'] == 'disputed' or contract_obj['phase'] == 'validation' or contract_obj['phase'] == 'gradevalidation' or contract_obj['phase'] == 'successful' or contract_obj['phase'] == 'rating' %}
-            {# CHAT: MAIN #}
+            <div style="font-size: x-large; padding: 15px;">
+                bounty chat
+            </div>
+            {# SEND CHAT #}
+            {# chats cannot be sent once contract is successful #}
             {% if contract_obj['phase'] != 'successful' %}
-                <div id="chat_send">
-                    <form id="chat_send" method="post" name="chat_send">
+                <div id="div_chat_send">
+                    <form id="chat_send_form" method="post" name="chat_send_form">
                         <input id="c_s_f_message" name="c_s_f_message" placeholder="your message here..." required type="text"><br>
                         <input id="c_s_f_mood" maxlength="24" name="c_s_f_mood" placeholder="your mood here..." type="text"><br>
-                        send this chat?    <button type="submit">send</button>
+                        <div id="div_chat_button">
+                            <button type="submit">send</button>
+                        </div>
                     </form>
                 </div>
             {% endif %}
+            {# READ CHAT #}
             {% if contract_obj['chat']|length > 0 %}
-                {% for chat in contract_obj['chat']|reverse %}
-                    <div class="chat_row">
-                        user: {{ chat['user'] }}  //  mood: {{ chat['mood'] }}  // time: {{ chat['time'] }}<p></p>
-                        message: {{ chat['message'] }}<p></p>
-                    </div>
-                {% endfor %}
+                <div id="div_chat_read">
+                    {% for chat in contract_obj['chat']|reverse %}
+                        {% if current_user.username == chat['username'] %}
+                            <div class="chat_row_lb">
+                        {% else %}
+                            <div class="chat_row_lg">
+                        {% endif %}
+                            <div class="chat_row_top" >
+                                <span><b>{{ chat['username'] }}</b> @ {{ chat['time'].strftime('%H:%M') }} on {{ chat['time'].strftime('%h %d, %Y') }}</span>
+                                <span><i>mood</i>: {{ chat['mood'] }}</span>
+                            </div>
+                            <div class="chat_row_bottom">
+                                {{ chat['message'] }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
             {% endif %}
-            {# CHAT: MAIN #}
+
         {% endif %}
     </div>
-    <div style="margin-top: 30px">
-        {% if contract_obj['type_contract'] == 'assignment' %}
-            assignment deadline: due: {{ contract_obj['timeline'][2] }}<p></p>
-        {% endif %}
-        phase:<br>{{ contract_obj['phase'] }}
+    <div>
+        approved contract for assignment only atm...<- is this true?
     </div>
-    <p></p><p></p>approved contract for assignment only atm...<- is this true?<p></p>
 {#    <script src="{{url_for('static', filename='scripts/contract_chart.js')}}"></script>#}
 {% endblock %}

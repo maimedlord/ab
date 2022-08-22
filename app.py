@@ -241,9 +241,9 @@ def contract(contract_id, message):
             mood = request.form['c_s_f_mood']
             # if current user is not bhunter then submit and update bhunter's message bool
             if contract_obj['bhunter'] != current_user.id_object:
-                result = prc.prc_send_chat(contract_obj['_id'], current_user.id, 'chatnewmsgbhunter', message, mood)
+                result = prc.prc_send_chat(contract_obj['_id'], current_user.id, current_user.username, 'chatnewmsgbhunter', message, mood)
             else:
-                result = prc.prc_send_chat(contract_obj['_id'], current_user.id, 'chatnewmsgowner', message, mood)
+                result = prc.prc_send_chat(contract_obj['_id'], current_user.id, current_user.username, 'chatnewmsgowner', message, mood)
             if result:
                 return redirect(url_for('contract', contract_id=contract_id, message='none'))
             data_obj['message'] = 'chat send failed!'

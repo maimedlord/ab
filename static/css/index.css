@@ -89,9 +89,15 @@
     width: 132px;
 }
 #button_market {
-    background-image: url("../imgs/market.png");
+    align-items: center;
+    background-image: url("../imgs/market_smaller.png");
+    background-position: top center;
+    background-repeat: no-repeat;
+    color: black;
+    display: flex;;
+    flex-direction: column-reverse;
     height: 132px;
-    width: 180px;
+    width: 100px;
 }
 #c_m_bottom {
     background-color: orange;
@@ -126,7 +132,7 @@
 }
 #container_market {
     align-self: center;
-    background-color: lightblue;
+    background-color: #7FB3D5;
     border-radius: 30px 30px 30px 30px;
     display: flex;
     flex-direction: column;

@@ -7,10 +7,34 @@ body {
     flex-direction: row;
     justify-content: space-evenly;
     margin-top: 10px;
+    max-width: 1200px;
     padding: 5px;
+    width: 100%;
 }
 .c_textcenter {
     text-align: center;
+}
+.chat_row_lb {
+    background-color: lightblue;
+    border-top: solid white 2px;
+    padding: 10px;
+}
+.chat_row_lg {
+    background-color: lightgrey;
+    border-top: solid black 2px;
+    padding: 10px;
+}
+.chat_row_bottom {
+    padding:10px;
+}
+.chat_row_top {
+    column-gap: 30px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    font-size: small;
+    justify-content: space-between;
+    row-gap: 2px;
 }
 .graph_cell {
     border-color: limegreen;
@@ -49,22 +73,26 @@ body {
     width: 132px;
 }
 #c_s_f_message {
-    height: 40px;
     width: 100%;
 }
 #c_s_f_mood {
-    margin-bottom: 20px;
-    margin-top: 20px;
+    align-self: flex-end;
+    width: 200px;
 }
-#chat_send {
-    /*align-self: flex-end;*/
+#chat_send_form {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0px 10px 0px;
+    width: 95%;
 }
 #container_chat {
     /*align-items: flex-end;*/
+    align-items: center;
     align-self: center;
     /*border-bottom: solid black 1px;*/
     /*border-right: solid black 1px;*/
     /*box-shadow: inset 10px 10px 5px dimgray;*/
+    border-radius: 30px;
     display: flex;
     flex-direction: column;
     margin-top: 30px;
@@ -79,7 +107,7 @@ body {
     gap: 5px;
     justify-content: center;
     margin-top: 40px;
-    max-width: 1400px;
+    max-width: 1600px;
     text-align: center;
     width: 100%;
     z-index: -1;
@@ -107,6 +135,25 @@ body {
     text-align: center;
     width: 70px;
 }
+#div_chat_button {
+    align-self: flex-end;
+}
+#div_chat_read {
+    background-color: lightsteelblue;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    padding: 0 0 20px 0;
+    width: 100%;
+}
+#div_chat_send {
+    align-items: center;
+    background-color: lightsteelblue;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
 #div_existing_offer {
     align-self: center;
     background-color: pink;
@@ -127,6 +174,7 @@ body {
     display: flex;
     flex-direction: column;
     padding: 5px;
+    row-gap: 5px;
 }
 #div_iparty_row {
     align-self: center;
@@ -142,7 +190,7 @@ body {
 #div_instructions {
     background-color: aquamarine;
     border-radius: 15px;
-    box-shadow: 5px 5px dimgray;
+    /*box-shadow: 5px 5px dimgray;*/
     display: flex;
     flex-direction: row;
     margin: 0 10px 0 10px;
@@ -161,7 +209,7 @@ body {
 #div_instructions_row {
     background-color: lightgrey;
     border-radius: 15px;
-    box-shadow: 3px 3px dimgray;
+    /*box-shadow: 3px 3px dimgray;*/
     display: flex;
     flex-direction: row;
     max-width: 1150px;/* SLAVE */
@@ -271,9 +319,10 @@ body {
     width: 100%;
 }
 #info2_container {
+    align-items: center;
     background-color: white;
     border-bottom: solid black;
-    box-shadow: -10px 10px dimgray;
+    box-shadow: 40px 30px 10px dimgray;
     display: flex;
     flex-direction: column;
     padding: 10px;

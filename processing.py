@@ -62,9 +62,13 @@ def prc_create_ip(contract_id, bhunter_user_id, bhunter_uname, offer):
 
 
 # need mechanism to alert other use of chat...
-def prc_send_chat(contract_id, userid, chatnewmsguser, message, mood):
+def prc_send_chat(contract_id, userid, username, chatnewmsguser, message, mood):
     nowtime = datetime.utcnow()
-    result = calls.c_send_chat(ObjectId(contract_id), chatnewmsguser, {'message': message, 'mood': mood, 'time': nowtime, 'user': ObjectId(userid)})
+    result = calls.c_send_chat(ObjectId(contract_id), chatnewmsguser, {'message': message,
+                                                                       'mood': mood,
+                                                                       'time': nowtime,
+                                                                       'user': ObjectId(userid),
+                                                                       'username': username})
     if result:
         if result.acknowledged:
             return True
@@ -272,19 +276,41 @@ def prep_graph(phase, timeline_arr, type_contract, tz_offset):
             if counter == 2 and phase in skip_stall_arr:
                 pass
             else:
-                if not now_written and (obj['time'] - timedelta(minutes=tz_offset)) > last_date and user_time < (obj['time'] - timedelta(minutes=tz_offset)):
-                    if str(user_time.date()) in teh_graph.keys():
-                        teh_graph[str(user_time.date())].append({str(user_time.time()): 'your last visit'})
+                if not now_written and (obj['time'] - timedelta(minutes=tz_offset)) > last_date and user_time < (
+                        obj['time'] - timedelta(minutes=tz_offset)):
+                    if user_time.date() in teh_graph.keys():
+                        teh_graph[user_time.date()].append({user_time.time(): 'your last visit'})
                         now_written = True
                     else:
-                        teh_graph[str(user_time.date())] = [{str(user_time.time()): 'your last visit'}]
+                        teh_graph[user_time.date()] = [{user_time.time(): 'your last visit'}]
                         now_written = True
-                if str((obj['time'] - timedelta(minutes=tz_offset)).date()) in teh_graph.keys():
-                    teh_graph[str((obj['time'] - timedelta(minutes=tz_offset)).date())].append({str((obj['time'] - timedelta(minutes=tz_offset)).time()): obj['event']})
+                if (obj['time'] - timedelta(minutes=tz_offset)).date() in teh_graph.keys():
+                    teh_graph[(obj['time'] - timedelta(minutes=tz_offset))].append(
+                        {(obj['time'] - timedelta(minutes=tz_offset)): obj['event']})
                 else:
-                    teh_graph[str((obj['time'] - timedelta(minutes=tz_offset)).date())] = [{str((obj['time'] - timedelta(minutes=tz_offset)).time()): obj['event']}]
+                    teh_graph[(obj['time'] - timedelta(minutes=tz_offset))] = [
+                        {(obj['time'] - timedelta(minutes=tz_offset)): obj['event']}]
                 last_date = obj['time'] - timedelta(minutes=tz_offset)
         counter += 1
+    # for obj in timeline_arr:
+    #     if obj['time']:
+    #         # only show stall in 'creation' and 'open' contracts
+    #         if counter == 2 and phase in skip_stall_arr:
+    #             pass
+    #         else:
+    #             if not now_written and (obj['time'] - timedelta(minutes=tz_offset)) > last_date and user_time < (obj['time'] - timedelta(minutes=tz_offset)):
+    #                 if str(user_time.date()) in teh_graph.keys():
+    #                     teh_graph[str(user_time.date())].append({str(user_time.time()): 'your last visit'})
+    #                     now_written = True
+    #                 else:
+    #                     teh_graph[str(user_time.date())] = [{str(user_time.time()): 'your last visit'}]
+    #                     now_written = True
+    #             if str((obj['time'] - timedelta(minutes=tz_offset)).date()) in teh_graph.keys():
+    #                 teh_graph[str((obj['time'] - timedelta(minutes=tz_offset)).date())].append({str((obj['time'] - timedelta(minutes=tz_offset)).time()): obj['event']})
+    #             else:
+    #                 teh_graph[str((obj['time'] - timedelta(minutes=tz_offset)).date())] = [{str((obj['time'] - timedelta(minutes=tz_offset)).time()): obj['event']}]
+    #             last_date = obj['time'] - timedelta(minutes=tz_offset)
+    #     counter += 1
     if not now_written:
         teh_graph[str(now_time.date())] = [{str(user_time.time()): 'your last visit'}]
     return teh_graph
