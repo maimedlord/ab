@@ -253,7 +253,7 @@ def prc_submit_rating_c(comment, contract_id, rating, user_id):
 #         return True
 #     return False
 
-
+#need to have front end take care of time difference between server and user
 def prep_graph(phase, timeline_arr, type_contract, tz_offset):
     print(datetime.utcnow())
     print(datetime.now())
@@ -285,8 +285,7 @@ def prep_graph(phase, timeline_arr, type_contract, tz_offset):
                         teh_graph[user_time.date()] = [{user_time.time(): 'your last visit'}]
                         now_written = True
                 if (obj['time'] - timedelta(minutes=tz_offset)).date() in teh_graph.keys():
-                    teh_graph[(obj['time'] - timedelta(minutes=tz_offset))].append(
-                        {(obj['time'] - timedelta(minutes=tz_offset)): obj['event']})
+                    teh_graph[(obj['time'] - timedelta(minutes=tz_offset))].append( {(obj['time'] - timedelta(minutes=tz_offset)): obj['event']} )
                 else:
                     teh_graph[(obj['time'] - timedelta(minutes=tz_offset))] = [
                         {(obj['time'] - timedelta(minutes=tz_offset)): obj['event']}]

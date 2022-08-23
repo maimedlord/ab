@@ -203,7 +203,8 @@ def contract(contract_id, message):
     if not contract_obj:
         return redirect(url_for('hmm', message='contract not found or you are not permitted to view it...'))
     # xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:
-    timeline_graph = prc.prep_graph(contract_obj['phase'], contract_obj['timeline'], contract_obj['type_contract'], current_user.tz_offset)
+    # timeline_graph = prc.prep_graph(contract_obj['phase'], contract_obj['timeline'], contract_obj['type_contract'], current_user.tz_offset)
+    timeline_graph = []
     print(timeline_graph)
     # creates potential earnings value:
     data_obj['earnable'] = contract_obj['bounty']

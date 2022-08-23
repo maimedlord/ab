@@ -8,6 +8,7 @@
 {#    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.2/dist/chart.min.js" integrity="sha256-srZ7wC4CLlY0F9UFji68dTwYJQ5o93Quq2+iyQ4gH/I=" crossorigin="anonymous"></script>#}
 {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js" integrity="sha512-42PE0rd+wZ2hNXftlM78BSehIGzezNeQuzihiBCvUEB3CVxHvsShF86wBWwQORNxNINlBPuq7rG4WWhNiTVHFg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>#}
 {#    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment"></script>#}
+    <script>console.log({{ contract_obj['phase']|tojson }});</script>
 {% endblock %}
 {% block body %}
     <div id="header_logo_behind"></div>
@@ -31,22 +32,22 @@
     {% if data_obj['message'] and data_obj['message'] != 'none' %}
     <div style="text-align: center">{{ data_obj['message'] }}</div>
     {% endif %}
-    <div id="container_graph">
-        {% for key in tg.keys() %}
-            <div class="graph_day" id="{{ key.strftime('%Y-%m-%d') }}">
-            {% for value in tg[key]|reverse %}
-                {% for key2, value2 in value.items() %}
-                    <div class="graph_cell" id="{{ key2 }}">{# [0:8] #}
-                    {{ key2.strftime('%H:%M') }}<br>
-                    {{ value2 }}<br>
-                    </div>
-                {% endfor %}
-            {% endfor %}
-                <div>
-                    <b>{{ key.strftime('%h %d, %Y') }} &#8594;</b>
-                </div>
-            </div>
-        {% endfor %}
+    <div id="container_graph">asdf
+{#        {% for key in tg.keys() %}#}
+{#            <div class="graph_day" id="{{ key.strftime('%Y-%m-%d') }}">#}
+{#            {% for value in tg[key]|reverse %}#}
+{#                {% for key2, value2 in value.items() %}#}
+{#                    <div class="graph_cell" id="{{ key2 }}">{# [0:8] #}
+{#                    {{ key2.strftime('%H:%M') }}<br>#}
+{#                    {{ value2 }}<br>#}
+{#                    </div>#}
+{#                {% endfor %}#}
+{#            {% endfor %}#}
+{#                <div>#}
+{#                    <b>{{ key.strftime('%h %d, %Y') }} &#8594;</b>#}
+{#                </div>#}
+{#            </div>#}
+{#        {% endfor %}#}
     </div>
     <i>display user's timezone here</i>
     <div id="container_input">
@@ -420,4 +421,7 @@
         approved contract for assignment only atm...<- is this true?
     </div>
 {#    <script src="{{url_for('static', filename='scripts/contract_chart.js')}}"></script>#}
+    <script>
+        set_timeline_graph({{ contract_obj['phase']|tojson }}, {{ contract_obj['timeline']|tojson }});
+    </script>
 {% endblock %}
