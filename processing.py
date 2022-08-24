@@ -369,11 +369,11 @@ def process_new_contract(form_dict, owner_id, owner_uname, tz_offset):
             rating_deadline = a_deadline_iso + timedelta(days=7)
         user_obj.update({'timeline': [{'time': start_iso, 'event': 'created'},
                                       {'time': None, 'event': 'contract set inprogress'},
-                                      {'time': stall_iso, 'event': 'deadline: stall'},
-                                      {'time': efbonus_deadline, 'event': 'deadline: early finish bonus!'},
-                                      {'time': a_deadline_iso, 'event': 'deadline: submission'},
-                                      {'time': g_deadline, 'event': 'deadline: grading'},
-                                      {'time': rating_deadline, 'event': 'deadline: rate the other person'}]})# MISSING CORRECT RATING DEADLINE
+                                      {'time': stall_iso, 'event': 'stall deadline'},
+                                      {'time': efbonus_deadline, 'event': 'early finish bonus deadline'},
+                                      {'time': a_deadline_iso, 'event': 'assignment submission deadline'},
+                                      {'time': g_deadline, 'event': 'grade submission deadline'},
+                                      {'time': rating_deadline, 'event': 'rate user deadline'}]})
     # set up test contract:
     if type_contract == 'test':
         t_start_iso = datetime.fromisoformat(form_dict['c_f_t_t_start'] + 'T' + form_dict['c_f_t_t_s_time'] + ':00+00:00') + timedelta(minutes=tz_offset)
@@ -388,11 +388,11 @@ def process_new_contract(form_dict, owner_id, owner_uname, tz_offset):
             rating_deadline = t_end_iso + timedelta(days=7)
         user_obj.update({'timeline': [{'time': start_iso, 'event': 'created'},
                                       {'time': None, 'event': 'contract set inprogress'},
-                                      {'time': stall_iso, 'event': 'deadline: stall'},
-                                      {'time': t_start_iso, 'event': "deadline: test start"},
-                                      {'time': t_end_iso, 'event': 'deadline: test end'},
-                                      {'time': g_deadline, 'event': 'deadline: grading'},
-                                      {'time': rating_deadline, 'event': 'deadline: rate the other person'}]})# MISSING CORRECT RATING DEADLINE
+                                      {'time': stall_iso, 'event': 'stall deadline'},
+                                      {'time': t_start_iso, 'event': 'test starts'},
+                                      {'time': t_end_iso, 'event': 'test ends'},
+                                      {'time': g_deadline, 'event': 'grade submission deadline'},
+                                      {'time': rating_deadline, 'event': 'rate user deadline'}]})
     # add in data not initiated by user:
     user_obj.update({'owner': owner_id})
     user_obj.update({'iparties': []})

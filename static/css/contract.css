@@ -1,5 +1,5 @@
 body {
-    background-color: white;
+    /*background-color: white;*/
 }
 .c_row {
     align-items: center;
@@ -37,18 +37,46 @@ body {
     row-gap: 2px;
 }
 .graph_cell {
-    border-color: limegreen;
-    border-style: solid;
+    background-color: white;
+    border: solid 2px limegreen;
     border-radius: 5px;
-    box-shadow: 3px 3px limegreen;
+    border-right-width: 20px;
+    font-weight: normal;
     padding: 5px;
+    width: 150px;
+}
+.graph_cell_past {
+    background-color: white;
+    border: solid 2px gray;
+    border-left: solid 20px gray;
+    border-radius: 5px;
+    font-weight: normal;
+    padding: 5px;
+    width: 150px;
+}
+.graph_cell_time {
+    font-size: large;
+    font-weight: bold;
+    margin-top: 10px;
+}
+.graph_cell_today {
+    background-color: white;
+    border: solid 5px orange;
+    border-left-width: 20px;
+    border-right-width: 20px;
+    border-radius: 5px;
+    font-weight: normal;
+    margin: 10px 0 10px 0;
+    padding: 5px;
+    width: 130px;
 }
 .graph_day {
+    align-items: center;
     display: flex;
-    flex-direction: column;
-    gap: 10px;
-    justify-content: flex-end;
-    padding: 5px;
+    flex-direction: column-reverse;
+    font-weight: bold;
+    gap: 5px;
+    justify-content: flex-start;
     width: 200px;
 }
 .nav_top_cell {
@@ -113,13 +141,13 @@ body {
     z-index: -1;
 }
 #container_input {
-    background-color: indianred;
-    border-radius: 50px;
-    box-shadow: 15px 15px 10px dimgray;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-evenly;
     margin-top: 30px;
-    padding: 15px 10px 15px 10px;
+    max-width: 1200px;
+    padding: 20px 0 20px 0;
+    width: 100%;
 }
 #div_cancel_inner {
     background-color: white;
@@ -155,13 +183,16 @@ body {
     width: 100%;
 }
 #div_existing_offer {
-    align-self: center;
-    background-color: pink;
-    border-radius: 15px;
-    box-shadow: 5px 5px dimgray;
+    background-color: #A9CCE3;/*#7FB3D5*/
+    box-shadow: 8px 8px dimgray;
     display: flex;
     flex-direction: column;
-    padding: 8px;
+    padding: 10px 0 10px 0;
+    /*position: absolute;*/
+    text-align: center;
+    width: 100%;
+    /*margin-bottom: 10px;*/
+    z-index: 2;
 }
 #div_grade_proof {
     display: flex;
@@ -178,9 +209,7 @@ body {
 }
 #div_iparty_row {
     align-self: center;
-    background-color: silver;
     border-radius: 15px;
-    box-shadow: 3px 3px dimgray;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -207,8 +236,9 @@ body {
     /*width: 100%;*/
 }
 #div_instructions_row {
-    background-color: lightgrey;
+    background-color: white;
     border-radius: 15px;
+    border: solid black 2px;
     /*box-shadow: 3px 3px dimgray;*/
     display: flex;
     flex-direction: row;
@@ -218,7 +248,18 @@ body {
     text-align: left;
     /*width: 100%;*/
 }
-
+#div_make_offer {
+    background-color: #A9CCE3;/*#7FB3D5*/
+    box-shadow: 8px 8px dimgray;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0 10px 0;
+    /*position: absolute;*/
+    text-align: center;
+    width: 100%;
+    /*margin-bottom: 10px;*/
+    z-index: 2;
+}
 #div_phase {
     align-items: center;
     display: flex;
@@ -271,6 +312,9 @@ body {
     width: 100%;
     z-index: -1;
 }
+#iparties {
+    background-color: purple;
+}
 #nav_row_top {
     align-items: center;
     display: flex;
@@ -304,12 +348,12 @@ body {
 }
 #info1_container {
     background-color: lightgreen;
-    border-top: solid black;
+    box-shadow: -8px 8px dimgray;
     display: flex;
     flex-direction: row;
     justify-content: center;
-    margin-top: 30px;
     width: 100%;
+    z-index: 1;
 }
 #info1_main_col {
     display: flex;
@@ -322,7 +366,7 @@ body {
     align-items: center;
     background-color: white;
     border-bottom: solid black;
-    box-shadow: 40px 30px 10px dimgray;
+    /*box-shadow: 40px 30px 10px dimgray;*/
     display: flex;
     flex-direction: column;
     padding: 10px;
@@ -335,5 +379,10 @@ body {
     flex-direction: column;
     margin-top: 30px;
     padding: 10px;
+    width: 100%;
+}
+#user_timezone {
+    margin: 30px 0 0 0;
+    text-align: center;
     width: 100%;
 }
