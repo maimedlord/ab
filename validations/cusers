@@ -4,11 +4,13 @@
     required: [
       'active',
       'email',
-      'pass',
-      'uName',
       'joinDate',
-      'timezone',
-      'reviewHistory'
+      'pass',
+      'paymentid',
+      'reviewHistory',
+      'tz_offset',
+      'uName',
+      'userlog'
     ],
     properties: {
       active: {
@@ -19,21 +21,20 @@
         bsonType: 'string',
         description: 'required: email'
       },
-      pass: {
-        bsonType: 'string',
-        description: 'required: pass'
-      },
-      uName: {
-        bsonType: 'string',
-        description: 'required: uName'
-      },
       joinDate: {
         bsonType: 'date',
         description: 'required: joinDate'
       },
-      timezone: {
+      pass: {
         bsonType: 'string',
-        description: 'user: timezone'
+        description: 'required: pass'
+      },
+      paymentid: {
+        bsonType: [
+          'null',
+          'objectId'
+        ],
+        description: 'user: paymentid'
       },
       reviewHistory: {
         bsonType: 'array',
@@ -73,6 +74,40 @@
             }
           }
         }
+      },
+      tz_offset: {
+        bsonType: 'string',
+        description: 'user: timezone'
+      },
+      uName: {
+        bsonType: 'string',
+        description: 'required: uName'
+      },
+      userlog: {
+        bsonType: [
+          'array',
+          'null'
+        ],
+        description: 'user: userlog',
+        items: {
+          bsonType: 'object',
+          description: 'user: userlog: item',
+          required: [
+            'event',
+            'time'
+          ],
+          properties: {
+            event: {
+              bsonType: 'string',
+              description: 'user: userlog: item: event'
+            },
+            time: {
+              bsonType: 'date',
+              description: 'user: userlog: item: date'
+            }
+          }
+        },
+        uniqueItems: true
       }
     }
   }

@@ -3,7 +3,13 @@ window.onload = function () {
    document.getElementById('user_timezone').innerText = 'your timezone: '
        +  new Date().toString().match('([A-Z][a-z]+ [A-Za-z]+ [A-Za-z]+)')[0];
 
-   if (document.getElementById('div_iparty_row').innerText == '') {
+   // changes construction notice to user's local time:
+   document.getElementById('notice_construction').innerText = 'your local time: '
+       +  new Date().toString();
+
+   // remove div_iparty_row if it has no text as it will leave behind an artifact if not
+   if (document.querySelectorAll('#div_iparty_row').length > 0
+       && document.getElementById('div_iparty_row').innerText == '') {
       document.getElementById('div_iparty_row').style.display = 'none';
    }
 };

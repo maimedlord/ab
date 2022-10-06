@@ -1,6 +1,7 @@
 import os
 from flask import Flask, redirect, render_template, request, session, url_for, flash, Markup, send_from_directory, abort
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
+from jinja2 import Environment
 from werkzeug.utils import secure_filename
 from urllib.parse import urlparse, urljoin
 import processing as prc
@@ -14,6 +15,7 @@ from forms import CContract, LoginForm, RegistrationForm
 
 
 app = Flask(__name__)
+
 
 # NEED to verify safe next as used in login
 login_manager = LoginManager()
@@ -202,10 +204,6 @@ def contract(contract_id, message):
     contract_obj = prc.prc_get_contract_account(contract_id, current_user.id_object)
     if not contract_obj:
         return redirect(url_for('hmm', message='contract not found or you are not permitted to view it...'))
-    # xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:
-    # timeline_graph = prc.prep_graph(contract_obj['phase'], contract_obj['timeline'], contract_obj['type_contract'], current_user.tz_offset)
-    timeline_graph = []
-    print(timeline_graph)
     # creates potential earnings value:
     data_obj['earnable'] = contract_obj['bounty']
     if contract_obj['efbonusyon']:
@@ -213,8 +211,9 @@ def contract(contract_id, message):
     if contract_obj['egbonusyon']:
         data_obj['earnable'] += contract_obj['egbonus']
     # PHASE: CREATION
-    if contract_obj and contract_obj['phase'] == 'creation' and contract_obj['owner'] == current_user.id_object:
-        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj, tg=timeline_graph)
+    if contract_obj and contract_obj['phase'] == 'creation':
+        if contract_obj['owner'] == current_user.id_object:
+            return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
     # looks for existing offer in iparties and if exists, passes to data_obj
     iparty_arr = contract_obj['iparties']
     for doc in iparty_arr:
@@ -228,73 +227,49 @@ def contract(contract_id, message):
                 offer = float(request.form['m_o_f_offer'])
                 result = prc.prc_create_ip(contract_obj['_id'], current_user.id_object, current_user.username, offer)
                 if result:
-                    return redirect(url_for('contract', contract_id=contract_id, message='offer success', tg=timeline_graph))
-                return redirect(url_for('contract', contract_id=contract_id, message='error in process of updating interested parties...'), tg=timeline_graph)
+                    return redirect(url_for('contract', contract_id=contract_id, message='offer success'))
+                return redirect(url_for('contract', contract_id=contract_id, message='error in process of updating interested parties...'))
             # default view for non-owner:
-            return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj, tg=timeline_graph)
+            return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
         # owner view:
-        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj, tg=timeline_graph)
+        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
     # PHASE: INPROGRESS
-    if contract_obj and contract_obj['phase'] == 'inprogress' and contract_obj['owner'] == current_user.id_object or contract_obj['bhunter'] == current_user.id_object:
-        # form for submitting chat
-        if request.method == 'POST':
-            message = request.form['c_s_f_message']
-            mood = request.form['c_s_f_mood']
-            # if current user is not bhunter then submit and update bhunter's message bool
-            if contract_obj['bhunter'] != current_user.id_object:
-                result = prc.prc_send_chat(contract_obj['_id'], current_user.id, current_user.username, 'chatnewmsgbhunter', message, mood)
-            else:
-                result = prc.prc_send_chat(contract_obj['_id'], current_user.id, current_user.username, 'chatnewmsgowner', message, mood)
-            if result:
-                return redirect(url_for('contract', contract_id=contract_id, message='none'))
-            data_obj['message'] = 'chat send failed!'
-        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj, tg=timeline_graph)
+    if contract_obj and contract_obj['phase'] == 'inprogress':
+        if contract_obj['owner'] == current_user.id_object or contract_obj['bhunter'] == current_user.id_object:
+            print(contract_obj['phase'])
+            return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
     # PHASE: STALLED
     if contract_obj and contract_obj['phase'] == 'stalled':
-        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj, tg=timeline_graph)
+        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
     # phase: validation
-    if contract_obj and contract_obj['phase'] == 'validation' and contract_obj['owner'] == current_user.id_object or contract_obj['bhunter'] == current_user.id_object:
-        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj, tg=timeline_graph)
+    if contract_obj and contract_obj['phase'] == 'validation':
+        if contract_obj['owner'] == current_user.id_object or contract_obj['bhunter'] == current_user.id_object:
+            return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
     # phase: approved
-    if contract_obj and contract_obj['phase'] == 'approved' and contract_obj['owner'] == current_user.id_object or contract_obj['bhunter'] == current_user.id_object:
-        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj, tg=timeline_graph)
+    if contract_obj and contract_obj['phase'] == 'approved':
+        if contract_obj['owner'] == current_user.id_object or contract_obj['bhunter'] == current_user.id_object:
+            return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
     # phase: gradevalidation
-    if contract_obj and contract_obj['phase'] == 'gradevalidation' and contract_obj['owner'] == current_user.id_object or contract_obj['bhunter'] == current_user.id_object:
-        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj, tg=timeline_graph)
+    if contract_obj and contract_obj['phase'] == 'gradevalidation':
+        if contract_obj['owner'] == current_user.id_object or contract_obj['bhunter'] == current_user.id_object:
+            return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
     # phase: rating
-    if contract_obj and contract_obj['phase'] == 'rating' and contract_obj[
-        'owner'] == current_user.id_object or contract_obj['bhunter'] == current_user.id_object:
-        print(contract_obj)
-        if len(contract_obj['reviews']) == 1:
-            if contract_obj['reviews'][0]['user'] == contract_obj['owner']:
-                print('user OWNER has already rated...')
-                data_obj['review'] = 'owner'
-            if contract_obj['reviews'][0]['user'] == contract_obj['bhunter']:
-                print('user BHUNTER has already rated...')
-                data_obj['review'] = 'bhunter'
-        # form for submitting chat
-        if request.method == 'POST':
-            message = request.form['c_s_f_message']
-            mood = request.form['c_s_f_mood']
-            # if current user is not bhunter then submit and update bhunter's message bool
-            if contract_obj['bhunter'] != current_user.id_object:
-                result = prc.prc_send_chat(contract_obj['_id'], current_user.id, 'chatnewmsgbhunter', message,
-                                           mood)
-            else:
-                result = prc.prc_send_chat(contract_obj['_id'], current_user.id, 'chatnewmsgowner', message,
-                                           mood)
-            if result:
-                return redirect(url_for('contract', contract_id=contract_id, message='none'))
-            data_obj['message'] = 'chat send failed!'
-        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj, tg=timeline_graph)
+    if contract_obj and contract_obj['phase'] == 'rating':
+        if len(contract_obj['reviews']) > 0:
+            data_obj['reviewers'] = []
+            for review in contract_obj['reviews']:
+                data_obj['reviewers'].append(review['user'])
+
+            print(data_obj['reviewers'])
+        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
         # return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
     # phase: successful
-    if contract_obj and contract_obj['phase'] == 'successful' and contract_obj[
-        'owner'] == current_user.id_object or contract_obj['bhunter'] == current_user.id_object:
-        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj, tg=timeline_graph)
+    if contract_obj and contract_obj['phase'] == 'successful':
+        if contract_obj['owner'] == current_user.id_object or contract_obj['bhunter'] == current_user.id_object:
+            return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
     # phase: disputed
     if contract_obj and contract_obj['phase'] == 'disputed':
-        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj, tg=timeline_graph)
+        return render_template('contract.html', contract_obj=contract_obj, data_obj=data_obj)
     # rejected
     return redirect(url_for('hmm', message='contract not found or you are not permitted to view it...'))
 
@@ -574,12 +549,20 @@ def view_user(user_id):
         user_obj = dict(user_obj)
         # average rating:
         if len(user_obj['reviewHistory']) > 0:
+            data_obj['given_avg'] = 0.0
+            data_obj['received_avg'] = 0.0
             data_obj['review_avg'] = 0.0
         counter = 0
         for x in user_obj['reviewHistory']:
             data_obj['review_avg'] += x['rating']
+            if str(x['reviewer']) == user_id:
+                data_obj['given_avg'] += x['rating']
+            else:
+                data_obj['received_avg'] += x['rating']
             counter += 1
         if data_obj['review_avg'] != None:
+            data_obj['given_avg'] = data_obj['given_avg'] / counter
+            data_obj['received_avg'] = data_obj['received_avg'] / counter
             data_obj['review_avg'] = data_obj['review_avg'] / counter
         else:
             data_obj['review_avg'] = 'no reviews yet'

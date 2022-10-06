@@ -2,29 +2,68 @@
 {% block title %}<title>answerBlasters: LOGIN BROTHERS AND SISTERS</title>{% endblock %}
 {% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/view_user.css') }}">{% endblock %}
 {% block body %}
-    <div id="container_header">
-        <div id="header_logo">
-        </div>
-    </div>
+    <div id="header_logo_behind"></div>
+    <div id="header_logo"></div>
+    {{ data_obj['message'] }}
     <div id="view_user_main">
-        view_user.html<p></p>
-        {{ data_obj['message'] }}<p></p>
-        username: {{ user_obj['uName'] }}<p></p>
-        user since: {{ user_obj['joinDate'] }}<p></p>
-        average given review rating: <p></p>
-        average received review rating: <p></p>
-        average total review rating: {{ data_obj['review_avg'] }}<p></p>
-        <h3>review history:</h3><p></p>
-        {% for review in user_obj['reviewHistory'] %}
-            time: {{ review['time'] }}<p></p>
-            user: {{ review['reviewer'] }}<p></p>
-            {% if review['reviewer'] == user_obj['_id'] %}
-                <b>gave</b> rating: {{ review['rating'] }}<p></p>
-            {% else %}
-                <b>recieved</b> rating {{ review['rating'] }}<p></p>
-            {% endif %}
-            comment: {{ review['comment'] }}<p></p>
-            <h3>---</h3>
-        {% endfor %}
+        <div id="container_user_stats">
+            <div id="user_stats_row">
+                <div class="u_t_c user_stats_column">
+                    <h2>{{ user_obj['uName'] }}</h2>
+                    user since {{ user_obj['joinDate'].strftime('%h, %Y') }}
+                </div>
+                <div class="user_stats_column">
+                    <span>average rating given: <b>{{ data_obj['given_avg']|round|int }}%</span></b><br><br>
+                    <span>average rating received: <b>{{ data_obj['received_avg']|round|int }}%</b></span><br><br>
+                    <span>average rating total: <b>{{ data_obj['review_avg']|round|int }}%</b></span>
+                </div>
+            </div>
+        </div>
+        <div id="container_history">
+        {% if user_obj['reviewHistory']|length > 0 %}
+            {% for review in user_obj['reviewHistory'] %}
+                {% if loop.first %}
+                    <div class="history_row">
+                    <div class="history_date_column">
+                        {{ review['time'].strftime('%h %Y') }}
+                    </div>
+                        <div class="history_column">
+                            {% if review['reviewer'] == current_user.id_object %}
+                                <span style="font-size: large; text-align: center">rating given: {{ review['rating']|round|int }}</span><br>
+                            {% else %}
+                                <span style="font-size: large; text-align: center">rating received: {{ review['rating']|round|int }}</span><br>
+                            {% endif %}
+                            {{ review['comment'] }}
+                        </div>
+                {% elif loop.previtem and loop.previtem['contract'] != review['contract'] %}
+                    </div>{# close history_row before adding new row #}
+                    <div class="history_row">
+                        <div class="history_date_column">
+                            {{ review['time'].strftime('%h %Y') }}
+                        </div>
+                        <div class="history_column">
+                            {% if review['reviewer'] == current_user.id_object %}
+                                <span style="font-size: large; text-align: center">rating given: {{ review['rating']|round|int }}</span><br>
+                            {% else %}
+                                <span style="font-size: large; text-align: center">rating received: {{ review['rating']|round|int }}</span><br>
+                            {% endif %}
+                            {{ review['comment'] }}
+                        </div>
+                {% else %}
+                    <div class="history_column">
+                        {% if review['reviewer'] == current_user.id_object %}
+                                <span style="font-size: large; text-align: center">rating given: {{ review['rating']|round|int }}</span><br>
+                            {% else %}
+                                <span style="font-size: large; text-align: center">rating received: {{ review['rating']|round|int }}</span><br>
+                            {% endif %}
+                        {{ review['comment'] }}
+                    </div>
+                {% endif %}
+                {% if loop.last %}
+                    </div>{# close history_row #}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        </div>
     </div>
 {% endblock %}

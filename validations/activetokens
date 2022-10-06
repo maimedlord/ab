@@ -1,0 +1,40 @@
+{
+  $jsonSchema: {
+    bsonType: 'object',
+    required: [
+      'dateactive',
+      'dateexpired',
+      'dateused',
+      'token',
+      'userid'
+    ],
+    properties: {
+      dateactive: {
+        bsonType: 'date',
+        description: 'token: dateactive'
+      },
+      dateexpired: {
+        bsonType: [
+          'date',
+          'null'
+        ],
+        description: 'token: dateexpired'
+      },
+      dateused: {
+        bsonType: [
+          'date',
+          'null'
+        ],
+        description: 'token: dateused'
+      },
+      token: {
+        bsonType: 'string',
+        description: 'token: token'
+      },
+      userid: {
+        bsonType: 'objectId',
+        description: 'token: userid'
+      }
+    }
+  }
+}

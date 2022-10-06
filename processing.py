@@ -431,6 +431,7 @@ def process_new_user(email, password1, tz_offset, username):
         'reviewHistory': [],
         'tz_offset': tz_offset,
         'uName': username,
+        'userlog': None
     }
     return calls.create_user(user_template)
 

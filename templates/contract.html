@@ -32,35 +32,19 @@
     {% if data_obj['message'] and data_obj['message'] != 'none' %}
     <div style="text-align: center">{{ data_obj['message'] }}</div>
     {% endif %}
-    <div id="container_graph">
-{#        {% for key in tg.keys() %}#}
-{#            <div class="graph_day" id="{{ key.strftime('%Y-%m-%d') }}">#}
-{#            {% for value in tg[key]|reverse %}#}
-{#                {% for key2, value2 in value.items() %}#}
-{#                    <div class="graph_cell" id="{{ key2 }}">{# [0:8] #}
-{#                    {{ key2.strftime('%H:%M') }}<br>#}
-{#                    {{ value2 }}<br>#}
-{#                    </div>#}
-{#                {% endfor %}#}
-{#            {% endfor %}#}
-{#                <div>#}
-{#                    <b>{{ key.strftime('%h %d, %Y') }} &#8594;</b>#}
-{#                </div>#}
-{#            </div>#}
-{#        {% endfor %}#}
-    </div>
-    <div id="user_timezone">
-
-    </div>
+    <div id="container_graph"></div>
+    <div id="user_timezone"></div>
     <div id="container_input">
         {# PHASE: CREATION #}
         {% if contract_obj['phase'] == 'creation' %}
+        <div id="container_input_row">
             <div>
-                <a href="{{ url_for('cancel_contract', contract_id=contract_obj['_id']) }}">CANCEL BOUNTY</a>
+            <a href="{{ url_for('cancel_contract', contract_id=contract_obj['_id']) }}">CANCEL BOUNTY</a>
             </div>
             <div>
                 <a href="{{ url_for('set_open', contract_id=contract_obj['_id']) }}">MOVE TO OPEN</a>
             </div>
+        </div>
         {% endif %}
         {# PHASE: CREATION #}
         {# PHASE: OPEN #}
@@ -71,42 +55,40 @@
         {% endif %}
         {# PHASE: OPEN #}
         {# INTERESTED PARTIES #}
-{#        {% if contract_obj['phase'] == "open" %}#}
+        {% if contract_obj['phase'] == "open" %}
             {# show for anyone that's NOT the owner and has NOT offered on the contract yet #}
-{#            {% if (current_user.id_object != contract_obj['owner']) and not data_obj['bhunter_offer'] %}#}
-{#                make an offer on this contract:<p></p>#}
-{#                <form id="make_offer_form" method="post" name="make_offer_form">#}
-{#                    For what amount will you take on this contract?<br>#}
-{#                    <i>once an offer is submitted it cannot be canceled or changed</i><br>#}
-{#                    <input id="m_o_f_offer" min="{{ contract_obj['bounty'] }}" name="m_o_f_offer" placeholder="$0.00" step="0.01" required type="number"><p></p>#}
-{#                    <button type="submit">submit</button>#}
-{#                </form>#}
+            {% if (current_user.id_object != contract_obj['owner']) and not data_obj['bhunter_offer'] %}
+                <span style="font-size: large;font-weight: bold">make an offer on this contract:</span><br><br>
+                <form id="make_offer_form" method="post" name="make_offer_form">
+                    For what amount will you take on this contract?
+                    <input id="m_o_f_offer" min="{{ contract_obj['bounty'] }}" name="m_o_f_offer" placeholder="$0.00" step="0.01" required type="number"><br>
+                    <i style="color: red; font-size: small">once an offer is submitted it cannot be canceled or changed at the moment...</i><br>
+                    <button type="submit">submit</button>
+                </form>
             {# show for bhunter that's already offered on contract #}
-{#            {% elif data_obj['bhunter_offer'] %}#}
-{#                <div id="div_existing_offer">#}
-{#                    Your existing offer on this contract:#}
-{#                    <span>offer: {{ data_obj['bhunter_offer']['offer'] }}</span>#}
-{#                    <span>time: {{ data_obj['bhunter_offer']['time'] }}</span>#}
-{#                </div>#}
+            {% elif data_obj['bhunter_offer'] %}
+                Your existing offer on this contract:
+                <span>${{ data_obj['bhunter_offer']['offer'] }}</span>
+                <span>{{ data_obj['bhunter_offer']['time'].strftime('%h %d @ %H:%M') }}</span>
             {# show for the contract owner... maybe add another elif here? #}
-{#            {% else %}#}
-{#                <div id="div_iparty_row">#}
-{#                {% for party in contract_obj['iparties'] %}#}
-{#                    <div id="div_iparty_cell">#}
-{#                        <span><a href="{{ url_for('view_user', user_id=party['bhunter']) }}">{{ party['bhunter_uname'] }}</a></span>#}
-{#                        {% if contract_obj['bounty'] == party['offer'] %}#}
-{#                            <span style="color: green"><i>agreed to your original offer</i></span>#}
-{#                        {% else %}#}
-{#                            <span style="color: red">counter offer: <b>$ {{ party['offer'] }}</b></span>#}
-{#                        {% endif %}#}
-{#                        <span style="font-size: small">{{ party['time'].strftime('%h %d') }} @ {{ party['time'].strftime('%H:%M') }}</span>#}
-{#                        <a href="{{ url_for('accept_ip_offer', bhunter_id=party['bhunter'], bhunter_uname=party['bhunter_uname'], contract_id=contract_obj['_id'], offer=party['offer']) }}">accept offer</a>#}
-{#                    </div>#}
-{#                {% endfor %}#}
-{#                </div>#}
-{#            {% endif %}#}
-{#        {% endif %}#}
-        {# INTERESTED PARTIES #}
+            {% else %}
+                <div id="div_iparty_row">
+                {% for party in contract_obj['iparties'] %}
+                    <div id="div_iparty_cell">
+                        <span><a href="{{ url_for('view_user', user_id=party['bhunter']) }}">{{ party['bhunter_uname'] }}</a></span>
+                        {% if contract_obj['bounty'] == party['offer'] %}
+                            <span style="color: green"><i>agreed to your original offer</i></span>
+                        {% else %}
+                            <span style="color: red">counter offer: <b>$ {{ party['offer'] }}</b></span>
+                        {% endif %}
+                        <span style="font-size: small">{{ party['time'].strftime('%h %d') }} @ {{ party['time'].strftime('%H:%M') }}</span>
+                        <a href="{{ url_for('accept_ip_offer', bhunter_id=party['bhunter'], bhunter_uname=party['bhunter_uname'], contract_id=contract_obj['_id'], offer=party['offer']) }}">accept offer</a>
+                    </div>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endif %}
+        {# END INTERESTED PARTIES #}
         {# PHASE: STALLED #}
         {% if contract_obj['phase'] == "stalled" %}
         {% endif %}
@@ -116,21 +98,22 @@
             {# PHASE: INPROGRESS: ASSIGNMENT #}
             {% if contract_obj['type_contract'] == 'assignment' %}
                 {#            <a href="{{ url_for('set_disputed', contractid=contract_obj['_id']) }}">link: set contract as disputed</a><p></p>#}
-                -----<p></p>
                 {% if contract_obj['owner'] == current_user.id_object %}
-                    waiting on submission from bount hunter...<p></p>
+                    waiting on submission from bount hunter...
                 {% endif %}
                 {% if contract_obj['bhunter'] == current_user.id_object %}
                     submit assignment for validation:
                     <form action="{{ url_for('submit_assignment', contract_id=contract_obj['_id']) }}" enctype="multipart/form-data" id="submission" method="post" name="submission">
                         <input id="afile" name="assignment_file" required type="file"><p></p>
-                        submit file?    <button type="submit">submit submission</button>
+                        <button type="submit">submit submission</button>
                     </form>
                 {% endif %}
             {% endif %}
             {# PHASE: INPROGRESS: TEST #}
             {% if contract_obj['type_contract'] == 'test' %}
-                SOMETHING HERE FOR TEST!{# incomplete #}
+                <div id="div_neutral">
+                    waiting for test to begin...
+                </div>
             {% endif %}
         {% endif %}
         {# PHASE: INPROGRESS #}
@@ -167,8 +150,7 @@
         {# PHASE: APPROVED #}
         {% if contract_obj['phase'] == 'approved' %}
             {% if contract_obj['bhunter'] == current_user.id_object %}
-                // if the grade deadline was the same as the due deadline then there is no excellent grade bonus<p></p><p></p>
-                // if there was a good grade bonus you'll need to wait until the owner submits the grade or the deadline passes...
+                waiting for owner to submit grade proof...
             {% endif %}
             {% if contract_obj['owner'] == current_user.id_object %}
                 <form action="{{ url_for('submit_grade', contract_id=contract_obj['_id']) }}" enctype="multipart/form-data" id="submit_grade" method="post" name="submit_grade">
@@ -181,23 +163,21 @@
                     submit the grade decision <button type="submit">submit decision</button><p></p>
                 </form>
             {% endif %}
-            <i>link to grade proof here??? Both should be able to view</i>
+{#            <i>link to grade proof here??? Both should be able to view</i>#}
         {% endif %}
         {# PHASE: APPROVED #}
         {# PHASE: GRADEVALIDATION #}
         {% if contract_obj['phase'] == 'gradevalidation' %}
             {% if contract_obj['bhunter'] == current_user.id_object %}
-                bhunter view
                 <a href="{{ url_for('download_grade_proof', filename=contract_obj['gsubmission']) }}" download>DOWNLOAD leh gradepruf</a><p></p>
                 <form action="{{ url_for('set_dors', contract_id=contract_obj['_id']) }}" id="set_dispute" method="post" name="set_dispute">
                     do you dispute the proof?<p></p>
                     yes: <input id="s_f_d_yes" name="s_f_d_yon" required type="radio" value="disputed">
                     no: <input id="s_f_d_no" name="s_f_d_yon" required type="radio" value="rating"><p></p>
-                    submit dispute    <button type="submit">submit dispute form</button>
+                    <button type="submit">submit decision</button>
                 </form>
             {% endif %}
             {% if contract_obj['owner'] == current_user.id_object %}
-                owner view:<p></p>
                 waiting for bount hunter to accept your grade proof...
             {% endif %}
         {% endif %}
@@ -227,153 +207,42 @@
         {# PHASE: SUCCESSFUL #}
         {# PHASE: RATING #}
         {% if contract_obj['phase'] == 'rating' %}
-            rating...<p></p>
             {% if contract_obj['bhunter'] == current_user.id_object %}
-                bhunter view<p></p>
-                {% if data_obj['review'] != 'bhunter' %}
+                {% if contract_obj['bhunter'] not in data_obj['reviewers'] %}
                     <form action="{{ url_for('submit_rating', contract_id=contract_obj['_id']) }}" id="submit_rating" method="post" name="submit_rating">
-                    how do you rate the owner of the bounty? <input id="s_r_f_rating" max="100" min="0" name="s_r_f_rating" required type="number"><p></p>
-                    comment: <p></p>
-                    <input id="s_r_f_comment" minlength="4" name="s_r_f_comment" required type="text"><p></p>
-                    submit rating    <button type="submit">submit rating</button>
-                </form>
+                        how do you rate the owner of the bounty? <input id="s_r_f_rating" max="100" min="0" name="s_r_f_rating" required type="number"><p></p>
+                        comment: <p></p>
+                        <input id="s_r_f_comment" minlength="4" name="s_r_f_comment" required type="text"><p></p>
+                        <button type="submit">submit rating</button>
+                    </form>
+                {% endif %}
+                {% if contract_obj['owner'] not in data_obj['reviewers'] %}
+                    <div>
+                        the bounty owner has not submitted their rating yet...
+                    </div>
                 {% endif %}
             {% endif %}
             {% if contract_obj['owner'] == current_user.id_object %}
-                owner view:<p></p>
-                {% if data_obj['review'] != 'owner' %}
+                {% if contract_obj['owner'] not in data_obj['reviewers'] %}
                     <form action="{{ url_for('submit_rating', contract_id=contract_obj['_id']) }}" id="submit_rating" method="post" name="submit_rating">
                     how do you rate the bhunter? <input id="s_r_f_rating" max="100" min="0" name="s_r_f_rating" required type="number"><p></p>
                     comment: <p></p>
                     <input id="s_r_f_comment" minlength="4" name="s_r_f_comment" required type="text"><p></p>
-                    submit rating    <button type="submit">submit rating</button>
+                    <button type="submit">submit rating</button>
                 </form>
+                {% endif %}
+                {% if contract_obj['bhunter'] not in data_obj['reviewers'] %}
+                    <div>
+                        the bounty hunter has not submitted their rating yet...
+                    </div>
                 {% endif %}
             {% endif %}
         {% endif %}
         {# PHASE: RATING #}
         {# other phases ...#}
-        {# CHAT #}
-{#        {% if contract_obj['phase'] == 'inprogress' or contract_obj['phase'] == 'disputed' or contract_obj['phase'] == 'validation' or contract_obj['phase'] == 'gradevalidation' or contract_obj['phase'] == 'successful' or contract_obj['phase'] == 'rating' %}#}
-            {# CHAT: MAIN #}
-{#            <div id="chat_main">#}
-{#                {% if contract_obj['phase'] != 'successful' %}#}
-{#                    <div id="chat_send">#}
-{#                        chat send input and button...#}
-{#                        <form id="chat_send" method="post" name="chat_send">#}
-{#                            <input id="c_s_f_message" name="c_s_f_message" placeholder="your message here..." required type="text">#}
-{#                            <input id="c_s_f_mood" name="c_s_f_mood" placeholder="your mood here..." type="text"><p></p>#}
-{#                            send this chat?    <button type="submit">submit chat</button>#}
-{#                        </form>#}
-{#                    </div>#}
-{#                {% endif %}#}
-{#                {% if contract_obj['chat']|length > 0 %}#}
-{#                    {% for chat in contract_obj['chat']|reverse %}#}
-{#                        <div class="chat_row">#}
-{#                            user: {{ chat['user'] }}  //  mood: {{ chat['mood'] }}  // time: {{ chat['time'] }}<p></p>#}
-{#                            message: {{ chat['message'] }}<p></p>#}
-{#                        </div>#}
-{#                    {% endfor %}#}
-{#                {% endif %}#}
-{#            </div>#}
-            {# CHAT: MAIN #}
-{#        {% endif %}#}
     </div>
-    {# INTERESTED PARTIES #}
-    {% if contract_obj['phase'] == "open" %}
-        {# show for anyone that's NOT the owner and has NOT offered on the contract yet #}
-        {% if (current_user.id_object != contract_obj['owner']) and not data_obj['bhunter_offer'] %}
-            <div id="div_make_offer">
-                <span style="font-size: large;font-weight: bold">make an offer on this contract:</span><br><br>
-                <form id="make_offer_form" method="post" name="make_offer_form">
-                    For what amount will you take on this contract?
-                    <input id="m_o_f_offer" min="{{ contract_obj['bounty'] }}" name="m_o_f_offer" placeholder="$0.00" step="0.01" required type="number"><br>
-                    <i style="color: red; font-size: small">once an offer is submitted it cannot be canceled or changed at the moment...</i><br>
-                    <button type="submit">submit</button>
-                </form>
-            </div>
-        {# show for bhunter that's already offered on contract #}
-        {% elif data_obj['bhunter_offer'] %}
-            <div id="div_existing_offer">
-                Your existing offer on this contract:
-                <span>{{ data_obj['bhunter_offer']['offer'] }}</span>
-                <span>{{ data_obj['bhunter_offer']['time'].strftime('%h %d @ %H:%M') }}</span>
-            </div>
-        {# show for the contract owner... maybe add another elif here? #}
-        {% else %}
-            <div id="div_iparty_row">
-            {% for party in contract_obj['iparties'] %}
-                <div id="div_iparty_cell">
-                    <span><a href="{{ url_for('view_user', user_id=party['bhunter']) }}">{{ party['bhunter_uname'] }}</a></span>
-                    {% if contract_obj['bounty'] == party['offer'] %}
-                        <span style="color: green"><i>agreed to your original offer</i></span>
-                    {% else %}
-                        <span style="color: red">counter offer: <b>$ {{ party['offer'] }}</b></span>
-                    {% endif %}
-                    <span style="font-size: small">{{ party['time'].strftime('%h %d') }} @ {{ party['time'].strftime('%H:%M') }}</span>
-                    <a href="{{ url_for('accept_ip_offer', bhunter_id=party['bhunter'], bhunter_uname=party['bhunter_uname'], contract_id=contract_obj['_id'], offer=party['offer']) }}">accept offer</a>
-                </div>
-            {% endfor %}
-            </div>
-        {% endif %}
-    {% endif %}
-    {# INTERESTED PARTIES #}
      <div id="info1_container">
         <div id="info1_main_col">
-            {# INTERESTED PARTIES #}
-{#            {% if contract_obj['phase'] == "open" %}#}
-                {# show for anyone that's NOT the owner and has NOT offered on the contract yet #}
-{#                {% if (current_user.id_object != contract_obj['owner']) and not data_obj['bhunter_offer'] %}#}
-{#                    make an offer on this contract:<p></p>#}
-{#                    <form id="make_offer_form" method="post" name="make_offer_form">#}
-{#                        For what amount will you take on this contract? <input id="m_o_f_offer" min="{{ contract_obj['bounty'] + 1.00 }}" name="m_o_f_offer" placeholder="$0.00" step="0.01" required type="number"><p></p>#}
-{#                        <button type="submit">submit</button>#}
-{#                    </form>#}
-                {# show for bhunter that's already offered on contract #}
-{#                {% elif data_obj['bhunter_offer'] %}#}
-{#                    <div id="div_existing_offer">#}
-{#                        Your existing offer on this contract:#}
-{#                        <span>offer: {{ data_obj['bhunter_offer']['offer'] }}</span>#}
-{#                        <span>time: {{ data_obj['bhunter_offer']['time'] }}</span>#}
-{#                    </div>#}
-                {# show for the contract owner... maybe add another elif here? #}
-{#                {% else %}#}
-{#                    <div id="div_iparty_row">#}
-{#                    {% for party in contract_obj['iparties'] %}#}
-{#                        <div id="div_iparty_cell">#}
-{#                            <span>interested party: <a href="{{ url_for('view_user', user_id=party['bhunter']) }}">{{ party['bhunter_uname'] }}</a></span>#}
-{#                            <span>counter offer: <b>$ {{ party['offer'] }}</b></span>#}
-{#                            time:    {{ party['time'] }}#}
-{#                            <a href="{{ url_for('accept_ip_offer', bhunter_id=party['bhunter'], bhunter_uname=party['bhunter_uname'], contract_id=contract_obj['_id'], offer=party['offer']) }}">accept offer</a>#}
-{#                        </div>#}
-{#                    {% endfor %}#}
-{#                    </div>#}
-{#                {% endif %}#}
-{#            {% endif %}#}
-            {# INTERESTED PARTIES #}
-            {# PHASE: INPROGRESS #}
-{#            {% if contract_obj['phase'] == "inprogress" %}#}
-                {# PHASE: INPROGRESS: ASSIGNMENT #}
-{#                {% if contract_obj['type_contract'] == 'assignment' %}#}
-                    {#            <a href="{{ url_for('set_disputed', contractid=contract_obj['_id']) }}">link: set contract as disputed</a><p></p>#}
-{#                    -----<p></p>#}
-{#                    {% if contract_obj['owner'] == current_user.id_object %}#}
-{#                        waiting on submission from bount hunter...<p></p>#}
-{#                    {% endif %}#}
-{#                    {% if contract_obj['bhunter'] == current_user.id_object %}#}
-{#                        submit assignment for validation:#}
-{#                        <form action="{{ url_for('submit_assignment', contract_id=contract_obj['_id']) }}" enctype="multipart/form-data" id="submission" method="post" name="submission">#}
-{#                            <input id="afile" name="assignment_file" required type="file"><p></p>#}
-{#                            submit file?    <button type="submit">submit submission</button>#}
-{#                        </form>#}
-{#                    {% endif %}#}
-{#                {% endif %}#}
-                {# PHASE: INPROGRESS: TEST #}
-{#                {% if contract_obj['type_contract'] == 'test' %}#}
-{#                    SOMETHING HERE FOR TEST!{# incomplete #}
-{#                {% endif %}#}
-{#            {% endif %}#}
-            {# PHASE: INPROGRESS #}
             <div class="c_row">
                 <div>bounty: <b>${{ contract_obj['bounty'] }}</b></div>
                 {% if contract_obj['efbonus'] > 0 %}
