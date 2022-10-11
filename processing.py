@@ -334,7 +334,8 @@ def process_email_token(email_token):
         doc_or_false['dateused'] = datetime.utcnow()
         insert_one_result = calls.set_used_token(doc_or_false)
         print(doc_or_false)
-        doc_or_none = calls.set_emailconfirmed(email, doc_or_false['userid'])
+        doc_or_none = calls.set_emailconfirmed(email, {'event': 'user activated account via email registration link',
+                                                       'time': datetime.utcnow()}, doc_or_false['userid'])
         print(doc_or_none)
         # send thank you email...
         return [str(doc_or_none['_id']), doc_or_none['email'], doc_or_none['uName'], doc_or_none['_id'], doc_or_none['tz_offset']]
