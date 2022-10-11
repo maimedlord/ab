@@ -474,7 +474,8 @@ def process_new_user(email, mail, password1, tz_offset, username):
         'reviewHistory': [],
         'tz_offset': tz_offset,
         'uName': username,
-        'userlog': None
+        'userlog': [{'event': 'user created their account and must confirm registration email',
+                     'time': datetime.utcnow()}]
     }
     insert_one_result = calls.create_user(user_template)
     if insert_one_result.acknowledged:

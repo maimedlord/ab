@@ -371,7 +371,12 @@ def set_activetoken(email_token_obj):
 def set_emailconfirmed(email, user_id):
     db = db_mc[dbUsers]
     dbc = db[cusers]
-    return dbc.find_one_and_update({'_id': user_id, 'email': email}, {'$set': {'emailconfirmed': True}}, return_document=ReturnDocument.AFTER)
+    return dbc.find_one_and_update({'_id': user_id, 'email': email},
+                                   {'$set': {'emailconfirmed': True},
+                                    '$push': {'userlog': {'event': 'user activated account via email registration link',
+                                                       'time': datetime.utcnow()}}
+                                    }
+                                   , return_document=ReturnDocument.AFTER)
 
 
 def set_used_token(token_doc):
