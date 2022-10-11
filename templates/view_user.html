@@ -13,9 +13,9 @@
                     user since {{ user_obj['joinDate'].strftime('%h, %Y') }}
                 </div>
                 <div class="user_stats_column">
-                    <span>average rating given: <b>{{ data_obj['given_avg']|round|int }}%</span></b><br><br>
-                    <span>average rating received: <b>{{ data_obj['received_avg']|round|int }}%</b></span><br><br>
-                    <span>average rating total: <b>{{ data_obj['review_avg']|round|int }}%</b></span>
+                    <span>average rating given: <b>{{ data_obj['given_avg'] }}%</b></span><br><br>
+                    <span>average rating received: <b>{{ data_obj['received_avg'] }}%</b></span><br><br>
+                    <span>average rating total: <b>{{ data_obj['review_avg'] }}%</b></span>
                 </div>
             </div>
         </div>

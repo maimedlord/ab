@@ -5,6 +5,14 @@ from werkzeug.security import generate_password_hash
 import pytz
 from werkzeug.utils import secure_filename
 from user import User
+from itsdangerous import URLSafeTimedSerializer
+from flask_mail import Message
+from flask import url_for
+
+
+urlsafetimedserializer = 'thisisaterriblesecret'
+urlsafetimedserializersalt = 'somesaltthisis'
+
 
 def get_contracts_top():
     contracts_data = calls.get_contracts_top_10()
@@ -315,6 +323,38 @@ def prep_graph(phase, timeline_arr, type_contract, tz_offset):
     return teh_graph
 
 
+def process_email_token(email_token):
+    doc_or_false = calls.get_active_token(email_token)
+    # does unhashed token match email saved in user record?
+    email = URLSafeTimedSerializer(urlsafetimedserializer).loads(email_token, salt=urlsafetimedserializersalt)
+
+    if doc_or_false:
+        doc_or_false = calls.delete_active_token(email_token)
+        print(doc_or_false)
+        doc_or_false['dateused'] = datetime.utcnow()
+        insert_one_result = calls.set_used_token(doc_or_false)
+        print(doc_or_false)
+        doc_or_none = calls.set_emailconfirmed(email, doc_or_false['userid'])
+        print(doc_or_none)
+        # send thank you email...
+        return [str(doc_or_none['_id']), doc_or_none['email'], doc_or_none['uName'], doc_or_none['_id'], doc_or_none['tz_offset']]
+        #user_arr = calls.get_auth_user(email, password1, tz_offset)
+        # login_user(User(user_arr[0], user_arr[1], user_arr[2], user_arr[3], user_arr[4]))
+        # next = flask.request.args.get('next')
+        # if not is_safe_url(next):
+        #     return flask.abort(400)
+    # look for token in active token database
+        # if exists, move token to used and confirm user
+            # return
+    # check if expired
+        # if expired, alert user to this fact and ask them to try again
+    # check if used
+        #...
+    # send token and user's ip data to strange databse
+        # send user to home with no message...
+    return False
+
+
 '''
 INCOMPLETE: 
 NEED TO VERIFY ALL INPUT HERE BEFORE SENDING TO CALLS
@@ -420,11 +460,14 @@ def process_new_contract(form_dict, owner_id, owner_uname, tz_offset):
         user_obj.update({'egbonusyon': True})
     return calls.create_contract(user_obj)
 
-
-def process_new_user(email, password1, tz_offset, username):
+# notdone
+# returns True if ???
+# returns False if ???
+def process_new_user(email, mail, password1, tz_offset, username):
     user_template = {
         'active': True,
         'email': email,
+        'emailconfirmed': False,
         'joinDate': datetime.utcnow(),
         'pass': generate_password_hash(password1),
         'paymentid': None,
@@ -433,7 +476,24 @@ def process_new_user(email, password1, tz_offset, username):
         'uName': username,
         'userlog': None
     }
-    return calls.create_user(user_template)
+    insert_one_result = calls.create_user(user_template)
+    if insert_one_result.acknowledged:
+        email_token = URLSafeTimedSerializer(urlsafetimedserializer).dumps(email, salt=urlsafetimedserializersalt)
+        # store email_token in database:
+        is_token_stored = calls.set_activetoken({
+            'dateactive': datetime.utcnow(),
+            'dateexpired': None,
+            'dateused': None,
+            'token': email_token,
+            'userid': insert_one_result.inserted_id
+        })
+        message = Message('confirm la email', sender='listen_silent@hotmail.com', recipients=[email])
+        link = url_for('confirm_email', email_token=email_token, _external=True)
+        message.body = 'Your link is ' + link
+        mail.send(message)
+        print('here')
+        return True
+    return False
 
 
 def process_user_orders(userid_obj):

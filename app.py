@@ -12,10 +12,10 @@ from datetime import datetime  # get this moved to prc...
 # import html
 from user import User
 from forms import CContract, LoginForm, RegistrationForm
-
+from flask_mail import Mail
 
 app = Flask(__name__)
-
+app.config.from_pyfile('config.py')
 
 # NEED to verify safe next as used in login
 login_manager = LoginManager()
@@ -23,9 +23,10 @@ login_manager.init_app(app)
 login_manager.login_message = 'you need to be logged in and authorized to view this page...'
 login_manager.login_view = 'login'
 
-app.config['SECRET_KEY'] = 'secret!'  # put in config file?
-app.config['UPLOAD_FOLDER'] = 'uploads'
+# mail
+mail = Mail(app)
 
+# global variables:
 ALLOWED_EXTENSIONS = {'gif', 'jpg', 'pdf', 'png', 'txt'}
 NO_CHAT_MSG_ARR = ['creation', 'open', 'successful']
 
@@ -40,13 +41,12 @@ def allowed_file(filename):
 def is_safe_url(target):
     ref_url = urlparse(request.host_url)
     test_url = urlparse(urljoin(request.host_url, target))
-    return test_url.scheme in ('http', 'https') and \
-           ref_url.netloc == test_url.netloc
+    return test_url.scheme in ('http', 'https') and ref_url.netloc == test_url.netloc
 
 
 # for removing dangerous characters from strings passed to routes via POST/address
 def remove_danger_chars(passed_string):
-    return re.sub("[$;:&@?*%<>{}|,\[\]^]", '', passed_string)
+    return re.sub("[$;:&@?*%<>{}|,^]", '', passed_string)
 
 
 @login_manager.user_loader
@@ -59,12 +59,18 @@ def user_loader(user_id):
 
 
 #######################################################################################################################
-
-
 @app.route('/')
 def index():
     data_obj = {"ip_address": request.remote_addr}
     c_top = prc.get_contracts_top()
+    ##
+    # email = 'listen_silent@hotmail.com'
+    # email_token = urlsafetimedserializer.dumps(email, salt='somesaltthisis')
+    # msg = Message('confirm la email', sender='listen_silent@hotmail.com', recipients=[email])
+    # link = url_for('confirm_email', email_token=email_token, _external=True)
+    # msg.body = 'Your link is ' + link
+    # mail.send(msg)
+    ##
     return render_template('index.html', c_top=c_top, data_obj=data_obj)
 
 
@@ -158,6 +164,19 @@ def cancel_contract(contract_id):
         return redirect(url_for('account'))
     data_obj['message'] = 'there was an error canceling the contract'
     return render_template('hmm.html', data_obj=data_obj)
+
+
+# make sure to handle different token types
+@app.route('/confirm_email/<email_token>', methods=['GET', 'POST'])
+def confirm_email(email_token):
+    user_arr = prc.process_email_token(email_token)
+    if user_arr:
+        login_user(User(user_arr[0], user_arr[1], user_arr[2], user_arr[3], user_arr[4]))
+        # next = flask.request.args.get('next')
+        # if not is_safe_url(next):
+        #     return flask.abort(400)
+        return redirect(url_for('account'))
+    return 'the thing you wanted to happen did\'t happen'
 
 
 # disable back button?
@@ -359,14 +378,15 @@ def register():
         tz_offset = request.form['r_f_timezone']
         username = request.form['r_f_username']
         # where login to test if passwords match?
-        result = prc.process_new_user(email, password1, tz_offset, username)
+        result = prc.process_new_user(email, mail, password1, tz_offset, username)
         if result:
             user_arr = calls.get_auth_user(email, password1, tz_offset)
-            login_user(User(user_arr[0], user_arr[1], user_arr[2], user_arr[3], user_arr[4]))
+            #login_user(User(user_arr[0], user_arr[1], user_arr[2], user_arr[3], user_arr[4]))
             # next = flask.request.args.get('next')
             # if not is_safe_url(next):
             #     return flask.abort(400)
-            return redirect('account')
+            return render_template('check_registration_email.html', data_obj=data_obj)
+        data_obj['message'] = 'there was an error processing your request, or the email/username already exist...'
     return render_template('register.html', data_obj=data_obj)
 
 

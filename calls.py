@@ -9,12 +9,17 @@ from bson.objectid import ObjectId
 
 
 dbContracts = 'ab_dbcontracts'
-dbUsers = 'ab_dbusers'
-dbSiteGen = 'ab_dbsitegen'
 dbGames = 'ab_dbgames'
 dbLogs = 'ab_dblogs'
+dbSiteGen = 'ab_dbsitegen'
+dbTokens = 'ab_db_e_r_t'
 dbUploads = 'ab_dbuploads'
+dbUsers = 'ab_dbusers'
 db_mc = MongoClient()
+active_tokens = 'activetokens'
+expired_tokens = 'expiredtokens'
+strange_tokens = 'strangetokens'
+used_tokens = 'usedtokens'
 ccontracts = 'ccontracts'
 cusers = 'cusers'
 login_log = 'loginlog'
@@ -76,17 +81,32 @@ def create_contract(user_obj):
         return result
     return None
 
-
+# returns pymongo InsertOneResult(inserted_id: Any, acknowledged: bool)
 def create_user(user_template):
     db = db_mc[dbUsers]
     dbc = db[cusers]
     email_result = dbc.find_one({'email': user_template['email']})
     username_result = dbc.find_one({'uName': user_template['uName']})
     if email_result or username_result:
-        return False
+        class Temp_obj:
+            def __init__(self):
+                self.inserted_id = None
+                self.acknowledged = False
+        return Temp_obj()
     else:
-        dbc.insert_one(user_template)
-        return True
+        return dbc.insert_one(user_template)
+
+
+def delete_active_token(email_token):
+    db = db_mc[dbTokens]
+    dbc = db[active_tokens]
+    return dbc.find_one_and_delete({'token': email_token})
+
+
+def get_active_token(email_token):
+    db = db_mc[dbTokens]
+    dbc = db[active_tokens]
+    return dbc.find_one({'token': email_token})
 
 
 def get_all_open():
@@ -119,6 +139,16 @@ def get_auth_user(email, password, tz_offset):
             return [str(user_record['_id']), email, user_record['uName'], user_record['_id'], user_record['tz_offset']]
     else:
         return None
+
+
+def get_auth_user_no_tz():
+    pass
+
+
+def get_expired_token(email_token):
+    db = db_mc[dbTokens]
+    dbc = db[expired_tokens]
+    return dbc.find_one({'token': email_token})
 
 
 # returns contract or None
@@ -175,6 +205,18 @@ def get_sesh(userid):
         return temp_array
     else:
         return []
+
+
+def get_strange_token(email_token):
+    db = db_mc[dbTokens]
+    dbc = db[strange_tokens]
+    return dbc.find_one({'token': email_token})
+
+
+def get_used_token(email_token):
+    db = db_mc[dbTokens]
+    dbc = db[used_tokens]
+    return dbc.find_one({'token': email_token})
 
 
 def get_user(user_id):
@@ -318,3 +360,21 @@ def upload_sample(sample_obj):
     db = db_mc[dbUploads]
     dbc = db[samples]
     return dbc.insert_one(sample_obj)
+
+
+def set_activetoken(email_token_obj):
+    db = db_mc[dbTokens]
+    dbc = db[active_tokens]
+    return dbc.insert_one(email_token_obj)
+
+
+def set_emailconfirmed(email, user_id):
+    db = db_mc[dbUsers]
+    dbc = db[cusers]
+    return dbc.find_one_and_update({'_id': user_id, 'email': email}, {'$set': {'emailconfirmed': True}}, return_document=ReturnDocument.AFTER)
+
+
+def set_used_token(token_doc):
+    db = db_mc[dbTokens]
+    dbc = db[used_tokens]
+    return dbc.insert_one(token_doc)
