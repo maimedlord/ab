@@ -322,12 +322,11 @@ def prep_graph(phase, timeline_arr, type_contract, tz_offset):
         teh_graph[str(now_time.date())] = [{str(user_time.time()): 'your last visit'}]
     return teh_graph
 
-
+# returns User array, False
 def process_email_token(email_token):
     doc_or_false = calls.get_active_token(email_token)
     # does unhashed token match email saved in user record?
     email = URLSafeTimedSerializer(urlsafetimedserializer).loads(email_token, salt=urlsafetimedserializersalt)
-
     if doc_or_false:
         doc_or_false = calls.delete_active_token(email_token)
         print(doc_or_false)
@@ -338,21 +337,20 @@ def process_email_token(email_token):
                                                        'time': datetime.utcnow()}, doc_or_false['userid'])
         print(doc_or_none)
         # send thank you email...
-        return [str(doc_or_none['_id']), doc_or_none['email'], doc_or_none['uName'], doc_or_none['_id'], doc_or_none['tz_offset']]
+        return [str(doc_or_none['_id']), doc_or_none['email'], doc_or_none['uName'], doc_or_none['_id'],
+                doc_or_none['tz_offset']]
         #user_arr = calls.get_auth_user(email, password1, tz_offset)
         # login_user(User(user_arr[0], user_arr[1], user_arr[2], user_arr[3], user_arr[4]))
         # next = flask.request.args.get('next')
         # if not is_safe_url(next):
         #     return flask.abort(400)
-    # look for token in active token database
-        # if exists, move token to used and confirm user
-            # return
-    # check if expired
-        # if expired, alert user to this fact and ask them to try again
-    # check if used
-        #...
-    # send token and user's ip data to strange databse
-        # send user to home with no message...
+    doc_or_false = calls.get_expired_token(email_token)
+    if doc_or_false:
+        return 'expired'
+    doc_or_false = calls.get_used_token(email_token)
+    if doc_or_false:
+        return 'used'
+    calls.set_strange_token(datetime.utcnow(), email_token)
     return False
 
 
@@ -484,16 +482,17 @@ def process_new_user(email, mail, password1, tz_offset, username):
         # store email_token in database:
         is_token_stored = calls.set_activetoken({
             'dateactive': datetime.utcnow(),
-            'dateexpired': None,
+            #'expiredate': datetime.utcnow() + timedelta(days=3),
+            'expiredate': datetime.utcnow(),
             'dateused': None,
             'token': email_token,
             'userid': insert_one_result.inserted_id
         })
         message = Message('confirm la email', sender='listen_silent@hotmail.com', recipients=[email])
         link = url_for('confirm_email', email_token=email_token, _external=True)
+        print(link)
         message.body = 'Your link is ' + link
         mail.send(message)
-        print('here')
         return True
     return False
 

@@ -169,14 +169,22 @@ def cancel_contract(contract_id):
 # make sure to handle different token types
 @app.route('/confirm_email/<email_token>', methods=['GET', 'POST'])
 def confirm_email(email_token):
+    data_obj = {"ip_address": request.remote_addr}
+    # returns document or None
     user_arr = prc.process_email_token(email_token)
-    if user_arr:
+    if user_arr and isinstance(user_arr, list):
         login_user(User(user_arr[0], user_arr[1], user_arr[2], user_arr[3], user_arr[4]))
         # next = flask.request.args.get('next')
         # if not is_safe_url(next):
         #     return flask.abort(400)
         return redirect(url_for('account'))
-    return 'the thing you wanted to happen did\'t happen'
+    if isinstance(user_arr, str):
+        if user_arr == 'expired':
+            data_obj['message'] = 'Your email token expired. Try registering again.'
+        if user_arr == 'used':
+            data_obj['message'] = 'You have already registered and confirmed your account. Try signing in'
+        return render_template('hmm.html', data_obj=data_obj)
+    return redirect(url_for('index'))
 
 
 # disable back button?

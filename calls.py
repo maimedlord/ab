@@ -376,6 +376,15 @@ def set_emailconfirmed(email, message_obj, user_id):
                                    return_document=ReturnDocument.AFTER)
 
 
+def set_strange_token(time, token):
+    db = db_mc[dbTokens]
+    dbc = db[strange_tokens]
+    return dbc.insert_one({
+        'time': time,
+        'token': token
+    })
+
+
 def set_used_token(token_doc):
     db = db_mc[dbTokens]
     dbc = db[used_tokens]

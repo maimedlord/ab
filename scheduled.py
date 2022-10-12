@@ -10,6 +10,16 @@ dbGames = 'ab_dbgames'
 db_mc = MongoClient()
 ccontracts = 'ccontracts'
 cusers = 'cusers'
+purged_users = 'purgedusers'
+
+
+def active_to_expired():
+    db = db_mc[dbUsers]
+    dbc = db[purged_users]
+    now_time = datetime.utcnow()
+    tokens = dbc.find({'expiredate': {'$lte': now_time}})
+    print(tokens)
+    pass
 
 
 def failed_a_submit():
