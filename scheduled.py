@@ -3,23 +3,29 @@ from datetime import datetime, timedelta
 from bson.objectid import ObjectId
 
 
+# db's
 dbContracts = 'ab_dbcontracts'
 dbUsers = 'ab_dbusers'
 dbSiteGen = 'ab_dbsitegen'
 dbGames = 'ab_dbgames'
 db_mc = MongoClient()
+token_db = 'ab_db_e_r_t'
+# collections
+active_tokens = 'activetokens'
 ccontracts = 'ccontracts'
 cusers = 'cusers'
 purged_users = 'purgedusers'
 
 
 def active_to_expired():
-    db = db_mc[dbUsers]
-    dbc = db[purged_users]
+    db = db_mc[token_db]
+    dbc = db[active_tokens]
     now_time = datetime.utcnow()
-    tokens = dbc.find({'expiredate': {'$lte': now_time}})
-    print(tokens)
-    pass
+    print(now_time, '\n')
+    tokens = list(dbc.find({'expiredate': {'$lte': now_time}}))
+    for x in tokens:
+        print(x)
+    print('end')
 
 
 def failed_a_submit():
@@ -173,5 +179,5 @@ def move_t_validation():
 
 
 if __name__ == '__main__':
-    print(move_stalled(), '\n')
+    print(active_to_expired())
     # print(user_loader("theman@gmail.com"))
