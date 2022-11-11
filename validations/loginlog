@@ -1,0 +1,19 @@
+{
+  $jsonSchema: {
+    bsonType: 'object',
+    required: [
+      'time',
+      'userid'
+    ],
+    properties: {
+      time: {
+        bsonType: 'date',
+        description: 'loginlog: time'
+      },
+      userid: {
+        bsonType: 'objectId',
+        description: 'loginlog: userid'
+      }
+    }
+  }
+}

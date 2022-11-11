@@ -4,6 +4,7 @@
     required: [
       'active',
       'email',
+      'emailconfirmed',
       'joinDate',
       'pass',
       'paymentid',
@@ -20,6 +21,10 @@
       email: {
         bsonType: 'string',
         description: 'required: email'
+      },
+      emailconfirmed: {
+        bsonType: 'bool',
+        description: 'required: user: emailconfirmed'
       },
       joinDate: {
         bsonType: 'date',

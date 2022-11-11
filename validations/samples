@@ -3,9 +3,9 @@
     bsonType: 'object',
     required: [
       'contractid',
-      'data',
       'date',
       'downloader',
+      'filename',
       'uploader'
     ],
     properties: {
@@ -17,16 +17,19 @@
         bsonType: 'binData',
         description: 'samples: data'
       },
-      date: {
-        bsonType: 'date',
-        description: 'samples: date'
-      },
       downloader: {
-        bsonType: [
-          'null',
-          'objectId'
-        ],
-        description: 'samples: downloader'
+        bsonType: 'array',
+        description: 'samples: downloader',
+        uniqueItems: true,
+        minItems: 0,
+        items: {
+          bsonType: 'objectId',
+          description: 'samples: downloader: item'
+        }
+      },
+      filename: {
+        bsonType: 'string',
+        description: 'samples: filename'
       },
       uploader: {
         bsonType: 'objectId',

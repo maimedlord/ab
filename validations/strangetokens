@@ -1,0 +1,19 @@
+{
+  $jsonSchema: {
+    bsonType: 'object',
+    required: [
+      'time',
+      'token'
+    ],
+    properties: {
+      time: {
+        bsonType: 'date',
+        description: 'strangetoken: time'
+      },
+      token: {
+        bsonType: 'string',
+        description: 'strangetoken: token'
+      }
+    }
+  }
+}

@@ -2,27 +2,42 @@
   $jsonSchema: {
     bsonType: 'object',
     required: [
+      'asubmission',
       'bounty',
       'bhunter',
+      'bhunter_uname',
       'chat',
+      'chatnewmsgbhunter',
+      'chatnewmsgowner',
       'clog',
       'efbonus',
+      'efbonusyon',
       'egbonus',
+      'egbonusyon',
+      'gsubmission',
       'instructions',
       'iparties',
       'lvbhunter',
       'lvowner',
       'lostudy',
       'owner',
+      'owner_uname',
       'phase',
       'reviews',
-      'sample',
+      'sampleUp',
       'specialization',
       'subject',
       'timeline',
       'type_contract'
     ],
     properties: {
+      asubmission: {
+        bsonType: [
+          'null',
+          'string'
+        ],
+        description: 'contact: asubmission'
+      },
       bounty: {
         bsonType: 'double',
         description: 'contract: bounty'
@@ -33,6 +48,13 @@
           'objectId'
         ],
         description: 'contract: bhunter'
+      },
+      bhunter_uname: {
+        bsonType: [
+          'null',
+          'string'
+        ],
+        description: 'contract: bhunter_uname'
       },
       chat: {
         bsonType: 'array',
@@ -46,7 +68,8 @@
             'message',
             'mood',
             'time',
-            'user'
+            'user',
+            'username'
           ],
           properties: {
             message: {
@@ -64,9 +87,21 @@
             user: {
               bsonType: 'objectId',
               description: 'contract: chat: item: user'
+            },
+            username: {
+              bsonType: 'string',
+              description: 'contract: chat: item: username'
             }
           }
         }
+      },
+      chatnewmsgbhunter: {
+        bsonType: 'bool',
+        description: 'contract: chatnewmsgbhunter'
+      },
+      chatnewmsgowner: {
+        bsonType: 'bool',
+        description: 'contract: chatnewmsgowner'
       },
       clog: {
         bsonType: 'array',
@@ -92,9 +127,24 @@
         bsonType: 'double',
         description: 'contract: efbonus'
       },
+      efbonusyon: {
+        bsonType: 'bool',
+        description: 'contract: efbonusyon'
+      },
       egbonus: {
         bsonType: 'double',
         description: 'contract: egbonus'
+      },
+      egbonusyon: {
+        bsonType: 'bool',
+        description: 'contract: egbonusyon'
+      },
+      gsubmission: {
+        bsonType: [
+          'null',
+          'string'
+        ],
+        description: 'contract: gsubmission'
       },
       instructions: {
         bsonType: 'string',
@@ -111,20 +161,25 @@
           required: [
             'time',
             'bhunter',
+            'bhunter_uname',
             'offer'
           ],
           properties: {
-            time: {
-              bsonType: 'date',
-              description: 'contract: iparties: time'
-            },
             bhunter: {
               bsonType: 'objectId',
-              description: 'contract: iparties: bhunter'
+              description: 'contract: iparties: item: bhunter'
+            },
+            bhunter_uname: {
+              bsonType: 'string',
+              description: 'contract: iparties: item: bhunter_uname'
             },
             offer: {
               bsonType: 'double',
-              description: 'contract: iparties: coffer'
+              description: 'contract: iparties: item: coffer'
+            },
+            time: {
+              bsonType: 'date',
+              description: 'contract: iparties: item: time'
             }
           }
         }
@@ -151,6 +206,10 @@
       owner: {
         bsonType: 'objectId',
         description: 'contract: owner'
+      },
+      owner_uname: {
+        bsonType: 'string',
+        description: 'contract: owner_uname'
       },
       phase: {
         bsonType: 'string',
@@ -191,9 +250,12 @@
           }
         }
       },
-      sample: {
-        bsonType: 'string',
-        description: 'contract: sample'
+      sampleUp: {
+        bsonType: [
+          'null',
+          'string'
+        ],
+        description: 'contract: sampleUpId'
       },
       specialization: {
         bsonType: 'string',
@@ -214,7 +276,10 @@
           ],
           properties: {
             time: {
-              bsonType: 'date'
+              bsonType: [
+                'date',
+                'null'
+              ]
             },
             event: {
               bsonType: 'string'

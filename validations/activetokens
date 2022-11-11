@@ -3,8 +3,8 @@
     bsonType: 'object',
     required: [
       'dateactive',
-      'dateexpired',
       'dateused',
+      'expiredate',
       'token',
       'userid'
     ],
@@ -13,19 +13,16 @@
         bsonType: 'date',
         description: 'token: dateactive'
       },
-      dateexpired: {
-        bsonType: [
-          'date',
-          'null'
-        ],
-        description: 'token: dateexpired'
-      },
       dateused: {
         bsonType: [
           'date',
           'null'
         ],
         description: 'token: dateused'
+      },
+      expiredate: {
+        bsonType: 'date',
+        description: 'token: expiredate'
       },
       token: {
         bsonType: 'string',
